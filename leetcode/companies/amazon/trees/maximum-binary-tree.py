@@ -18,3 +18,30 @@ Output: return the tree root node representing the following tree:
        \
         1
 """
+class TreeNode:
+    def __init__(self, num):
+        self.val = num
+        self.right = None
+        self.left = None
+
+class Solution:
+    def constructMaximumBinaryTree(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: TreeNode
+        """
+        stack = []
+        for num in nums:
+            nextNode = TreeNode(num)
+            while stack and num>stack[-1].val:
+                nextNode.left = stack.pop()
+            if stack and stack[-1].val>num:
+                stack[-1].right = nextNode
+            stack.append(nextNode)
+        
+        return(stack[0])
+
+if __name__=='__main__':
+    myList = [3,2,1,6,0,5]
+    sol = Solution()
+    root = sol.constructMaximumBinaryTree(myList)
