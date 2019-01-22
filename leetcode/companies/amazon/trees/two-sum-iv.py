@@ -24,6 +24,7 @@ Target = 28
 
 Output: False
 """
+from collections import deque
 class TreeNode:
     def __init__(self, num):
         self.val = num
@@ -38,7 +39,7 @@ class Solution:
         :type k: int
         :rtype: bool
         """
-        queue = collections.deque()
+        queue = deque()
         queue.append(root)
         matches = set()
         
