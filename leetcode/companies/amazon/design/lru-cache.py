@@ -65,4 +65,65 @@ class LRUCache(object):
         return()
 
 
-# Second attempt: ___percentile...uses linked list
+# Second attempt: 99th percentile...uses linked list
+#Used a doubly linked list with caps of 0 on either end.
+#This implementation relies on the assumption that only positive 
+# keys are sent to the cache
+
+class Node:
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+        self.next = None
+        self.prev = None
+        
+        
+class LRUCache:
+    def __init__(self, capacity):
+        self.cache = {} #key -> Node
+        self.cap = capacity
+        self.headCap = Node(0, 0)
+        self.tailCap = Node(0, 0)
+        self.headCap.next = self.tailCap
+        self.tailCap.prev = self.headCap
+
+        
+    def get(self, key):
+        if key in self.cache:
+            res = self.cache[key]
+            self._del(res)
+            self._add(res)
+            return(res.val)
+        else:
+            return(-1)
+        
+    def put(self, key, val):
+        if key in self.cache:
+            node = self.cache[key]
+            self._del(node)
+            node.val = val
+            self.cache[key] = node
+            self._add(node)
+        else:
+            newNode = Node(key, val)
+            if len(self.cache)==self.cap:
+                oldHeadKey = self.headCap.next.key
+                del self.cache[oldHeadKey]
+                self._del(self.headCap.next)
+            self.cache[key] = newNode
+            self._add(newNode)
+        return()
+
+
+    def _del(self, node):
+        prev = node.prev
+        nxt = node.next
+        prev.next = nxt
+        nxt.prev = prev              
+    
+    def _add(self, node):
+        oldTail = self.tailCap.prev
+        oldTail.next = node
+        node.prev = oldTail
+        node.next = self.tailCap
+        self.tailCap.prev = node
