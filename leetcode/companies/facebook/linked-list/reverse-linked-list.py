@@ -12,12 +12,12 @@ A linked list can be reversed either iteratively or recursively. Could you imple
 # 1st attempt: iterative. 100th percentile in speed. Space: about 12.8MB. Best is 12.5MB.  
 
 # Definition for singly-linked list.
-# class ListNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
+class ListNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.next = None
 
-class Solution(object):
+# class Solution(object):
     def reverseList(self, head):
         """
         :type head: ListNode
@@ -53,6 +53,38 @@ class Solution(object):
         
         return(cur)
 
-# 3rd attempt: recursive. 
+
+# 3rd attempt: recursive. 100th percentile in speed. 17.7 MB. 
+class Solution(object):
+    #  Start with helper(None, head)
+    def helper(self, leader, lagger=None):
         
+        if not leader:
+            return(lagger)
+        else:
+            stash = leader.next
+            leader.next = lagger
+            return(self.helper(stash, leader))
+    
+    def reverseList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """   
+        return(self.helper(head))
+
+
+if __name__=='__main__':
+    head = ListNode(1)
+    temp = head
+    for i in range(2, 6):
+        temp.next = ListNode(i)
+        temp = temp.next
+
+    s = Solution()
+    res = s.reverseList(head)
+    
+    while res:
+        print(res.val)
+        res = res.next
         
