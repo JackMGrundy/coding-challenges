@@ -21,6 +21,11 @@ Explanation: There are three ways to climb to the top.
 2. 1 step + 2 steps
 3. 2 steps + 1 step
 """
+# Many different ways to solve this. Key intuition, is that the # of ways is going to 
+# equal the number of ways you get can within 2 of the end + the number of ways you can get winthin
+# 1 of the end. 
+# Results in a simple Fibonacci like sequence. Can get faster time using special characteristics of Fib
+# sequence. 
 class Solution(object):
     def climbStairs(self, n):
         """
