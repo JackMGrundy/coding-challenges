@@ -23,8 +23,6 @@ class Solution:
 
 
 # 2nd attempt: actual backtracking with recursive DFS. 60th percentile in speed:
-from itertools import permutations
-
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
         res = []
