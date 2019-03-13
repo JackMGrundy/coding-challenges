@@ -14,9 +14,3 @@ Output:
   [3,2,1]
 ]
 */
-a = ["1", "2", "3"]
-// b = a.slice()
-b = a
-b[0] = "4"
-console.log(a===b);
-console.log(a, b);
