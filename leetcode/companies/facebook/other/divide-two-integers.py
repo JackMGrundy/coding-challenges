@@ -65,7 +65,7 @@ class Solution:
 
 
 # 3rd attempt: Attempt to optimize submission 2 a bit. Instead of descending in orders of magnitude, ascend.
-# Runtime unclear. Ossicaltes between top submission and ~20th percentile. 
+# Runtime unclear. Oscillates between top submission and ~20th percentile. 
 class Solution:
     def divide(self, dividend: int, divisor: int) -> int:
         positive = (dividend>=0 and divisor>=0) or (dividend<=0 and divisor<=0)
