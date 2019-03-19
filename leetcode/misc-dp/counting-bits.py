@@ -46,17 +46,56 @@ Can you do it like a boss? Do it without using any builtin function like __built
 00001       16
 
 """
-# Attempt 1: 
-def lg(x):
-    res = 0
-    while x>1:
-        x = x >> 1
-        res +=1
-    return(res)
+# Attempt 1: 51st percentile in speed. Implement log base 2 function
+# Intuition: binary repeats in chunks with an extra 1...so #s 4 to 7 are the same
+# as 0 to 3 with an extra 1 added...8 to 15 are the same as 0 to 7 with an extra 1 added
+# and so on
+class Solution:
+    def countBits(self, num: int) -> List[int]:
+        def lg(x):
+            res = 0
+            while x>1:
+                x = x >> 1
+                res +=1
+            return(res)
+        
+        res = [0, 1]
+        for _ in range( lg(num) ):
+            res += [ x+1 for x in res ]
+        return res[0:num+1]
 
 
-def countBits(n):
-    res = [0, 1]
-    for _ in range( lg(n) ):
-        res += [ x+1 for x in res ]
-    return res[0:n]
+
+# 2nd attempt: 81st percentile in speed. Extra speed with built ins. 
+from math import log, floor
+class Solution:
+    def countBits(self, num: int) -> List[int]:
+        if num==0: return[0]
+        res = [0, 1]
+        for _ in range( int(floor(log(num, 2))) ):
+            res += [ x+1 for x in res ]
+        return res[0:num+1]
+
+
+# 3rd attempt: 99th percentile in speed. Simplify the loop
+class Solution:
+    def countBits(self, num: int) -> List[int]:
+        # if num==0: return[0]
+        res = [0, 1]
+        while len(res) < num+2:
+            res += [ x+1 for x in res ]
+        return res[0:num+1]
+
+
+# 4th attempt: 76th percentile in speed
+# Different tact. Two facts. 1) Every binary value has the same number of 1's as the result of
+# multiplying it by 2. 2) Every odd number has a binary representation with 1 more 1 than the
+# even number that is one less.
+class Solution:    
+    def countBits(self, num: 'int') -> List[int]:
+        res = [0]*(num+2)
+        res[1] = 1
+        for i in range(1,num//2+1):
+            res[i*2] = res[i]
+            res[i*2+1] = res[i]+1
+        return res[:num+1]
