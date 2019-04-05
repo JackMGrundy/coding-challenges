@@ -16,6 +16,8 @@ One possible answer is: [0,-3,9,-10,null,5], which represents the following heig
  -10  5
  */
 // 1st attempt: 97th percentile in speed
+// 1 new takeaway. I'm used to having // in python. Don't make the dumb mistake of forgetting that this
+// requires floor in javascript. 
 /**
  * Definition for a binary tree node.
  * function TreeNode(val) {
