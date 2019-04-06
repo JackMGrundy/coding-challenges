@@ -16,3 +16,28 @@ Accepted
 Submissions
 921,724
 */
+// 1st attempt: 97th percentile
+/**
+ * Definition for an interval.
+ * function Interval(start, end) {
+ *     this.start = start;
+ *     this.end = end;
+ * }
+ */
+/**
+ * @param {Interval[]} intervals
+ * @return {Interval[]}
+ */
+var merge = function(intervals) {
+    if (intervals.length===0) return [];
+    intervals.sort( (a, b) => a.start - b.start);
+    s = [ intervals[0] ];
+    for (let i = 1; i < intervals.length; i++) {
+        if (intervals[i].start <= s[s.length-1].end) {
+            s[s.length-1].end = Math.max(s[s.length-1].end, intervals[i].end);
+        } else {
+            s.push(intervals[i]);
+        }
+    }
+    return s;
+};
