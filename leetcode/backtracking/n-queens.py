@@ -269,6 +269,11 @@ And...>> is bit shifting...so x >> 1 is the same as // 2.
 While these can produce speedup, I think the decrease in readbility/maintainabiliy frequently isn't
 worth it...a key benefit of python is supposed to be clarity. We might as well use Java or C++ if
 speed is so critical. 
+
+Important note on python array referencing:
+Note that it's path + [createRow(j)] works in the dfs call, because python makes a new list
+when concatenation is used. This is why we don't have to delete anything from the list after the
+dfs call. 
 """
 class Solution:
     def solveNQueens(self, n: int) -> List[List[str]]:
@@ -288,6 +293,37 @@ class Solution:
                 if j+i in diagD: continue
                 rows.add(j); diagU.add(j-i); diagD.add(j+i)
                 dfs(i+1, path + [createRow(j)] )
+                rows.remove(j); diagU.remove(j-i); diagD.remove(j+i)
+                
+        
+        ans, rows, diagU, diagD = [], set(), set(), set()
+        dfs(0, [])
+        return ans
+
+
+# 5th attempt: 88th percentile in speed
+# Interesting that just working with the original list (not using concat to make a new one)
+# Doesn't yield a performance benefit. 
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        
+        def createRow(j):
+            return '.'*j + 'Q' + '.'*(n-j-1)
+        
+        def dfs(i, path):
+            nonlocal ans, rows, diagU, diagD
+            if i >= n:
+                ans.append(path[:])
+                return
+            
+            for j in range(n):
+                if j in rows: continue
+                if j-i in diagU: continue
+                if j+i in diagD: continue
+                rows.add(j); diagU.add(j-i); diagD.add(j+i)
+                path += [createRow(j)]
+                dfs(i+1, path)
+                del path[i]
                 rows.remove(j); diagU.remove(j-i); diagD.remove(j+i)
                 
         
