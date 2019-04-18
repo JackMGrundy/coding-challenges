@@ -94,7 +94,7 @@ class Solution:
         
         
 
-# Attempt: 
+# Attempt 2: 90th percentile in speed.
 # The best answers to this problem almost all take a stack based approach
 # This is a fast/cool answer that adapts the solution for "largest rectangular area
 # in a histrogram" to this problem (see https://www.geeksforgeeks.org/largest-rectangle-under-histogram/)
