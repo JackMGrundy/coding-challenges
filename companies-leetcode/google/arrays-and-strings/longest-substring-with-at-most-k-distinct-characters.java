@@ -74,3 +74,31 @@ class Solution {
         return max;
     }
 }
+
+
+// 99th percentile
+class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        char[] cs = s.toCharArray();
+        int[] counts = new int[256];
+        int numSeen = 0;
+        int res = 0;
+        
+        for (int l = 0, r = 0; r < s.length(); r++) {
+            counts[cs[r]]++;
+            if (counts[cs[r]]==1) {
+                numSeen++;
+            }
+            while (numSeen > k) {
+                counts[cs[l]]--;
+                if (counts[cs[l]]==0) {
+                    numSeen--;
+                }
+                l++;
+            }
+            res = Math.max(res, r-l+1);
+        }
+        
+        return res;
+}
+}
