@@ -101,6 +101,7 @@ Sum of those distances, and you have the value of that spot. Repeat this for eve
 -You can speed things up drastically with a slight shift in logic. In stead of doing a bfs for every 0 spot, do one for every building.
 During the bfs, every time you hit a new cell, tally how far it is from the building currently being examined. After repeating this
 process for each building, the tallies will include all distances from all the buildings...just what we need.
+^Note, that how useful this is depends on the ratio of 0's to 1's...these test cases seem to imply more 1's than 0's.
 -A big speedup (prune technically...): since we're doing BFS's starting from buildings, we can tell quickly if one building
 is not reachable from the others (just count up the total number of buildings reached from the current start point). If that's the case,
 just return -1 immediately. This trick is the difference between being 33rd percentile and 98th (736ms vs 56ms)
