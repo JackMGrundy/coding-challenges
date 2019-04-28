@@ -31,4 +31,19 @@ class Solution:
         
         return res
 
-# 
+
+# 59th percentile. 68ms
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        tail = res = 0
+        head = len(height)-1
+        
+        while tail != head:
+            res = max(res, min(height[tail], height[head])*abs(head-tail))
+            if height[tail] < height[head]:
+                tail += 1
+            else:
+                head -= 1
+        
+        return res
+            
