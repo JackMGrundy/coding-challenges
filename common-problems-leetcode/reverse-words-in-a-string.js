@@ -35,3 +35,11 @@ Accepted
 Submissions
 1,662,513
 */
+// 100th percentile. 56ms.
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var reverseWords = function(s) {
+    return s.trim().split(/[\s]+/).reverse().join(' ');
+};
