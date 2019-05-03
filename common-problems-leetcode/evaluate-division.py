@@ -25,63 +25,56 @@ Accepted
 Submissions
 161,861
 """
-
-# Create a mapping of letter -> (tuples)
-
-for q in query:
-
-    # Check if same letter...
-
-    # check if we already have the pair
-
-    # check if we have the reciprocal
-
-    # check if both letters are in the list of letters...if not...return -1
-
-    # Do a bfs
-    """
-    add to the queue all pairs with the start letter and dist valA if (a,b) or 1/valA if (b, a)...(let, dist)...make sure (a, b) is added
-    pop cur
-    if cur's 2nd letter is target, done
-    otherwise:
-        target: a, e
-        add all the pairs of the 2nd letter with dist equal to:
-            we're going to pop something of the form:
-            (b, c) 
-            or 
-            (c, b) 
-            by design...the first ele was (a, b)
-
-            so if (b, c), dist = dist * (b,c)dist
-               if (c, b), dist = dist / (c,b)dist
-            
-            # Memoize the updated dists...
-            
-            add all the children of c...
-
-            nxt time:
-            we pop off something of the form:
-            (c, d)
-            or
-            (d, c)
-
-            by design, the second ele was (b, c)
-
-            so if (c, d), dist = dist * (c, d)dist
-               if (d, c) dist = dist / (d, c)dist
-            
-            add all the children of d...
-
-            eventually we're going to get something of the form:
-            (d, e)
-            or 
-            (e, d)
-            ...calculate the dist as usual and return
+# 79th percentile. 36ms. Feels good when it works on the first try.
+# Likely longer than need be...but straightforwaord logic at leat
+from collections import defaultdict
+from collections import deque
+class Solution:
+    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
+        letters = set()
+        for eq in equations:
+            A, B = eq
+            letters.add(A)
+            letters.add(B)
         
-
-    if we get to the end without a path...return -1
-    
-
-    along the way memoize for future queries
-
-    """
+        # vals[ ("a", "b") ] = 3.0 -> a/b=3.0
+        vals = defaultdict(list)
+        denoms = defaultdict(list)
+        for i in range(len(values)):
+            A, B = equations[i]
+            val = values[i]
+            vals[ (A, B) ] = val
+            vals[ (B, A) ] = 1.0/val
+            denoms[A].append(B)
+            denoms[B].append(A)
+        
+        res = []
+        for query in queries:
+            A, B = query
+            if A not in letters or B not in letters:
+                res.append(-1.0)
+            elif A==B:
+                res.append(1.0)
+            # bfs to look for a solution
+            else:
+                q = deque()
+                ans = -1.0
+                for denom in denoms[A]:
+                    q.append( ( denom, vals[ (A, denom) ] ) )
+                visited = set([A])
+                
+                while q:
+                    C, dist = q.popleft()
+                    if C in visited:
+                        continue
+                    visited.add(C)
+                    if C==B:
+                        ans = dist
+                        break
+                    else:
+                        for denom in denoms[C]:
+                            q.append( (denom, dist*vals[ C, denom ]) )
+                
+                res.append(ans)
+        
+        return res

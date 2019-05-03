@@ -22,3 +22,82 @@ Accepted
 Submissions
 161,861
 */
+// 100th percentile. 56ms.
+/**
+ * @param {string[][]} equations
+ * @param {number[]} values
+ * @param {string[][]} queries
+ * @return {number[]}
+ */
+var calcEquation = function(equations, values, queries) {
+    // set of letter
+    let letters = new Set();
+    equations.forEach(eq => {
+        let A = eq[0],
+            B = eq[1];
+        letters.add(A);
+        letters.add(B);
+    })
+    
+    // pieces to graph:
+    let linkWeights = {},
+        denoms = {};
+    for (let i = 0; i < equations.length; i++) {
+        eq = equations[i];
+        val = values[i];
+        let A = eq[0],
+            B = eq[1];
+        linkWeights[A+B] = val;
+        linkWeights[B+A] = 1.0/val;
+        if (denoms[A]) denoms[A].push(B)
+        else denoms[A] = [B]
+        
+        if (denoms[B]) denoms[B].push(A)
+        else denoms[B] = [A]
+    }
+    
+    // iterate through queries
+    res = []
+    queries.forEach( query => {
+        let A = query[0],
+            B = query[1];
+    
+        // check if we have the letter
+        if (!letters.has(A) || !letters.has(B)) {
+            res.push(-1.0);
+        }
+        // check if we already have the value
+        else if (A==B) {
+            res.push(1.0);
+        }
+        // bfs to find answer
+        else {
+            let q = [];
+            let visited = new Set();
+            let ans = -1.0;
+            denoms[A].forEach(denom => {
+                q.push( [ denom, linkWeights[ A+denom ] ] );
+            })
+            
+            while (q.length > 0) {
+                let cur = q.shift();
+                let C = cur[0],
+                    val = cur[1];
+                if ( visited.has(C) ) continue
+                visited.add(C);
+                if (C === B) {
+                    ans = val;
+                    break;
+                }
+                else {
+                    denoms[C].forEach(denom => {
+                        q.push( [ denom, val*linkWeights[C+denom] ] );
+                    })
+                }
+            }
+            res.push(ans);
+        }
+    })
+  
+    return res
+};
