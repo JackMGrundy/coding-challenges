@@ -34,3 +34,10 @@ Accepted
 Submissions
 255,048
 """
+
+"""
+Hash table...
+use hashfunction that hashes to range of 0-16...
+double whenever full...
+For random selection...select a random val in the range...check is the slot is taken...if not...try again until a hit
+"""
