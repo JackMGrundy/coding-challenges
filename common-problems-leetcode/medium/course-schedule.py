@@ -34,7 +34,6 @@ class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         
         neighbors = self.getNeighbors(numCourses, prerequisites)
-        print(neighbors)
         visited = [False] * numCourses
         recStack = [False] * numCourses
         
