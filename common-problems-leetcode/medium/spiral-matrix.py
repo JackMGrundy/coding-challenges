@@ -24,38 +24,46 @@ Output: [1,2,3,4,8,12,11,10,9,5,6,7]
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
         if not matrix: return []
-        rStop = len(matrix[0])
-        bStop = len(matrix)
-        lStop = 0
-        tStop = 0
-        res = []
-        eles = len(matrix)*len(matrix[0])
-        count = 0
+
+        totalNumElements = len(matrix) * len(matrix[0])
+        numElementsProcessed = 0
+        answer = []
         
-        while lStop < rStop and bStop > tStop:
-            for i in range(lStop, rStop):
-                res.append(matrix[tStop][i])
-                count += 1
-                if count == eles: return res
-            rStop -= 1
+        topBoundary = 0
+        rightBoundary = len(matrix[0])
+        bottomBoundary = len(matrix)
+        leftBoundary = 0
+        while numElementsProcessed < totalNumElements:
             
-            for j in range(tStop+1, bStop):
-                res.append(matrix[j][rStop])
-                count += 1
-                if count == eles: return res
-            bStop -= 1
+            # Top row
+            for ele in range(leftBoundary, rightBoundary):
+                answer.append(matrix[topBoundary][ele])
+                numElementsProcessed += 1
+            topBoundary += 1
+            if numElementsProcessed==totalNumElements: 
+                return answer
             
-            for i in range(rStop-1, lStop-1, -1):
-                res.append(matrix[bStop][i])
-                count += 1
-                if count == eles: return res
-            lStop += 1
+            # Right column
+            rightBoundary -= 1
+            for ele in range(topBoundary, bottomBoundary):
+                answer.append(matrix[ele][rightBoundary])
+                numElementsProcessed += 1
+            if numElementsProcessed==totalNumElements: 
+                return answer
             
-            for j in range(bStop-1, tStop, -1):
-                res.append(matrix[j][lStop-1])
-                count += 1
-                if count == eles: return res
-            tStop += 1
-        
+            # Bottom row
+            bottomBoundary -= 1
+            for ele in range(rightBoundary-1, leftBoundary-1, -1):
+                answer.append(matrix[bottomBoundary][ele])
+                numElementsProcessed += 1
+            if numElementsProcessed==totalNumElements: 
+                return answer
             
+            # Left column
+            for ele in range(bottomBoundary-1, topBoundary-1, -1):
+                answer.append(matrix[ele][leftBoundary])
+                numElementsProcessed += 1
+            leftBoundary += 1
+            if numElementsProcessed==totalNumElements: 
+                return answer
         
