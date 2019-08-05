@@ -21,6 +21,7 @@ Explanation: There are three ways to climb to the top.
 2. 1 step + 2 steps
 3. 2 steps + 1 step
 """
+# 1st attempt: 89th percentile speed. 32ms. 
 # Many different ways to solve this. Key intuition, is that the # of ways is going to 
 # equal the number of ways you get can within 2 of the end + the number of ways you can get winthin
 # 1 of the end. 
@@ -36,4 +37,4 @@ class Solution(object):
         trail, lead = 1, 1
         for _ in range(n-1):
             trail, lead = lead, trail + lead
-        return(lead)
+        return lead
