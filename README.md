@@ -3,3 +3,4 @@ Solutions to coding challenges
   Javascript
   Java
   SQL
+  Bash Scripting
