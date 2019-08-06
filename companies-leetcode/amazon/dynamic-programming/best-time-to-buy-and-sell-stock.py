@@ -95,4 +95,18 @@ class Solution(object):
                 absMin = price
         
         return(profit)
-       
+
+
+# Python 3. 76ms. 
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        if not prices: 
+            return 0
+        minPriceSeen = prices[0]
+        res = 0
+        for price in prices[1:]:
+            res = max(res, price-minPriceSeen)
+            minPriceSeen = min(minPriceSeen, price)
+        
+        return res
+            
