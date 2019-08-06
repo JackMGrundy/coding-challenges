@@ -28,3 +28,13 @@ class Solution(object):
             temp = max(nums[i], temp + nums[i])
             maxSum = max(maxSum, temp)
         return(maxSum)
+
+
+# Python 3. 72ms. 92nd percentile. 
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        res = temp = nums[0]
+        for num in nums[1:]:
+            temp = max(num, num+temp)
+            res = max(res, temp)
+        return res
