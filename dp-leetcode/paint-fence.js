@@ -44,3 +44,28 @@ var numWays = function(n, k) {
     }
     return arr*k;
 };
+
+// 2nd attempt. 52ms. 60t percentile. 
+/**
+ * @param {number} n
+ * @param {number} k
+ * @return {number}
+ */
+var numWays = function(n, k) {
+    if (n === 0 || k === 0 || (n > 2 && k === 1)) {
+        return 0;
+    }
+    if (n === 1) {
+        return k;
+    }
+    let s = k*k;
+    let a = k;
+    let b;
+    for (let i = 2; i < n; i++) {
+        b = a;
+        a = s - b;
+        s = b*(k-1) + a*k;
+    }
+    
+    return s;
+};
