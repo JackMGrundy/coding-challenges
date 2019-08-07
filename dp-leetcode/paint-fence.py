@@ -72,3 +72,20 @@ class Solution:
             arr = arr*(k-1) + a
         
         return k*arr
+
+
+
+# Python 3. 28ms. 99th percentile
+class Solution:
+    def numWays(self, n: int, k: int) -> int:
+        if n == 0 or k == 0: return 0
+        if n == 1: return k
+        if k == 1 and n > 2: return 0
+        s = k*k
+        a = k
+        for i in range(n-2):
+            b = a
+            a = s - b
+            s = a*k + b*(k-1)
+        
+        return s
