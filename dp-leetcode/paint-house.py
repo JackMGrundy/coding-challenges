@@ -29,4 +29,20 @@ class Solution:
             dp = temp
         
         return min(dp)
+
+
+# Python 3: 56ms 100th percentile
+class Solution:
+    def minCost(self, costs: List[List[int]]) -> int:
+        if not costs:
+            return 0
+        dp = costs[0]
         
+        for house in costs[1:]:
+            temp = [0] * len(dp)
+            temp[0] = house[0] + min(dp[1], dp[2])
+            temp[1] = house[1] + min(dp[0], dp[2])
+            temp[2] = house[2] + min(dp[0], dp[1])
+            dp = temp
+        
+        return min(dp)
