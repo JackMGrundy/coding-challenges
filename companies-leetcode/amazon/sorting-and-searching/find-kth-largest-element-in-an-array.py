@@ -26,7 +26,7 @@ class Solution(object):
         
 
 
-# O(N) solution with heap
+# Solution with heap
 class SolutionHeap(object):
     def findKthLargest(self, nums, k):
         """
