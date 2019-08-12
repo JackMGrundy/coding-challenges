@@ -30,8 +30,29 @@ class Solution(object):
             if 0 <= i < len(grid) and 0 <= j < len(grid[i]) and grid[i][j]=='1': 
                 grid[i][j] = '0'
                 map(processIsland, (i, i, i-1, i+1), (j-1, j+1, j, j))
-                return(1)
-            return(0)
+                return 1
+            return 0
         
         res = sum( [processIsland(i, j) for i in range(len(grid)) for j in range(len(grid[i])) if grid[i][j]=='1'] )
         return(res)
+
+
+
+# Python 3: 88th percentile. 148 ms.
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        if not grid:
+            return 0
+        
+        def identifyIsland(i, j):
+            if 0 <= i < len(grid) and 0 <= j < len(grid[0]) and grid[i][j]=='1':
+                grid[i][j] = '0'
+                identifyIsland(i+1, j)
+                identifyIsland(i-1, j)
+                identifyIsland(i, j+1)
+                identifyIsland(i, j-1)
+                return 1
+            return 0
+
+        res = sum([identifyIsland(i, j) for i in range(len(grid)) for j in range(len(grid[0])) if grid[i][j]=='1'] )
+        return res
