@@ -74,3 +74,41 @@ class Solution {
 }
 
 
+// 2nd attempt. 0ms. 100th percentile
+// recursive
+// Note I did the double if's because I found it easier to read
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+import java.util.Stack;
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return helper(root, null, null);
+    }
+    
+    private boolean helper(TreeNode root, TreeNode largestLeftAncestor, TreeNode smallestRightAncestor) {
+        if (root == null) {
+            return true;
+        }
+        
+        if (root.left != null) {
+            if ( (largestLeftAncestor != null && largestLeftAncestor.val >= root.left.val) || root.left.val >= root.val) {
+                return false;
+            } 
+        }
+
+        if (root.right != null) {
+            if ( (smallestRightAncestor != null && smallestRightAncestor.val <= root.right.val) || root.right.val <= root.val) {
+                return false;
+            } 
+        }
+        
+        return helper(root.left, largestLeftAncestor, root) && helper(root.right, root, smallestRightAncestor);
+    }
+}
