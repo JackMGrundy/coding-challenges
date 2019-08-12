@@ -27,7 +27,7 @@ Output: -1
 # narrow our search to it. If not, it must in the other side. 
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
-        if not nums: return(-1)
+        if not nums: return -1
         l, r = 0, len(nums)-1
         
         while l<=r:
@@ -53,10 +53,14 @@ class Solution:
                 else:
                     r = m-1
         
-        return(-1)
+        return -1
                 
         
 # Second attempt: 
 # 1st attempt was 44ms. 99th percentile is 40ms. I looked at a few examples
 # that were that fast, and they used the same core idea but had more confusing
 # code in my opinion. 
+
+
+
+
