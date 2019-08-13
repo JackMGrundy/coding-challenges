@@ -9,6 +9,7 @@ Example 2:
 
 Input: [[7,10],[2,4]]
 Output: 1
+NOTE: input types have been changed on April 15, 2019. Please reset to default code definition to get new method signature.
 """
 # First attempt - 5th percentile in speed and memory inefficient
 # Definition for an interval.
@@ -109,3 +110,10 @@ class Solution(object):
             else:
                 index += 1
         return(res)
+
+
+
+
+# Another possibility...iterate through a sorted list of starts. Put the ends in a priority queue as you go
+# This lets you compare the starts to the nearest end. Given this logic you can solve the problem similar to the above logic.
+# I think it's easier to just think about extracting the ends and sorting them though. 
