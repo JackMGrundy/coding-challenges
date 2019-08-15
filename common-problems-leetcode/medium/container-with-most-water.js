@@ -26,18 +26,18 @@ Submissions
  * @return {number}
  */
 var maxArea = function(height) {
-    let res = 0,
-        tail = 0,
-        head = height.length-1;
+    let mostWater = 0,
+        left = 0,
+        right = height.length-1;
       
-      while (tail < head) {
-          res = Math.max(res, Math.min(height[tail], height[head])*Math.abs(head-tail));
-          if (height[tail] < height[head]) {
-              tail++;
+      while (left < right) {
+        mostWater = Math.max(mostWater, Math.min(height[left], height[right])*Math.abs(right-left));
+          if (height[left] < height[right]) {
+              left++;
           } else {
-              head--;
+              right--;
           }
       }
       
-      return res;
+      return mostWater;
   };
