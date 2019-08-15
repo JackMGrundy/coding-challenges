@@ -20,21 +20,22 @@ Accepted
 Submissions
 805.1K
 */
-// 78th percentile 3ms
+// 94th percentile 2ms
 class Solution {
     public int maxArea(int[] height) {
-        int res = 0;
-        int tail = 0;
-        int head = height.length-1;
+        int mostWater = 0;
+        int left = 0;
+        int right = height.length-1;
         
-        while (tail < head) {
-            res = Math.max(res, Math.min(height[tail], height[head])*Math.abs(head-tail));
-            if (height[tail] < height[head]) {
-                tail++;
+        while (left < right) {
+            mostWater = Math.max(mostWater, (right-left)*Math.min(height[left], height[right]));
+            if (height[left] < height[right]) {
+                left++;
             } else {
-                head--;
-            }            
+                right--;
+            }
         }
-        return res;
+        
+        return mostWater;
     }
 }
