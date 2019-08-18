@@ -41,7 +41,7 @@ class Solution:
             if (root.val in [p.val, q.val]):
                 return root
             if ( root.val > p.val and root.val < q.val) or ( root.val < p.val and root.val > q.val):
-                return root;
+                return root
             
             # Prep next iteration
             if root.val > p.val and root.val > q.val:
