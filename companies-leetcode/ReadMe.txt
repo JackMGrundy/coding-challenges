@@ -1,0 +1,1 @@
+For each of these companies, many of the problems are under the "common-problems-leetcode" folder. Also, companies apparently often ask the same questions...questions aren't duplicated in multiple folders if that's the case.
