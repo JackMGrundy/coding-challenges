@@ -19,3 +19,68 @@ Input words contain only lowercase letters.
 Follow up:
 Try to solve it in O(n log k) time and O(n) extra space.
 */
+// 6ms. 96th percentile.
+// technically n log n. using built ins.
+import java.util.*;
+class Solution {
+    public List<String> topKFrequent(String[] words, int k) {
+        Map<String, Integer> counts = new HashMap<String, Integer>();
+        for (String word : words) {
+            counts.put(word, counts.getOrDefault(word, 0)+1);
+        }
+        
+        Comparator<String> wordCountsComparator = new Comparator<String>() {
+            
+            public int compare(String a, String b) {
+                if (counts.get(a) != counts.get(b)) {
+                    return counts.get(b) - counts.get(a);
+                } else {
+                    return a.compareTo(b);
+                }
+            }
+        };
+        
+        Set<String> uniqueWords = counts.keySet();
+        List<String> kMostFrequentWords = new ArrayList<String>(uniqueWords);
+        
+        Collections.sort(kMostFrequentWords, wordCountsComparator);
+        
+        return kMostFrequentWords.subList(0, k);
+    }
+}
+
+
+
+// 6ms. 96th percentile.
+// nlogk using heap
+import java.util.*;
+class Solution {
+    public List<String> topKFrequent(String[] words, int k) {
+        Map<String, Integer> counts = new HashMap<String, Integer>();
+        for (String word : words) {
+            counts.put(word, counts.getOrDefault(word, 0)+1);
+        }
+        
+        Comparator<String> wordCountsComparator = new Comparator<String>() {
+            public int compare(String a, String b) {
+                if (counts.get(a) != counts.get(b)) {
+                    return counts.get(b) - counts.get(a);
+                } else {
+                    return a.compareTo(b);
+                }
+            }
+        };
+        
+        PriorityQueue<String> pq = new PriorityQueue<String>(wordCountsComparator);
+        List<String> kMostFrequentWords = new ArrayList<String>();
+        
+        for (Map.Entry<String, Integer> entry : counts.entrySet()) {
+            pq.offer(entry.getKey());
+        }
+        for (int i = 0; i < k; i++) {
+            kMostFrequentWords.add(pq.poll());
+        }
+        
+        return kMostFrequentWords;
+    }
+}
