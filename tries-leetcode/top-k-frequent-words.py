@@ -19,3 +19,20 @@ Input words contain only lowercase letters.
 Follow up:
 Try to solve it in O(n log k) time and O(n) extra space.
 """
+
+# Built ins...technicall nlogn
+# 64ms. 77th percentile
+class Solution:
+    def topKFrequent(self, words: List[str], k: int) -> List[str]:
+        counts = Counter(words).most_common(len(words))
+        counts.sort(key=lambda x: (-x[1], x[0]))
+        return [ x[0] for x in counts[0:k] ]
+
+""" 
+To do better than n log n you can:
+1) Count the frequencies and put them into a heap. Then get the max element k times. 
+2) Count the frequencies. Then use quick select to get the k best. 
+3) Most involved but best method space and memory wise...use a trie to count the number
+of times each word appears. Then use a heap to get k best...way too involved imo
+unless the use case really calls for it...
+"""

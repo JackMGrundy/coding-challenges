@@ -19,3 +19,54 @@ Input words contain only lowercase letters.
 Follow up:
 Try to solve it in O(n log k) time and O(n) extra space.
 */
+
+// Built ins. Technically nlogn
+// 64ms. 92nd percentile.
+/**
+ * @param {string[]} words
+ * @param {number} k
+ * @return {string[]}
+ */
+var topKFrequent = function(words, k) {
+    let counts = {};
+    words.map( word => {
+        counts[word] = word in counts ? counts[word]+1 : 1;
+    });
+    
+    let topKFrequentWords = Object.keys(counts).sort( (a,b) => {
+        if (counts[a] !== counts[b]) {
+            return counts[b]-counts[a];
+        } else {
+            return a.localeCompare(b);
+        }
+    }).slice(0,k);
+    
+    return topKFrequentWords;
+};
+
+
+
+
+// Using reduce instead...same performance
+/**
+ * @param {string[]} words
+ * @param {number} k
+ * @return {string[]}
+ */
+var topKFrequent = function(words, k) {
+    const counts = words.reduce( (a,b) => {
+        b in a ? a[b]++ : a[b] = 1;
+        return a;
+    }, {});
+
+    
+    let topKFrequentWords = Object.keys(counts).sort( (a,b) => {
+        if (counts[a] !== counts[b]) {
+            return counts[b]-counts[a];
+        } else {
+            return a.localeCompare(b);
+        }
+    }).slice(0,k);
+    
+    return topKFrequentWords;
+};
