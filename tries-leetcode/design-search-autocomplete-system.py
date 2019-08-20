@@ -225,22 +225,6 @@ class TrieNode {
         this.children = new TrieNode[27];
         this.times = 0;
     }
-    
-    public String toString() {
-        char[] alphabet = new char[27];
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i <  26; i++) {
-            if (this.children[i] != null) {
-                String nxt = String.valueOf( (char) (i+97) );
-                s.append(nxt + ", ");
-            } else {
-                s.append("_, ");
-            }
-        }  
-        s.append(". times: " + this.times); 
-        return s.toString();
-    }
-    
 }
 
 class AutocompleteSystem {
@@ -379,6 +363,159 @@ class AutocompleteSystem {
                 } else {
                     char c = (char) (i+97);
                     extendedSentence = sentence + String.valueOf(c);
+                }
+                updateSentenceCounts(root.children[i], extendedSentence);
+            }
+        }
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+# Optimized
+import java.util.*;
+class TrieNode {
+    TrieNode[] children;
+    int times;
+    
+    public TrieNode() {
+        this.children = new TrieNode[256];
+        this.times = 0;
+    }
+}
+
+class AutocompleteSystem {
+    TrieNode trie;
+    String currentSearch;
+    TrieNode currentSearchRoot;
+    List<String> currentRecommendations;
+    Map<String, Integer> sentenceCounts;
+        
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        this.trie = createTrie(sentences, times);
+        this.currentSearch = "";
+        this.currentSearchRoot = this.trie;
+        this.currentRecommendations = null;
+        this.sentenceCounts = new HashMap<String, Integer>();
+    }
+    
+    public TrieNode createTrie(String[] sentences, int[] times) {
+        TrieNode trie = new TrieNode();
+        TrieNode root;
+        int sentenceId = 0;
+        for (String sentence : sentences) {
+            root = trie;
+            for (char c : sentence.toCharArray()) {
+                charIndex = c-'a';    
+                
+                if (root.children[charIndex] == null) {
+                    root.children[charIndex] = new TrieNode();
+                }
+                root = root.children[charIndex];
+            }
+            root.times = times[sentenceId++];
+        }    
+        return trie;
+    }
+    
+    public void insertSentence(String sentence) {
+        TrieNode root = this.trie;
+        for (char c : sentence.toCharArray()) {
+            charIndex = c-'a';
+            
+            if (root.children[charIndex] == null) {
+                root.children[charIndex] = new TrieNode();
+            }
+            root = root.children[charIndex];
+        }
+        root.times++;
+    }
+    
+    
+    public List<String> input(char c) {
+        int cIndex = c-'a';
+        
+        if (c == '#') {
+            insertSentence(this.currentSearch);
+            this.currentSearch = "";
+            this.currentRecommendations = null;
+            this.currentSearchRoot = this.trie;
+            return new ArrayList<String>();
+        } else if (this.currentSearchRoot.children[cIndex]==null) {
+            this.currentSearch += String.valueOf(c);
+            this.currentRecommendations = null;
+            this.currentSearchRoot = new TrieNode();
+            return new ArrayList<String>();
+        } else {
+            this.currentSearch += String.valueOf(c);
+            this.currentSearchRoot = this.currentSearchRoot.children[cIndex];
+            this.updateRecommendations();
+            int numRecsAvailable = Math.min(3, this.currentRecommendations.size());
+            return this.currentRecommendations.subList(0, numRecsAvailable);
+        }
+    }
+    
+    public void updateRecommendations() {
+        this.sentenceCounts = new HashMap<String, Integer>();
+        
+        if (this.currentRecommendations == null) {
+            this.currentRecommendations = new ArrayList<String>();
+            updateSentenceCounts(this.currentSearchRoot, "");
+            
+            Comparator<String> sentenceComparator = new Comparator<String>() {
+                
+                public int compare(String a, String b) {
+                    if (sentenceCounts.getOrDefault(a, 0) != sentenceCounts.getOrDefault(b, 0)) {
+                        return sentenceCounts.getOrDefault(b, 0) - sentenceCounts.getOrDefault(a, 0);
+                    } else {
+                        return a.compareTo(b);
+                    }
+                }
+            };
+            
+            PriorityQueue<String> pq = new PriorityQueue<String>(sentenceComparator);
+            for (Map.Entry<String, Integer> entry : this.sentenceCounts.entrySet()) {
+                pq.offer(entry.getKey());
+            }
+            while (pq.size() > 0) {
+                String nxt = pq.poll();
+                this.currentRecommendations.add(nxt);
+            }
+        } else {
+            char newCharacter = this.currentSearch.charAt(this.currentSearch.length()-1);
+            ArrayList<String> updatedRecommendations = new ArrayList<String>();
+            for (String s : this.currentRecommendations) {
+                
+                if (s.length() >= this.currentSearch.length() &&
+                    s.charAt(this.currentSearch.length()-1) == newCharacter) {
+                    updatedRecommendations.add(s);
+                }
+            }
+            this.currentRecommendations = updatedRecommendations;
+        }
+    }
+    
+
+    public void updateSentenceCounts(TrieNode root, String sentence) {        
+            
+        if (root.times > 0) {
+            this.sentenceCounts.put(this.currentSearch + sentence, root.times);
+        }
+        
+        for (int i = 0; i < 27; i++) {
+            if (root.children[i] != null) {
+                String extendedSentence;
+                char c = (char) (i+97);
+                extendedSentence = sentence + String.valueOf(c);
                 }
                 updateSentenceCounts(root.children[i], extendedSentence);
             }
