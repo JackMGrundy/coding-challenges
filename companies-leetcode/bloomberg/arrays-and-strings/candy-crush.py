@@ -195,16 +195,12 @@ class Solution:
 
 
 
-# 220ms. 52nd percentile.
-# A slower...but cleaner
+# 208ms. 61st percentile
+# cleaner
 class Solution:
     streakThreshold = 3
     
-
     def candyCrush(self, board: List[List[int]]) -> List[List[int]]:
-        if not board:
-            return [[]]
-        
         crushed = True
         while crushed:
             crushed, board = self.crush(board)
@@ -212,7 +208,6 @@ class Solution:
                 board = self.drop(board)
         return board
     
-
     def crush(self, board):
         squaresToCrush = [ [ 0 for square in row ] for row in board ]
         crushed = False
@@ -238,21 +233,15 @@ class Solution:
         
         return (crushed, board)
 
-
+    
     def drop(self, board):
-        
         for x in range(len(board[0])):
-            tail = runner = len(board)-1
-            while runner >= 0 and tail >= 0:
-                while tail >= 0 and board[tail][x] != 0:
+            tail = len(board)-1
+            for runner in range(len(board)-1, -1, -1):
+                if board[runner][x] > 0:
+                    board[tail][x] = board[runner][x]
                     tail -= 1
-                runner = tail
-                
-                while runner >= 0 and board[runner][x] == 0:              
-                    runner -= 1
-                
-                while runner >= 0 and tail >= 0 and board[tail][x] == 0 and board[runner][x] != 0:
-                    board[tail][x], board[runner][x] = board[runner][x], board[tail][x]
-                    tail -= 1
-                    runner -= 1
+            for i in range(tail, -1, -1):
+                board[i][x] = 0
+
         return board
