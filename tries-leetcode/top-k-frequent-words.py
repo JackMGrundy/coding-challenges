@@ -22,6 +22,7 @@ Try to solve it in O(n log k) time and O(n) extra space.
 
 # Built ins...technicall nlogn
 # 64ms. 77th percentile
+from collections import Counter
 class Solution:
     def topKFrequent(self, words: List[str], k: int) -> List[str]:
         counts = Counter(words).most_common(len(words))
