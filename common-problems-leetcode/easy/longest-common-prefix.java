@@ -22,9 +22,6 @@ class Solution {
         if (strs.length == 0) {
             return "";
         }
-        if (strs.length == 1) {
-            return strs[0];
-        }
         int longestCommon = 0;
         int minLength = Integer.MAX_VALUE;
         for (String word : strs) {
@@ -32,7 +29,6 @@ class Solution {
                 minLength = word.length();
             }
         }
-        
         
         for (int i = 0; i < minLength; i++) {
             char curChar = strs[0].charAt(i);
