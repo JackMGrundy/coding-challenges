@@ -34,3 +34,79 @@ Accepted
 Submissions
 255,048
 */
+// 120ms. 99th percentile.
+// This actually has a problem...
+/**
+ * Initialize your data structure here.
+ */
+var RandomizedSet = function() {
+    this.valsToIds = {};
+    this.idsToVals = {};
+    this.smallestId = 0;
+    this.nextId = 0;
+};
+
+/**
+ * Inserts a value to the set. Returns true if the set did not already contain the specified element. 
+ * @param {number} val
+ * @return {boolean}
+ */
+RandomizedSet.prototype.insert = function(val) {
+    if (val in this.valsToIds) {
+        return false;
+    }
+    
+    let valsId = this.nextId;
+    this.nextId += 1;
+    this.idsToVals[valsId] = val;
+    this.valsToIds[val] = valsId;
+    
+    return true;
+};
+
+/**
+ * Removes a value from the set. Returns true if the set contained the specified element. 
+ * @param {number} val
+ * @return {boolean}
+ */
+RandomizedSet.prototype.remove = function(val) {
+    if ( !(val in this.valsToIds) ) {
+        return false;
+    } 
+
+    let valsId = this.valsToIds[val];
+    delete this.valsToIds[val];
+    delete this.idsToVals[valsId];
+    
+    if (valsId === this.smallestId) {
+        this.smallestId += 1;
+        return true;
+    } else {
+        let replacementVal = this.idsToVals[this.smallestId];
+        delete this.idsToVals[this.smallestId];
+        this.smallestId += 1;
+        this.valsToIds[replacementVal] = valsId;
+        this.idsToVals[valsId] = replacementVal;
+        return true;
+    }
+};
+
+/**
+ * Get a random element from the set.
+ * @return {number}
+ */
+RandomizedSet.prototype.getRandom = function() {
+    if (this.smallestId === this.nextId) {
+        return null;
+    }
+    let randomId = Math.floor(this.smallestId + Math.random()*(this.nextId-this.smallestId));
+    return this.idsToVals[randomId];
+};
+
+/** 
+ * Your RandomizedSet object will be instantiated and called as such:
+ * var obj = new RandomizedSet()
+ * var param_1 = obj.insert(val)
+ * var param_2 = obj.remove(val)
+ * var param_3 = obj.getRandom()
+ */
