@@ -20,3 +20,32 @@ There are four ways to split nums into two subarrays.
 The best way is to split it into [7,2,5] and [10,8],
 where the largest sum among the two subarrays is only 18.
 */
+
+// DP method. O(m * (nums.length)^2)
+// 20ms. 29th percentile. 
+class Solution {
+    public int splitArray(int[] nums, int m) {
+        int[][] dp = new int[nums.length+1][m+1];
+        for (int i = 0; i < nums.length+1; i++) {
+            for (int j = 0; j < m+1; j++) {
+                dp[i][j] = Integer.MAX_VALUE;
+            }
+        }
+        
+        int[] cumSums = new int[nums.length+1];
+        for (int i = 0; i < nums.length; i++) {
+            cumSums[i+1] = cumSums[i] + nums[i];
+        }
+        
+        dp[0][0] = 0;
+        for (int i = 1; i < nums.length+1; i++) {
+            for (int j = 1; j < m+1; j++) {
+                for (int k = 0; k < i; k++) {
+                    dp[i][j] = Math.min(dp[i][j], Math.max(cumSums[i]-cumSums[k], dp[k][j-1]));
+                }
+            }
+        }
+        
+        return dp[nums.length][m];
+    }
+}

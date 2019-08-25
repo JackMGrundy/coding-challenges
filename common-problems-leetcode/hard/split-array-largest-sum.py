@@ -31,19 +31,20 @@ Example
 
 	                 0       1       2      3      4     5
 	 
-	     0           0		 0		 0		0	   0	  0
+	     0           ~		 ~		 ~		~	   ~	  ~
 
-	     1 [7]       0		 7       7      7      7      7
+	     1 [7]       ~		 7       -      -      -      -
 	     
-i        2 [2]       0		 9       7      7      7      7
+i        2 [2]       ~		 9       7      -      -      -
 Next
-usable   3 [5]       0		 14      9      7      7      7
+usable   3 [5]       ~		 14      7      7      -      - 
 element	   
-	     4 [10]      0		 24     14     10     10      7
+	     4 [10]      ~		 24     14     10     10      -
 	 
-	     5 [8]       0		 32     18     14     10     10
+	     5 [8]       ~		 32     18     14     10     10
 
 
+^Note that in the implementation those 0's are actually infinity...but I like how i looks better with the ~'s. 
 
 
 For each target square, iterate through the values in the column to the left of it up to the row above it.
@@ -73,10 +74,22 @@ and "our last split produces a subarray from the split to the end of the array..
 This is optimal substructure with the non-aftereffect property...so we can use dp. The subproblem pertinent to the
 current problem are the subproblems that comprise the first part of the max. 
 """
-
-
-
-
+# Times out on the second to last test case.
+# I'm pretty sure this is correct, but they want an even faster method.
+class Solution:
+    def splitArray(self, nums: List[int], m: int) -> int:
+        dp = [ [float("infinity") for x in range(m+1)] for y in range(len(nums)+1) ]
+        subSums = [ 0 for x in range(len(nums)+1)]
+        for i, num in enumerate(nums):
+            subSums[i+1] = subSums[i]+num
+        
+        dp[0][0] = 0
+        for i in range(1, len(nums)+1):
+            for j in range(1, m+1):
+                for k in range(i):
+                    dp[i][j] = min(dp[i][j], max(dp[k][j-1], subSums[i]-subSums[k]) )
+        
+        return dp[len(nums)][m]
 
 
 
