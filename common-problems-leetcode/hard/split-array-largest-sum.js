@@ -47,3 +47,50 @@ var splitArray = function(nums, m) {
     }
     return dp[nums.length][m];
 };
+
+
+
+// O(Nlog(sum of nums))
+// 52ms. 89th percentile. boom. 
+// love reduce so much. 
+/**
+ * @param {number[]} nums
+ * @param {number} m
+ * @return {number}
+ */
+var splitArray = function(nums, m) {
+    let l = Math.max(...nums);
+    let r = nums.reduce( (a,b) => {
+        return a+b;
+    }, 0);
+    let minValidSum = r;
+    
+    while (l <= r) {
+        let s = Math.floor((l+r) / 2.0);
+        
+        if (sumIsValid(nums, s, m)) {
+            minValidSum = Math.min(minValidSum, s);
+            r = s-1;
+        } else {
+            l = s+1;
+        }
+    }
+    return minValidSum;
+    
+};
+
+var sumIsValid = function(nums, s, m) {
+    let currentTotal = 0;
+    for (let num of nums) {
+        if (currentTotal + num <= s) {
+            currentTotal += num;
+        } else {
+            currentTotal = num;
+            m -= 1;
+            if (m === 0) {
+                return false;
+            }
+        }
+    }
+    return true;
+}

@@ -114,4 +114,36 @@ Therefore, we can combine a binary search with this linear search to find the an
 time. Pretty awesome.
 """
 
-
+# 36ms. 94th percentile. awesome. so simple.
+class Solution:
+    def splitArray(self, nums: List[int], m: int) -> int:
+        
+        l = max(nums)
+        r = sum(nums)
+        minSum = r
+        
+        while l < r:
+            s = (l+r) // 2
+            
+            if self.sumIsValid(nums, s, m):
+                minSum = min(minSum, s)
+                r = s
+            else:
+                l = s+1
+        
+        return minSum
+        
+    
+    
+    def sumIsValid(self, nums, s, m):
+        currentTotal = 0
+        for num in nums:
+            if currentTotal + num <= s:
+                currentTotal += num
+            else:
+                m -= 1
+                currentTotal = num
+                if m == 0:
+                    return False
+        
+        return True
