@@ -20,3 +20,30 @@ There are four ways to split nums into two subarrays.
 The best way is to split it into [7,2,5] and [10,8],
 where the largest sum among the two subarrays is only 18.
 */
+
+// DP method. O(m * (nums.length)^2)
+// 156ms. 18th percentile. 
+/**
+ * @param {number[]} nums
+ * @param {number} m
+ * @return {number}
+ */
+var splitArray = function(nums, m) {
+    const dp = Array.from( {length:nums.length+1}, () => 
+                     Array.from( {length:m+1}, () => Infinity));
+    
+    const subSums = nums.reduce( (a,b,i) => {
+        a.push(a[i]+b);
+        return a;
+    }, [0]);
+    
+    dp[0][0] = 0;
+    for (let i = 1; i < nums.length+1; i++) {
+        for (let j = 1; j < m+1; j++) {
+            for (let k = 0; k < i; k++) {
+                dp[i][j] = Math.min(dp[i][j], Math.max(subSums[i]-subSums[k], dp[k][j-1]));
+            }
+        }
+    }
+    return dp[nums.length][m];
+};
