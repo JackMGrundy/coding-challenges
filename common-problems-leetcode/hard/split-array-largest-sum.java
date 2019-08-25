@@ -49,3 +49,54 @@ class Solution {
         return dp[nums.length][m];
     }
 }
+
+
+
+
+// 1ms. 61st percentile.
+// Note the commented out stream operators.
+// I've been excited about streams but they just killed the performance here.
+// Using those lines drops the performance to 34ms instead of 1ms. 
+import java.util.*;
+class Solution {
+    public int splitArray(int[] nums, int m) {
+        // long l = Arrays.stream(nums).max().getAsInt();
+        // long r = Arrays.stream(nums).sum();
+        long l = 0;
+        long r = 0; 
+        for (int num : nums) {
+            l = Math.max(l, num);
+            r += num;
+        }
+        int minValidSum = Integer.MAX_VALUE;
+        
+        while (l <= r) {
+            int s = (int) Math.floor((l+r)/2.0);
+            
+            if (sumIsValid(nums, s, m)) {
+                minValidSum = Math.min(minValidSum, s);
+                r = s-1;
+            } else {
+                l = s+1;
+            }
+        }
+        
+        return minValidSum;
+    }
+    
+    public boolean sumIsValid(int[] nums, int s, int m) {
+        int currentTotal = 0;
+        
+        for (int num : nums) {
+            if (currentTotal + num <= s) {
+                currentTotal += num;
+            } else {
+                if (--m == 0) {
+                    return false;
+                }
+                currentTotal = num;
+            }
+        }
+        return true;
+    }
+}
