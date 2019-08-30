@@ -46,7 +46,8 @@ There may be multiple valid order of letters, return any one of them is fine.
 Keep a dictionary that maps letters to children
 
 Start a loop looking at pairs of words at a time. Loop through the letters of a pair of words until finding a pair of
-letters that are different. Make sure both letters are keys in the dictionary. Check if the letter in the second word if in the first letter's children. If it isn't add it
+letters that are different. Make sure both letters are keys in the dictionary. Check if the letter in the second word 
+if in the first letter's children. If it isn't add it
 
 Continue to the next pair of words
 
