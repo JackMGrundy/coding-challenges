@@ -87,3 +87,10 @@ class Solution:
             num = num % (currentDigits * 10**(totalDigits-digitsToProcess))
             
         return "".join(res).strip() or "Zero"
+
+
+"""
+Notes:
+It's pretty straightforwards after getting it...make a recursive function to handle base counts. Then
+process the string one chunk at a time. Note the trick of putting empty strings in the dicts.
+"""
