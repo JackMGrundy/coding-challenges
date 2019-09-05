@@ -25,56 +25,40 @@ Accepted
 Submissions
 161,861
 """
-# 79th percentile. 36ms. Feels good when it works on the first try.
-# Likely longer than need be...but straightforwaord logic at leat
-from collections import defaultdict
-from collections import deque
+# 79th percentile. 36ms.
 class Solution:
     def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
-        letters = set()
-        for eq in equations:
-            A, B = eq
-            letters.add(A)
-            letters.add(B)
+        pairs = collections.defaultdict(set)
         
-        # vals[ ("a", "b") ] = 3.0 -> a/b=3.0
-        vals = defaultdict(list)
-        denoms = defaultdict(list)
-        for i in range(len(values)):
-            A, B = equations[i]
-            val = values[i]
-            vals[ (A, B) ] = val
-            vals[ (B, A) ] = 1.0/val
-            denoms[A].append(B)
-            denoms[B].append(A)
+        for i,equation in enumerate(equations):
+            value = values[i]
+            numerator, denominator = equation
+            pairs[numerator].add( (denominator, value) )
+            pairs[denominator].add( (numerator, 1/value) )
         
         res = []
         for query in queries:
-            A, B = query
-            if A not in letters or B not in letters:
+            targetNumerator, targetDenominator = query
+            if targetNumerator not in pairs or targetDenominator not in pairs:
                 res.append(-1.0)
-            elif A==B:
+            elif targetNumerator == targetDenominator:
                 res.append(1.0)
-            # bfs to look for a solution
             else:
-                q = deque()
-                ans = -1.0
-                for denom in denoms[A]:
-                    q.append( ( denom, vals[ (A, denom) ] ) )
-                visited = set([A])
-                
-                while q:
-                    C, dist = q.popleft()
-                    if C in visited:
-                        continue
-                    visited.add(C)
-                    if C==B:
-                        ans = dist
-                        break
-                    else:
-                        for denom in denoms[C]:
-                            q.append( (denom, dist*vals[ C, denom ]) )
-                
-                res.append(ans)
+                visited = set()
+                q = collections.deque([(targetNumerator, 1)])
+                searching = True
+                while q and searching:
+                    curNumerator, val = q.popleft()
+                    visited.add(curNumerator)
+                    for neighbor in pairs[curNumerator]:
+                        denominator, neighborVal = neighbor
+                        if denominator == targetDenominator:
+                            res.append(val*neighborVal)
+                            searching = False
+                            break
+                        elif denominator not in visited:
+                            q.append( (denominator, val*neighborVal) )
+                if not q and searching:
+                    res.append(-1)
         
         return res

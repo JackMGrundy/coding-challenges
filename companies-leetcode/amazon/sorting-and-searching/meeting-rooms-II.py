@@ -113,7 +113,24 @@ class Solution(object):
 
 
 
+# Simple prioirty queue approach:
+# 96ms. 42nd percentile.
+from heapq import *
+class Solution:
+    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
+        if not intervals:
+            return 0
+        
+        intervals.sort(key = lambda x: x[0])
+        pq = []
+        maxOverlap = 0
+        
+        for interval in intervals:
+            start, end = interval
+            while pq and pq[0] <= start:
+                heappop(pq)
+            heappush(pq, end)
+            maxOverlap = max(maxOverlap, len(pq))
+        
 
-# Another possibility...iterate through a sorted list of starts. Put the ends in a priority queue as you go
-# This lets you compare the starts to the nearest end. Given this logic you can solve the problem similar to the above logic.
-# I think it's easier to just think about extracting the ends and sorting them though. 
+        return maxOverlap
