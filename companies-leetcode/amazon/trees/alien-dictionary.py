@@ -57,6 +57,7 @@ Keep a list of visited nodes
 DFS to check for cycles and recover ordering...https://en.wikipedia.org/wiki/Topological_sorting
 Topological sort deal...
 """
+# 40ms. 75 percentile
 class Solution(object):
     def alienOrder(self, words):
         """
@@ -76,7 +77,7 @@ class Solution(object):
                         children[c1].add(c2)
                     break
         
-        res = []
+        
         queue = collections.deque([c for c in degree.keys() if degree[c]==0])
         
         while queue:
