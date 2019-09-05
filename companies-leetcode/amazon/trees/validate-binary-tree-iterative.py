@@ -66,7 +66,7 @@ class Solution:
                 root = root.left
             else:
                 node = stack.pop()
-                root = node.right
+                root = node.right  #Key line
                 if node: 
                     if node.val <= minValue: 
                         return False
