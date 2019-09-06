@@ -76,7 +76,7 @@ class Codec:
 
 """
 Notes:
-	Per usual with tree problems, but piece is figuring out what traversal method to use. In this case preorder is 
+	Per usual with tree problems, big piece is figuring out what traversal method to use. In this case preorder is 
     the way to go. 
 
 	The serialization is straightforwards...especially with recursion...it's just "add root to string...make 
@@ -92,7 +92,8 @@ Notes:
     (enter queue/deque), then set its left equal to a recursive call.
 	Finally set its right equal to another recursive call. It's actually a really cool mirror of preoder traversal. 
 	"Pop the root node...attach its left...recursive calls will continue to be spun up to attach more lefts 
-    until they're aren't more lefts. Then the bottom recursive call will try to attach the right node...and so on as we unwind the call stack."
+    until they're aren't more lefts. Then the bottom recursive call will try to attach the right node...and so on as we 
+    unwind the call stack."
 
 
 	Example:

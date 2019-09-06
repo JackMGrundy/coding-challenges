@@ -28,15 +28,15 @@ class Solution:
                 elif c == ')':
                     count-=1
                     if count < 0:
-                        return(False)
-            return(count==0)
+                        return False
+            return count==0
                     
         
         level = {s}
         while True:
             correct = [x for x in level if check(x)]
             if correct:
-                return(correct)
+                return correct
             level = { s[:i]+s[i+1:] for s in level for i in range(len(s)) }
 
 
