@@ -25,40 +25,39 @@ Accepted
 Submissions
 161,861
 """
-# 79th percentile. 36ms.
+# 99th percentile. 28ms.
 class Solution:
     def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
-        pairs = collections.defaultdict(set)
+        pairs = collections.defaultdict(list)
         
-        for i,equation in enumerate(equations):
-            value = values[i]
-            numerator, denominator = equation
-            pairs[numerator].add( (denominator, value) )
-            pairs[denominator].add( (numerator, 1/value) )
+        for i, equation in enumerate(equations):
+            n, d = equation
+            val = values[i]
+            pairs[n].append( (d, val) )
+            pairs[d].append( (n, 1/val) )
         
         res = []
         for query in queries:
-            targetNumerator, targetDenominator = query
-            if targetNumerator not in pairs or targetDenominator not in pairs:
-                res.append(-1.0)
-            elif targetNumerator == targetDenominator:
-                res.append(1.0)
+            targetN, targetD = query
+            if targetN not in pairs or targetD not in pairs:
+                res.append(-1)
+            elif targetN == targetD:
+                res.append(1)
             else:
+                q = collections.deque([(targetN, 1)])
                 visited = set()
-                q = collections.deque([(targetNumerator, 1)])
                 searching = True
                 while q and searching:
-                    curNumerator, val = q.popleft()
-                    visited.add(curNumerator)
-                    for neighbor in pairs[curNumerator]:
-                        denominator, neighborVal = neighbor
-                        if denominator == targetDenominator:
-                            res.append(val*neighborVal)
+                    n, product = q.popleft()
+                    for neighbor in pairs[n]:
+                        d, factor = neighbor
+                        if d == targetD:
                             searching = False
-                            break
-                        elif denominator not in visited:
-                            q.append( (denominator, val*neighborVal) )
-                if not q and searching:
+                            res.append(product*factor)
+                        elif d not in visited:
+                            visited.add(d)
+                            q.append( (d, product*factor) )
+                if searching:
                     res.append(-1)
-        
+
         return res
