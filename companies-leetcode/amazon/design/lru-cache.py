@@ -21,49 +21,41 @@ cache.get(1);       // returns -1 (not found)
 cache.get(3);       // returns 3
 cache.get(4);       // returns 4
 """
-# First attempt: 65% percentile in speed...uses built in data structures
-from collections import OrderedDict
+# Built ins. 98th percentile. 
+class LRUCache:
 
-class LRUCache(object):
-
-    def __init__(self, capacity):
-        """
-        :type capacity: int
-        """
-        self.cache = OrderedDict()
-        self.size = 0
+    def __init__(self, capacity: int):
+        self.dict = collections.OrderedDict([])
+        self.numItems = 0
         self.capacity = capacity
-        
-    def get(self, key):
-        """
-        :type key: int
-        :rtype: int
-        """
-        if key in self.cache: 
-            value = self.cache[key]
-            del self.cache[key]
-            self.cache[key] = value
-            return(value)
-        else: 
-            return(-1)
-        
-    def put(self, key, value):
-        """
-        :type key: int
-        :type value: int
-        :rtype: void
-        """
-        if key in self.cache: 
-            del self.cache[key]
-            self.cache[key] = value
-        else:
-            if self.size >= self.capacity:
-                self.cache.popitem(last=False)
-                self.size -= 1
-            self.cache[key] = value
-            self.size += 1
-        return()
 
+    def get(self, key: int) -> int:
+        if key not in self.dict:
+            return -1
+        
+        val = self.dict[key]
+        del self.dict[key]
+        self.dict[key] = val
+        return val
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.dict:
+            del self.dict[key]
+            self.dict[key] = value
+            return 
+        
+        if self.numItems == self.capacity:
+            self.dict.popitem(last=False)
+        else:
+            self.numItems += 1
+        
+        self.dict[key] = value
+
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
 
 # Second attempt: 99th percentile...uses linked list
 #Used a doubly linked list with caps of 0 on either end.
