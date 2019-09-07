@@ -129,6 +129,8 @@ Then reduce the lists to unique elements and sort ascending - this helps us to s
 We have to have a positive and we have to have a negative. So we're going to iterate through all those combinations
     ^This step cuts down on a lot of combinations that an approach with two advancing pointers for fist and second
     would explore. 
+
+    The one exception is [0,0,0], which we can check for with counts
 We can instantly tell if we have the requisite third using a hash table that we prepopulate. 
 
 Now we're pretty much home free.
