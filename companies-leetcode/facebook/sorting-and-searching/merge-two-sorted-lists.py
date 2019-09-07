@@ -28,4 +28,4 @@ class Solution:
                 l2 = l2.next
             head = head.next
         head.next = l1 or l2
-        return(res.next)
+        return( es.next

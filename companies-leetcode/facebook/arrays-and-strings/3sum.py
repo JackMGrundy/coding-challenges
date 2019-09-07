@@ -117,7 +117,32 @@ class Solution(object):
                     #Tuples with all different
                     elif negEle < thirdEle < posEle:
                         res.append( [ posEle, negEle, thirdEle ] )
-                    if thirdEle < negEle:
-                        break
-        
-        return(res)
+        return res
+
+
+"""
+Notes:
+We're going to have an at least O(N^2) solution, so sorting is fine.
+Break the positives and negatives into separate lists. 
+Count how many we have of each element
+Then reduce the lists to unique elements and sort ascending - this helps us to sidestep the "no duplicates" part
+We have to have a positive and we have to have a negative. So we're going to iterate through all those combinations
+    ^This step cuts down on a lot of combinations that an approach with two advancing pointers for fist and second
+    would explore. 
+We can instantly tell if we have the requisite third using a hash table that we prepopulate. 
+
+Now we're pretty much home free.
+Check if we have that third element. There are two ways this third element could be a match for us.
+1) Third is equal to first or second. To makes sure we actually have two copies, check counts
+2) Third is a different number from the first two. Here we need a mechanism to deal with duplicates - at some point "third ele"
+    is going to come up again but as pos or neg. Specifically, for a given triplet, if the three numbers are a, b, c and say c is negative,
+    we're going to have
+    pos = a, third = b, neg = c
+    and
+    pos = b, third = a, neg = c
+    To enfore taking one, we can somewhat arbitraily take one of them. To make the writing of it a bit easier, we can just do negEle < thirdEle < posEle
+
+Last bit: if 
+
+
+"""
