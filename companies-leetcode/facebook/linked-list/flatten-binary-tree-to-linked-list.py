@@ -39,7 +39,6 @@ class Solution:
         if not root: return(None)
         stack = [root]
         prev = TreeNode(-1)
-        res = prev
         
         while stack:
             cur = stack.pop()
@@ -51,3 +50,16 @@ class Solution:
             prev.right = cur
             prev.left = None
             prev = prev.right
+
+
+"""
+Notes:
+
+Iteative pre order dfs...
+Process the current node. Put the children on the stack in the opposite order that you want to process.
+Say you put left on last. Then you'll always be popping off a left node until you've gon all the way down to the
+right. Then will go back to the right nodes when we're out of left.
+
+As for this specific problem...At each step we want the last node that was processed. So we just
+keep track of a previous. 
+"""
