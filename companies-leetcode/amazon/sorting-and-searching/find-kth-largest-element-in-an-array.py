@@ -54,6 +54,21 @@ class Solution(object):
         :rtype: int
         """
         return self.quickSelect(nums, k)
+    
+    def quickSelect(self, nums, k):
+        return self._quickSelect(nums, 0, len(nums)-1, k-1)
+
+    def _quickSelect(self, nums, start, end, k):
+        if start >= end:
+            return nums[start]
+        
+        partitionIndex = self.partition(nums, start, end)
+        if partitionIndex == k:
+            return nums[partitionIndex]
+        elif partitionIndex > k:
+            return self._quickSelect(nums, start, partitionIndex-1, k)
+        else:
+            return self._quickSelect(nums, partitionIndex+1, end, k)
 
     def partition(self, nums, start, end):
         left = right = start
@@ -69,22 +84,6 @@ class Solution(object):
             right += 1
         nums[left], nums[end] = nums[end], nums[left]
         return left
-        
-    def _quickSelect(self, nums, start, end, k):
-        if start >= end:
-            return nums[start]
-        
-        partitionIndex = self.partition(nums, start, end)
-        if partitionIndex == k:
-            return nums[partitionIndex]
-        elif partitionIndex > k:
-            return self._quickSelect(nums, start, partitionIndex-1, k)
-        else:
-            return self._quickSelect(nums, partitionIndex+1, end, k)
-    
-    
-    def quickSelect(self, nums, k):
-        return self._quickSelect(nums, 0, len(nums)-1, k-1)
     
     
         
