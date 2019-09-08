@@ -24,16 +24,14 @@ class Solution:
     def mySqrt(self, x: int) -> int:
         if x == 0:
             return 0
-        l = 1
-        r = x
+        l, r = 0, 1 + x//2
         
         while l <= r:
-            m = (l+r)//2
-            if m*m == x or (m*m < x and (m+1)*(m+1) > x):
+            m = l + (r-l)//2
+            if m*m <= x < (m+1)*(m+1):
                 return m
-            
-            if m*m > x:
-                r = m-1
-            else:
+            if m*m < x:
                 l = m+1
+            else:
+                r = m-1
 
