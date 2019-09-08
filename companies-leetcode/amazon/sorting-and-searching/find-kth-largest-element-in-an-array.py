@@ -42,7 +42,8 @@ class SolutionHeap(object):
 
 
 
-# 80ms. 56 percentile
+# 76ms. 80 percentile
+# Pretty proud of that performance. Compares favorably even with built in one liners. 
 # Quick Select Approach.
 # How you're "supposed to do this"
 # Best asymptotically. O(N) average with O(N^2) worst. 
@@ -85,9 +86,6 @@ class Solution(object):
         nums[left], nums[end] = nums[end], nums[left]
         return left
     
-    
-        
-        
         
 """
 Notes:

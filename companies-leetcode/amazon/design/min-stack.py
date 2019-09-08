@@ -75,3 +75,11 @@ class MinStack(object):
 # obj.pop()
 # param_3 = obj.top()
 # param_4 = obj.getMin()
+
+
+"""
+Notes:
+
+
+
+"""

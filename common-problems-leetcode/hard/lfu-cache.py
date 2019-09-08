@@ -31,47 +31,69 @@ class LFUCache:
         self.keyToFrequency = {}
         self.frequencyLists = {}
         self.capacity = capacity
-        self.minFrequency = 1
+        self.minFrequency = 0
+        self.numKeys = 0
 
-    def get(self, key: int) -> int:       
+    def get(self, key: int) -> int:        
         if key not in self.keyToValue:
             return -1
         
-        keyFrequency = self.keyToFrequency[key]
-        del self.frequencyLists[keyFrequency][key]
+        # Increase key's frequency
+        keysPreviousFrequency = self.keyToFrequency[key]
+        keysIncreasedFrequency = keysPreviousFrequency + 1
+        self.keyToFrequency[key] = keysIncreasedFrequency
         
-        updatedValFrequency = keyFrequency+1
-        if updatedValFrequency not in self.frequencyLists:
-             self.frequencyLists[updatedValFrequency] = collections.OrderedDict([])
-        self.frequencyLists[updatedValFrequency][key] = None
-        self.keyToFrequency[key] = updatedValFrequency
-        
-        if len(self.frequencyLists[keyFrequency])==0 and keyFrequency == self.minFrequency:
+        # If the key was the only key with minFrequency, increase minFrequency
+        if self.minFrequency == keysPreviousFrequency and len(self.frequencyLists[keysPreviousFrequency])==1:
             self.minFrequency += 1
-
-        return self.keyToValue[key]
         
-    
+        # Move key to its higher frequency list
+        del self.frequencyLists[keysPreviousFrequency][key]
+        if keysIncreasedFrequency not in self.frequencyLists:
+            self.frequencyLists[keysIncreasedFrequency] = collections.OrderedDict([])
+        self.frequencyLists[keysIncreasedFrequency][key] = None
+        
+        # Return key's value
+        return self.keyToValue[key]
+
     def put(self, key: int, value: int) -> None:
+        # If this is a zero capacity cache, just return 
         if self.capacity <= 0:
             return
         
+        # If the key is present, update its value and increase its frequency with get call
         if key in self.keyToValue:
             self.keyToValue[key] = value
             self.get(key)
             return
-        
-        if len(self.keyToValue) >= self.capacity:
-            popKey, popValue = self.frequencyLists[self.minFrequency].popitem(last=False)
-            del self.keyToValue[popKey]
-            del self.keyToFrequency[popKey]
-        
+            
+        # If at capacity, remove the LRU element with the minimum frequency
+        if self.numKeys == self.capacity:
+            deletedKey, _ = self.frequencyLists[self.minFrequency].popitem(last=False)
+            del self.keyToValue[deletedKey]
+            del self.keyToFrequency[deletedKey]
+        # Otherwise increase numKeys
+        else:
+            self.numKeys += 1
+            
+        # Add the new key with a frequency of 1
         self.keyToValue[key] = value
         self.keyToFrequency[key] = 1
-        self.minFrequency = 1
         if 1 not in self.frequencyLists:
             self.frequencyLists[1] = collections.OrderedDict([])
         self.frequencyLists[1][key] = None
+        
+        # Min frequency must be equal to 1 now
+        self.minFrequency = 1
+        
+        
+        return
+        
+
+# Your LFUCache object will be instantiated and called as such:
+# obj = LFUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
 
 
 # Your LFUCache object will be instantiated and called as such:
