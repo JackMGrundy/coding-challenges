@@ -64,10 +64,28 @@ class Solution:
             if i-maxPalindromeLength >= 1 and s[i-maxPalindromeLength-1:i+1] == s[i-maxPalindromeLength-1:i+1][::-1]:
                 start = i - maxPalindromeLength - 1
                 maxPalindromeLength += 2
-                continue
             
-            if i-maxPalindromeLength >= 0 and s[i-maxPalindromeLength:i+1] == s[i-maxPalindromeLength:i+1][::-1]:
+            elif i-maxPalindromeLength >= 0 and s[i-maxPalindromeLength:i+1] == s[i-maxPalindromeLength:i+1][::-1]:
                 start = i - maxPalindromeLength
                 maxPalindromeLength += 1
         
         return s[start: start+maxPalindromeLength]
+
+"""
+Notes:
+Core idea, when we increase a string by 1 in length, you could at most create a new paldinrome that is 1 or 2 characters longer. 
+
+We don't care about finding new palindromes that are the same length as one we've already found. 
+We steadily increase the length of string we are considering.
+Each time we look back as far as the longest palindrome we've seen so far.
+Note, each time we need to back for two distances...one that considers a string that reaches back 1 greater than we've found so
+far, and one that considers 2 greater than we've found so far. We increase the max string matched so far by those amounts
+respectively if there is a match in either case. 
+
+Good intuition exercise, think about:
+
+abcdefghgfedcba
+
+you have no palindrome until you get to the second g. You look back two and how you have max length 3. You go to f and look back 3 + 1, and use the 
+current char...so effectively trying to make it 2 longer. Once again, new longest plaindrome. This repeats. 
+"""

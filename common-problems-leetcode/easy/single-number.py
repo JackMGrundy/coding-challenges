@@ -23,3 +23,14 @@ class Solution:
             total ^= num
         return total
             
+
+"""
+Notes:
+
+XOR makes this possible without extra space. If two numbers are the same, XOR returns 0...their bits will line up
+perfectly, so they will cancel out. 
+
+The confusing part is how does it work out to XOR a string of numbers...the answer is that XOR is associative. 
+
+a XOR (b XOR c) and (a XOR b) XOR c are the same...
+"""
