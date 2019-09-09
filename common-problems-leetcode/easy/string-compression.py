@@ -58,7 +58,7 @@ Accepted
 Submissions
 133,111
 """
-# 100th percentile. 48 ms. 
+# 66 percentile. 68 ms. 
 class Solution:
     def compress(self, chars: List[str]) -> int:
         if not chars: return []
