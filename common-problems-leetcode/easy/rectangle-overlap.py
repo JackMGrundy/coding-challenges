@@ -18,18 +18,18 @@ Notes:
 Both rectangles rec1 and rec2 are lists of 4 integers.
 All coordinates in rectangles will be between -10^9 and 10^9.
 """
-
+# 32ms. 89th percentile.
 class Solution:
     def isRectangleOverlap(self, rec1: List[int], rec2: List[int]) -> bool:
-        aTopCornerX, aTopCornerY, aBottomCornerX, aBottomCornerY = rec1
-        bTopCornerX, bTopCornerY, bBottomCornerX, bBottomCornerY = rec2
+        rec1BottomLeftX, rec1BottomLeftY, rec1TopRightX, rec1TopRightY = rec1
+        rec2BottomLeftX, rec2BottomLeftY, rec2TopRightX, rec2TopRightY = rec2
         
-        aLeftOfB  = (aBottomCornerX <= bTopCornerX)
-        aBelowB   = (aTopCornerY >= bBottomCornerY)
-        aRightOfB = (aTopCornerX >= bBottomCornerX)
-        aAboveB   = (aBottomCornerY <= bTopCornerY)
+        rec1AboveRec2 = (rec1TopRightY <= rec2BottomLeftY)
+        rec1RightOfRec2 = (rec1TopRightX <= rec2BottomLeftX)
+        rec1BelowRec2 = (rec1BottomLeftY >= rec2TopRightY)
+        rec1LeftOfRec2 = (rec1BottomLeftX >= rec2TopRightX)
         
-        return not (aAboveB or aBelowB or aLeftOfB or aRightOfB)
+        return not (rec1AboveRec2 or rec1RightOfRec2 or rec1BelowRec2 or rec1LeftOfRec2)
 
 
 """
