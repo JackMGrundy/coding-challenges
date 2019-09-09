@@ -54,7 +54,7 @@ class Solution {
 
 
 
-// 2nd attempt: 100th percentile. 1 ms.
+// 100th percentile. 1 ms.
 class Solution {
     public int numIslands(char[][] grid) {
         
