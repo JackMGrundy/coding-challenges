@@ -28,22 +28,23 @@ Example 5:
 Input: "{[]}"
 Output: true
 """
-# 1st attempt: 83rd percentile in speed
+# 83rd percentile in speed
 class Solution:
     def isValid(self, s: str) -> bool:
-        if not s: return(True)
-        if len(s) % 2 == 1: return(False)
-        stack = []
-        d = {')': '(', '}': '{', ']': '['}
-        for c in s:
-            if c in d.values(): 
-                stack.append(c)
-            elif c in d.keys():
-                if stack and d[c]==stack[-1]:
-                    stack.pop()
-                else:
-                    return(False)
-            else:
-                return(False)
+        if not s:
+            return True
         
-        return(not stack)
+        stack = []
+        partner = { ")":"(", "]":"[", "}":"{" }
+        
+        for c in s:
+            if c in ["(", "[", "{"]:
+                stack.append(c)
+            else:
+                if not stack or stack[-1] != partner[c]:
+                    return False
+                stack.pop()
+            
+        return not stack
+            
+                
