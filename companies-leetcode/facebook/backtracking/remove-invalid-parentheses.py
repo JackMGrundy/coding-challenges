@@ -40,11 +40,8 @@ class Solution:
             level = { s[:i]+s[i+1:] for s in level for i in range(len(s)) }
 
 
-# 2nd attempt: I looked through some faster solutions, and as far as I can tell,
-# they achieve speedup by cutting down on the number of items that have to
-# be checked. I found them long and confusing though...would rather have the readability.
-            
-a = ")(f"  
-sol = Solution()
-res = sol.removeInvalidParentheses(a)
-print(res)
+"""
+Notes:
+
+This is basically bfs but we're initializing the queue a level at a time.
+"""
