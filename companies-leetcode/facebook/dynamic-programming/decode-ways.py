@@ -19,14 +19,64 @@ Output: 3
 Explanation: It could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
 """
 
+
+# Simple backtracking dfs with memoization
+# 32ms. 97th percentile. 
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        memo = {}
+        
+        def dfs(curCharIndex):
+            if curCharIndex in memo:
+                return memo[curCharIndex]
+            elif curCharIndex == len(s):
+                return 1 
+            elif curCharIndex > len(s):
+                return 0
+            
+            c = s[curCharIndex]
+            if c == '0':
+                return 0
+            elif c == '1':
+                memo[curCharIndex] = dfs(curCharIndex+1) + dfs(curCharIndex+2)
+            elif c == '2' and curCharIndex+1 < len(s) and s[curCharIndex+1] in ['0', '1', '2', '3', '4', '5', '6']:
+                memo[curCharIndex] = dfs(curCharIndex+1) + dfs(curCharIndex+2)
+            else:
+                memo[curCharIndex] = dfs(curCharIndex+1)
+            return memo[curCharIndex]
+                
+        return dfs(0)
+
+
+# Note that without memoization it times out:
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        
+        def dfs(curCharIndex):
+            if curCharIndex == len(s):
+                return 1 
+            elif curCharIndex > len(s):
+                return 0
+            
+            c = s[curCharIndex]
+            if c == '0':
+                return 0
+            elif c == '1':
+                return dfs(curCharIndex+1) + dfs(curCharIndex+2)
+            elif c == '2' and curCharIndex+1 < len(s) and s[curCharIndex+1] in ['0', '1', '2', '3', '4', '5', '6']:
+                return dfs(curCharIndex+1) + dfs(curCharIndex+2)
+            else:
+                return dfs(curCharIndex+1)
+
+        return dfs(0)
+
+
+
 # Instead of thinking of decoding, think of "taking steps" towards the end.
 # You can take 1 step at a time, except when you hit a pair of #'s between 10 and 26. 
 # Given this perspective, key intuition is: #of ways of getting to point 
 # n = sumOverI(num of ways of getting to n from previous spot i) where i are spots that are
 # 1 action away. 
-
-# Attempt 1: timer osscialtes between 100th percentile and 34th percentile in speed...
-# strange...Over commented. 
 class Solution(object):
     def numDecodings(self, s):
         """
@@ -54,9 +104,4 @@ class Solution(object):
             # - We hit a # and the 2 nums are not between 10 and 26. Then simply set f(n) to f(n-1)
             else:
                 last, cur = [cur, cur]
-        return(cur)
-
-s="12"
-a = Solution()
-res = a.numDecodings(s)
-print(res)
+        return cur
