@@ -11,7 +11,7 @@ For example, given n = 3, a solution set is:
   "()()()"
 ]
 """
-# 1st attempt: 82nd percentile in speed
+# 40ms. 78 percentile. 
 """
 Key intuition:
 At each step (adding a character), there are two options: add ( or add ).
@@ -20,13 +20,26 @@ if there is a ( to pair it with.
 """
 class Solution:
     def generateParenthesis(self, n: int) -> List[str]:
-        ans = []
-        def backtrack(s='', l=0, r=0 ):
-            if l + r == 2 * n: ans.append(s)
-            if l < n:
-                backtrack(s+'(', l+1, r)
-            if r < l:
-                backtrack(s+')', l, r+1)
-            
-        backtrack()
-        return ans
+        validStrings = []
+
+        def helper(opensLeft, closesLeft, s):
+            nonlocal validStrings
+            if opensLeft == closesLeft == 0:
+                validStrings.append(s)
+                return
+            elif opensLeft == closesLeft:
+                helper(opensLeft-1, closesLeft, s+"(")
+            else:
+                if 0 < opensLeft:
+                    helper(opensLeft-1, closesLeft, s+"(")
+                helper(opensLeft, closesLeft-1, s+")")
+        
+        helper(n, n, "")
+        return validStrings
+
+"""
+Notes:
+DFS: At each level, we have a number opens and a number of closes left we can use. If we're out of both, we've finished a string and we append it to
+the result. If we have the same number of each (not 0), then we must use only branch to using an open. Otherwise, if we have an open left, we
+can branch with an additional open. And either way we can branch with an additional close. 
+"""
