@@ -18,15 +18,14 @@ Clarification: The above format is the same as how LeetCode serializes a binary 
 
 Note: Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.
 """
-# Attempt 1: 79th percentile. A clever use of iter attributable to Stefan. 
+# Attempt 1: 82 percentile. 60ms. 
 # Definition for a binary tree node.
-class TreeNode(object):
-    def __init__(self, x):
-        self.val = x
-        self.left = None
-        self.right = None
-        
-from collections import deque
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
 class Codec:
 
     def serialize(self, root):
@@ -35,17 +34,19 @@ class Codec:
         :type root: TreeNode
         :rtype: str
         """
-        if not root: return(None)
+        if not root:
+            return ""
         res = []
-        def helper(node):
-            if not node:
-                res.append("N")
+        def helper(root):
+            if not root:
+                res.append("N,")
                 return
-            res.append(str(node.val))
-            helper(node.left)
-            helper(node.right)
+            res.append(str(root.val)+",")
+            helper(root.left)
+            helper(root.right)
+        
         helper(root)
-        return(' '.join(res))
+        return ''.join(res)
             
         
     def deserialize(self, data):
@@ -54,19 +55,22 @@ class Codec:
         :type data: str
         :rtype: TreeNode
         """
-        if not data: return(None)
+        if not data:
+            return None
+        
         def helper():
-            val = next(dataIter)
+            if not data:
+                return
+            val = data.popleft()
             if val == "N":
                 return
-            node = TreeNode(int(val))
-            node.left = helper()
-            node.right = helper()
-            return(node)
+            root = TreeNode(int(val))
+            root.left = helper()
+            root.right = helper()
+            return root
         
-        dataIter = iter(data.split())
-        root = helper()
-        return( root )
+        data = collections.deque(data.split(","))
+        return helper()
         
 
 # Your Codec object will be instantiated and called as such:
