@@ -19,6 +19,11 @@ nums2 = [3, 4]
 The median is (2 + 3)/2 = 2.5
 """
 
+"""
+[~ ~ ~ 5 ~ ~ ~]
+[~ ~ 3 ~ ~]
+"""
+
 # 108ms. 71st percentile.
 class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
