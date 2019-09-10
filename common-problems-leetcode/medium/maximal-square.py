@@ -43,27 +43,27 @@ class Solution:
 
 
 # can't be lazy...
-# 204ms. 88th percentile
+# 192ms. 99 percentile
 class Solution:
     def maximalSquare(self, matrix: List[List[str]]) -> int:
         if not matrix:
             return 0
 
         dp = [ 0 for x in range(len(matrix[0])+1) ]
-        prevSquare = 0
-        best = 0
+        longestSide = 0
         for j in range(1, len(matrix)+1):
+            prevSquare = 0
             for i in range(1, len(matrix[0])+1):
                 temp = dp[i]
                 if matrix[j-1][i-1] == '1':
                     dp[i] = min(dp[i], dp[i-1], prevSquare)+1
-                    best = max(best, dp[i])
+                    longestSide = max(longestSide, dp[i])
                 else:
                     dp[i] = 0
                 
                 prevSquare = temp
             
-        return best*best
+        return longestSide*longestSide
 
 
 """

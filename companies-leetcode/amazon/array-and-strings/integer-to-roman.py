@@ -42,37 +42,20 @@ Output: "MCMXCIV"
 Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
 """
 
-# 36ms. 72nd percentile.
-class Solution(object):
-    def intToRoman(self, num):
-        """
-        :type num: int
-        :rtype: str
-        """
-        convert = {  1:    ["I"],
-                     4:    ["IV"],
-                     5:    ["V"],
-                     9:    ["IX"],
-                     10:   ["X"],
-                     40:   ["XL"],
-                     50:   ["L"],
-                     90:   ["XC"],
-                     100:  ["C"],
-                     400:  ["CD"],
-                     500:  ["D"],
-                     900:  ["CM"],
-                     1000: ["M"] }  
-        symbolNumbers = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
-    
-        res = []    
-        for symbolNumber in symbolNumbers:
-
-            while num >= symbolNumber:
-                res += convert[symbolNumber]
-                num -= symbolNumber
+# 56ms. 70 percentile.
+class Solution:
+    def intToRoman(self, num: int) -> str:
+        numbers = [ 1,    4,    5,   9,   10,   40,  50,   90,  100, 400,  500, 900, 1000 ]
+        symbols = [ "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M" ]
+        
+        res = []
+        while num:
+            while numbers and num >= numbers[-1]:
+                res += [symbols[-1]]*(num//numbers[-1])
+                num %= numbers[-1]
             
-            if num == 0:
-                return ''.join(res)
-
-
-# 
+            if numbers:
+                numbers.pop()
+                symbols.pop()
+        
+        return ''.join(res) if res else ""
