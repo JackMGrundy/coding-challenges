@@ -52,7 +52,25 @@ class Solution:
                 r -= 1
         
         return res
-                
+
+
+"""
+Notes:
+
+The core intuition for the pincer movement approach is amazingly simple. As we advance the pincers, we start with the far left and far right columns.
+We know that regardless of what's between them, in the column after (or before on the right side) the min column, we're going to have another column
+at the far end to contain the water at least to height of that min column:
+                                -
+                                -
+-                               -
+-                               -
+------------------------------  -
+
+^In the cell to the right of the left column, we know we'll get at least 2 units of water. In fact, this is the best we can do. It doesn't matter if
+we have a bigger/smaller column between these two. Therefore we can confidently process that column to the right of the far left column. In this way,
+we can keep advancing the pincer...always moving the minimum height end column 1 ahead and then processing. 
+
+"""
             
         
         
