@@ -30,35 +30,48 @@ Follow up:
 Could you solve it in-place? Remember that the board needs to be updated at the same time: You cannot update some cells first and then use their updated values to update other cells.
 In this question, we represent the board using a 2D array. In principle, the board is infinite, which would cause problems when the active area encroaches the border of the array. How would you address these problems?
 """
-# 70th percentile
+# 32ms. 98 percentile. In place.
 class Solution:
     def gameOfLife(self, board: List[List[int]]) -> None:
         """
         Do not return anything, modify board in-place instead.
         """
-        m = len(board)
-        n = len(board[0])
-        neighbors = [ [ 0 for _ in range(n) ] for x in range(m) ]
+        livingInLastRoundCases = [1, 2, 3]
+        # deadInLastRoundCases   = [0, 4]
+        nextRoundLivingCases = [2, 4]
+        nextRoundDeadCases = [0, 1, 3]
         
-        # Iterate through cells
-        for j in range(m):
-            for i in range(n):
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                numNeighbors = 0
+                for neighbor in [(i-1,j), (i+1,j), (i,j-1), (i,j+1), (i-1,j-1), (i+1,j+1), (i+1,j-1), (i-1,j+1)]:
+                    nI, nJ = neighbor
+                    if 0 <= nI < len(board) and 0 <= nJ < len(board[0]) and board[nI][nJ] in livingInLastRoundCases:
+                        numNeighbors += 1
+                
+                if board[i][j] == 1 and numNeighbors in [0, 1]:
+                    board[i][j] = 1
+                elif board[i][j] == 1 and numNeighbors in [2, 3]:
+                    board[i][j] = 2
+                elif board[i][j] == 1 and 3 < numNeighbors:
+                    board[i][j] = 3
+                elif board[i][j] == 0 and numNeighbors == 3:
+                    board[i][j] = 4
+        
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if board[i][j] in nextRoundLivingCases:
+                    board[i][j] = 1
+                elif board[i][j] in nextRoundDeadCases:
+                    board[i][j] = 0
 
-                # Count neighbors in a square around the cell
-                for j_inner in range(max(0, j-1), min(m, j+2)):
-                    for i_inner in range(max(0, i-1), min(n, i+2)):
-                        if j_inner == j and i_inner == i: continue
-                        if board[j_inner][i_inner]==1:
-                            neighbors[j][i] += 1
-        
-        # Apply update
-        for j in range(m):
-            for i in range(n):
-                # cell is alive
-                if board[j][i] == 1:
-                    if neighbors[j][i] < 2 or neighbors[j][i] > 3:
-                        board[j][i] = 0
-                # cell is dead
-                else:
-                    if neighbors[j][i] == 3:
-                        board[j][i] = 1
+"""
+Notes:
+
+We make two passes. For each cell, we record which of the five case (the four given plus the fifth catch all) the square is. If we are looking at a 
+cell with neighbors that have already been updated, we can deduce if the neighbor was alive in the last roow by looking at what case it was labeled
+with...the first, second and third cases given indicate that the cell was alive in the last round. Coincidentally, a "1" also indicates it was
+previously alive, so we can just check if the cell has a 1, 2, or 3 to deduce if the cell is a living neighbor. After labeling all the cells with what case
+they were, we can do anothing pass over the board to fill in the final values. 
+
+"""

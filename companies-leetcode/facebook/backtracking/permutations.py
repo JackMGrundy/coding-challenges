@@ -14,7 +14,7 @@ Output:
   [3,2,1]
 ]
 """
-# 1st attempt: builtin methods. 90th percentile in speed. 
+# Builtins. 90th percentile in speed. 
 from itertools import permutations
 
 class Solution:
@@ -22,17 +22,35 @@ class Solution:
         return(list(permutations(nums)))
 
 
-# 2nd attempt: actual backtracking with recursive DFS. 60th percentile in speed:
+# 44ms. 91 percentile. Backtracking.
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        res = []
-        def dfs(cur, vals):
-            if len(cur)==len(nums):
-                res.append(cur)
-            else:
-                for i, val in enumerate(vals):
-                    dfs(cur + [val], vals[0:i] + vals[i+1:] )
+        nums = collections.deque(nums)
+        permutationLength = len(nums)
+        permutations = []
         
-        dfs([], nums)
-        return(res)
+        def helper(permutation):
+            if len(permutation) == permutationLength:
+                permutations.append(permutation)
+                return
+            
+            for i in range(len(nums)):
+                temp = nums.popleft()
+                helper(permutation + [temp])
+                nums.append(temp)
+        
+        helper([])
+        return permutations
+
+
+"""
+Notes:
+
+Standard backtracking problem. This solution uses a deque. Intuitively, at the very first call, we spin up a recusrive call with all the nums
+as options except the first one, which has already been appended to a permutation...after doing all those recursive calls, we'll finally get back to
+the first level, add back that first element, and then do it all again but with the second element as the first one selected. This kind of process
+is repteaded at every level.
+
+By using a deck, we can ensure that we repeatedly cycle through all the elements in the same order...we pop elements form the left and append on the right. 
+"""
         
