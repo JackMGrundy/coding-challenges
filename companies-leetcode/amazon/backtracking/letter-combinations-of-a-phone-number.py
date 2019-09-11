@@ -13,6 +13,7 @@ Note:
 Although the above answer is in lexicographical order, your answer could be in any order you want.
 """
 # Solution with itertools
+# 8ms. 99th percentile. 
 class Solution(object):
     def letterCombinations(self, digits):
         """
@@ -38,38 +39,40 @@ class Solution(object):
         inputs = [ numToLet[digit] for digit in digits ]
         res = list(itertools.product(*inputs))
         res = [ ''.join(item) for item in res]
-        return(res)
+        return res
 
 
 
 
 # Solution without itertools
+# 12ms. 94th percentile.
 class Solution(object):
-    
-    def helper(self, res, mapping, digits, indx, cur):
-        if indx==len(digits):
-            res.append(cur)
-            return
-        else:
-            for letter in mapping[digits[indx]]:
-                self.helper(res, mapping, digits, indx+1, cur+letter )
-        
-        
     def letterCombinations(self, digits):
         """
         :type digits: str
         :rtype: List[str]
         """
-        if len(digits)==0: return([])
-        mapping = {'2':'abc',
-               '3':'def',
-               '4':'ghi',
-               '5':'jkl',
-               '6':'mno',
-               '7':'pqrs',
-               '8':'tuv',
-               '9':'wxyz'}
-    
+        if not digits:
+            return []
+        digitsToLetters = {
+                            "2": ["a", "b", "c"],
+                            "3": ["d", "e", "f"],
+                            "4": ["g", "h", "i"],
+                            "5": ["j", "k", "l"],
+                            "6": ["m", "n", "o"],
+                            "7": ["p", "q", "r", "s"],
+                            "8": ["t", "u", "v"],
+                            "9": ["w", "x", "y", "z"]}
+        
         res = []
-        self.helper(res=res, mapping=mapping, digits=digits, indx=0, cur="")
-        return(res)
+        def dfs(curIndex, s):
+            if curIndex == len(digits):
+                res.append(s)
+                return
+            
+            for letter in digitsToLetters[digits[curIndex]]:
+                dfs(curIndex+1, s+letter)
+        
+        dfs(0, "")
+        return res
+        

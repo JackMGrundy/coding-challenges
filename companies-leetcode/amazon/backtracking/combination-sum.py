@@ -25,62 +25,54 @@ A solution set is:
   [3,5]
 ]
 """
-# First attempt - very slow
-class Solution(object):
-    def combinationSum(self, candidates, target):
-        """
-        :type candidates: List[int]
-        :type target: int
-        :rtype: List[List[int]]
-        """
-        import copy
-        
-        res = set()
-        stack = [ ]
-        for c in candidates:
-            stack.append([c])
-        
-        while stack:
-            cur = stack.pop()
-            s = sum(cur)
-            
-            if s==target:
-                cur.sort()
-                res.add(tuple(cur))
-            elif s<target:
-                for c in candidates:
-                    nxt = copy.deepcopy(cur)
-                    nxt.append(c)
-                    stack.append(nxt)         
-        
-        res = [ list(r) for r in res ]
-        return(res)
-                    
-            
-# Better solution - very fast
-class Solution(object):
-    def combinationSum(self, candidates, target):
-        """
-        :type candidates: List[int]
-        :type target: int
-        :rtype: List[List[int]]
-        """
+# 76ms. 65 percentile. 
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
         res = []
-        candidates.sort()
-        def helper(remain, stack):
-            if remain==0:
-                res.append(stack)
+        
+        def dfs(remainder, curNumbers):
+            if remainder == 0:
+                res.append(curNumbers)
                 return
-                
-            for c in candidates:
-                if (c > remain): 
-                    break
-                # Avoids duplicates such as [2, 2, 3] and [2, 3, 2]
-                if stack and c < stack[-1]: 
+            if remainder < 0:
+                return
+            
+            for candidate in candidates:
+                if curNumbers and candidate < curNumbers[-1]:
                     continue
-                else: 
-                    helper(remain - c, stack + [c])
+                if 0 <= remainder - candidate:
+                    dfs(remainder - candidate, curNumbers + [candidate])
         
-        
-        helper(target, [])
-        return(res)
+        dfs(target, [])
+        return res
+
+
+"""
+Notes:
+
+The simple part of this problem is doing a backtracking dfs style approach...at each level of recursion, just try subtracting each number in 
+the list of candidates. If you get 0, great that's a valid combination. If it's less than 0 quick that line of search. If it's greater than 
+0 spin up another level of recusion. 
+
+The tricky part of this problem is dealing with the duplicates bit. My favorite idea so far to accomplish this is the
+if curNumbers and candidate < curNumbers[-1]:
+    continue
+
+bit.
+
+To understand this, consider this example:
+Your input
+[2,3,6,7]
+7
+Output
+[[2,2,3],[2,3,2],[3,2,2],[7]]
+Expected
+[[2,2,3],[7]]
+
+The problem is the:
+[2,2,3],[2,3,2],[3,2,2]
+
+that bit of code enforces that we only consider combinations that are montonically increasing. That fixes this instance. 
+
+This is a much better (in terms of speed, memory and arguably readbility) approach than doing something like keeping a set of combinations found so far. 
+"""
