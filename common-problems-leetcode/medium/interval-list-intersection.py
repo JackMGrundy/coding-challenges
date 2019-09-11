@@ -52,3 +52,31 @@ class Solution:
                     bLow, bHigh = B[bI]
         
         return res
+
+
+"""
+Notes:
+
+
+        Cases
+        ----------
+          -----
+          
+        -------
+           --------
+        
+        -----
+              -----
+
+  The only case where there is no overlap is where the minEnd < maxStart
+  Otherise we append. 
+  The overlap is going to be the range from maxStart to minEnd. 
+
+  Note, because the question says that A and B are each pairwise disjont, we don't have to worry about the case of
+
+    --~~~~
+  ----------  
+
+where there are two consecutive intervals in A or in B that could actually be combined into a single combined bit of intersection. 
+
+"""
