@@ -20,31 +20,39 @@ Accepted
 Submissions
 805.1K
 """
-# Timeout: Tried super quick O(N^2) brute force as a benchmark
+# 140ms. 82 percentile. 
 class Solution:
     def maxArea(self, height: List[int]) -> int:
-        h = len(height); res = 0
+        if not height:
+            return 0
+        leftEnd, rightEnd = 0, len(height)-1
+        leftHeight, rightHeight = height[0], height[-1]
+        mostWaterContained = 0
         
-        for j in range(h):
-            for i in range(h):
-                res = max(res, min(height[j], height[i])*abs(j-i))
-        
-        return res
-
-
-# 59th percentile. 68ms
-class Solution:
-    def maxArea(self, height: List[int]) -> int:
-        tail = res = 0
-        head = len(height)-1
-        
-        while tail != head:
-            res = max(res, min(height[tail], height[head])*abs(head-tail))
-            if height[tail] < height[head]:
-                tail += 1
-            else:
-                head -= 1
-        
-        return res
+        while leftEnd < rightEnd:
+            mostWaterContained = max(mostWaterContained, (rightEnd - leftEnd)*min(leftHeight, rightHeight))
             
+            if leftHeight <= rightHeight:
+                leftEnd += 1
+                leftHeight = height[leftEnd]
+            else:
+                rightEnd -= 1
+                rightHeight = height[rightEnd]
+        
+        return mostWaterContained        
 
+
+"""
+Intuition
+Same intuition as trapping rain water...
+
+                                -
+                                -
+-                               -
+-                               -
+------------------------------  -
+
+^In the cell to the right of the left column, we know we'll get at least 2 units of water. In fact, this is the best we can do. It doesn't matter if
+we have a bigger/smaller column between these two. Therefore we can confidently process that column to the right of the far left column. In this way,
+we can keep advancing the pincer...always moving the minimum height end column 1 ahead and then processing. 
+"""
