@@ -19,38 +19,6 @@ Accepted
 Submissions
 700,745
 """
-# Quick/dirty implementation
-# 61st percentile. 120 ms
-from collections import defaultdict
-class Solution:
-    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-        groups = defaultdict(list)
-        for s in strs:
-            groups[str(sorted(s))].append(s)
-        
-        res = []
-        for _,val in groups.items():
-            res.append(val)
-        return res
-
-# 61st percentile. 120 ms
-"""
-Interesting that retrieving only the values is as fast as the keys and values...
-maks intuitive sense
-"""
-from collections import defaultdict
-class Solution:
-    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-        groups = defaultdict(list)
-        for s in strs:
-            groups[str(sorted(s))].append(s)
-        
-        res = []
-        for val in groups.values():
-            res.append(val)
-        return res
-
-
 # 61st percentile 120ms
 # cleaner
 from collections import defaultdict
@@ -74,3 +42,26 @@ class Solution:
             groups[''.join(sorted(s))].append(s)
         
         return list(groups.values())
+
+# 148ms 12 percentile.
+# Technically the best asymptotically, but slower due to testing string sizes
+# and constant factors. 
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        groups = collections.defaultdict(list)
+        
+        for s in strs:
+            key = [ 0 for _ in range(26) ]
+            for c in s:
+                key[ord(c) - ord('a')] += 1
+            groups[tuple(key)].append(s)
+        
+        return groups.values()
+
+
+"""
+Notes:
+
+It's Klog(K) to sort each string. the last approach is technically faster because it's just K...no sorting.
+
+"""
