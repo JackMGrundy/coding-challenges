@@ -84,3 +84,10 @@ class Solution:
             res += row
         
         return ''.join(res)
+
+"""
+Notes:
+
+Idea is to increase the row number until you've hit the peak...along the way deposit characters in their rows...then descend...
+
+"""

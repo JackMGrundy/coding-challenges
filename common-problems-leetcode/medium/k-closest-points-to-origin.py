@@ -30,76 +30,68 @@ Note:
 -10000 < points[i][1] < 10000
 """
 
-# 36th percentile
-"""
-Inefficient and unreadable...but fun two-liner
-O(Nlog(n))
-"""
-class Solution:
-    def kClosest(self, points: List[List[int]], K: int) -> List[List[int]]:
-        points = sorted([ [(point[0]**2 + point[1]**2)**.5, point[0], point[1] ] for point in points ])[0:K]
-        return [ [point[1], point[2]] for point in points ]
 
-
-# 41st percentile. 404 ms
-"""
-This should be much better than the first solution. This is O(N) on average.
-Uses quicksort algo...idea is that after each partition, we know how many items left of
-the partition are less than all the elements on the right. So keep partitioning until
-we have K elements on the left. Basically we're taking advantage of the fact that
-the items don't have to be returned in any order. 
-"""
-class Solution:
-    def kClosest(self, points: List[List[int]], K: int) -> List[List[int]]:
-        if not K: return []
-        if len(points) <= K: return points
-        points = [ ( (point[0]**2 + point[1]**2)**.5, point[0], point[1] ) for point in points ]
-        
-        def partition(arr, low, high):
-            i = low-1
-            
-            for j in range(low, high+1):
-                if arr[j] <= arr[high]:
-                    i += 1
-                    arr[j], arr[i] = arr[i], arr[j]
-
-            return i
-        
-        
-        def quicksort(arr, low, high):
-            if low < high:
-                p = partition(arr, low, high)
-                
-                # Done
-                if p == K:
-                    return
-                
-                # continue with the right side
-                elif p < K:
-                    quicksort(arr, p, high)
-                
-                # forget the right side, continue with the left
-                elif p > K:
-                    quicksort(arr, low, p-1)
-                
-        
-        quicksort(points, 0, len(points)-1)
-        return [ [ point[1], point[2], ]  for point in points[0:K] ]
-        
-
-# 90th percentile: 344 ms
-"""
-The second solution has better asymptotic complexity, but it looks like for 
-test cases of these sizes, the constant time trump the benefits and a solution utilizing built
-in features like this solution wins. 
-"""
+# 724ms 91 percentile
+# Built ins
 class Solution:
     def kClosest(self, points: List[List[int]], K: int) -> List[List[int]]:
         return sorted(points, key=lambda x: x[0]**2+x[1]**2)[0:K]
 
-# 87th percenilte: 348 ms
-# not a big diff..
+
+# 744ms 74th percentile
+# Quick select
 class Solution:
     def kClosest(self, points: List[List[int]], K: int) -> List[List[int]]:
-        points.sort(key=lambda x: x[0]**2+x[1]**2)
-        return points[0:K]
+        if not points:
+            return []
+        if len(points) <= K:
+            return points
+        pointsWithDistances = [ (x[0]*x[0] + x[1]*x[1], x[0], x[1]) for x in points ]
+        self.quickSelect(pointsWithDistances, K)
+        kClosestPoints = [ (x[1],x[2]) for x in pointsWithDistances[0:K] ]
+        return kClosestPoints
+    
+
+    def quickSelect(self, pointsWithDistances, K):
+        return self._quickSelect(pointsWithDistances, 0, len(pointsWithDistances) - 1, K-1)
+    
+
+    def _quickSelect(self, pointsWithDistances, start, end, K):
+        if start == end:
+            return 
+        
+        partitionIndex = self._partition(pointsWithDistances, start, end)
+        
+        if partitionIndex == K:
+            return
+        elif K < partitionIndex:
+            self._quickSelect(pointsWithDistances, start, partitionIndex - 1, K)
+        else:
+            self._quickSelect(pointsWithDistances, partitionIndex + 1, end, K)
+    
+
+    def _partition(self, pointsWithDistances, start, end):
+        left = right = start
+        
+        m = left + (right - left)//2
+        pointsWithDistances[m], pointsWithDistances[end] = pointsWithDistances[end], pointsWithDistances[m]
+        
+        while right < end:
+            if pointsWithDistances[right][0] < pointsWithDistances[end][0]:
+                pointsWithDistances[right], pointsWithDistances[left] = pointsWithDistances[left], pointsWithDistances[right]
+                left += 1
+            right += 1
+        
+        pointsWithDistances[left], pointsWithDistances[end] = pointsWithDistances[end], pointsWithDistances[left]
+        
+        return left
+        
+
+"""
+Notes:
+
+The first solution wins due to constant factors, but technically it's Nlog(N), while the second solution is O(N).
+Note the second solution is constructed to be in place...one of the main benefits of quick sort...makes the code a bit more complicated though. 
+
+See notes on quick select for second solution info. 
+"""
