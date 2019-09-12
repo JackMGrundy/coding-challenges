@@ -55,21 +55,23 @@ class Solution:
 # point. However, instead of comparing character by character, check entire substrings at once. 
 class Solution:
     def longestPalindrome(self, s: str) -> str:
-        if not s: return ""
-        maxPalindromeLength = 1
+        if not s:
+            return s
+        
         start = 0
+        length = 1
         
         for i in range(len(s)):
             
-            if i-maxPalindromeLength >= 1 and s[i-maxPalindromeLength-1:i+1] == s[i-maxPalindromeLength-1:i+1][::-1]:
-                start = i - maxPalindromeLength - 1
-                maxPalindromeLength += 2
-            
-            elif i-maxPalindromeLength >= 0 and s[i-maxPalindromeLength:i+1] == s[i-maxPalindromeLength:i+1][::-1]:
-                start = i - maxPalindromeLength
-                maxPalindromeLength += 1
-        
-        return s[start: start+maxPalindromeLength]
+            if 0 <= i - length - 1 and s[i-length-1:i+1] == s[i-length-1:i+1][::-1]:
+                start = i - length - 1
+                length += 2
+                
+            elif 0 <= i - length and s[i-length:i+1] == s[i-length:i+1][::-1]:
+                start = i - length
+                length += 1
+                
+        return s[start:start+length]
 
 """
 Notes:
