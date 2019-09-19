@@ -88,4 +88,4 @@ class Solution(object):
                 if degree[c] == 0:
                     queue.append(c)
         
-        return(''.join(res) if len(res)==len(degree) else '')
+        return ''.join(res) if len(res)==len(degree) else ''
