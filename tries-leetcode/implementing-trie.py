@@ -16,7 +16,7 @@ Note:
 You may assume that all inputs are consist of lowercase letters a-z.
 All inputs are guaranteed to be non-empty strings.
 """
-# 136ms. 94th percentile.
+# 132ms. 98th percentile.
 class Trie:
 
     def __init__(self):
@@ -28,10 +28,9 @@ class Trie:
     def insert(self, word: str) -> None:
         """
         Inserts a word into the trie.
-        abc
         """
         root = self.trie
-        for c in list(word):
+        for c in word:
             if c in root:
                 root = root[c]
             else:
@@ -44,25 +43,31 @@ class Trie:
         Returns if the word is in the trie.
         """
         root = self.trie
-        for c in list(word):
-            if c in root:
-                root = root[c]
-            else:
+        for c in word:
+            if c not in root:
                 return False
-        return "#" in root
+            root = root[c]
         
+        return "#" in root
 
     def startsWith(self, prefix: str) -> bool:
         """
         Returns if there is any word in the trie that starts with the given prefix.
         """
         root = self.trie
-        for c in list(prefix):
-            if c in root:
-                root = root[c]
-            else:
+        for c in prefix:
+            if c not in root:
                 return False
+            root = root[c]
         return True
+        
+
+
+# Your Trie object will be instantiated and called as such:
+# obj = Trie()
+# obj.insert(word)
+# param_2 = obj.search(word)
+# param_3 = obj.startsWith(prefix)
         
 
 
