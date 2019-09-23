@@ -15,21 +15,28 @@ Explanation: The palindromes are ["battab","tabbat"]
 
 
 """
-Upon reading this, I immediately think of using a hash table scheme to record valid palindromes as we go 
-along. Then when we later see a match, we record. The problem with this is that it can get really complicated
-and take up a ton of space. For example, the word "aaaaaa" generates the valid pairs "a", "aa", "aaa", "aaaa",
-"aaaaa", "aaaaaa", ... actually any number of a's. Trying to record something like "any word consisting of only
-a's" is frustrating.
-Also, say you wanted to check if a new word was a palindrome. You would need to store that obnoxious hash table(s)
-...otherwise you'd have to go through all the words again to construct it. 
-
-A better solution is to use a trie. How this works:
-
-Preliminaries:
+Notes:
 Make a trie in the usual way with the words sorted in revese order. 
 Make a function for checking if a string is a palindrome
 
-Now we want to check for valid palindrome pairs for a given word A. There are two relevant cases:
-1) 
+Make a trie of all the words in reverse
+Iterate through the words
+For word A, we're looking for palindromes formed by AB
+2 cases:
+1) B is shorter than A
+Go through the Trie for word A. Effectively you're going over the word backwards. 
+Whenever you hit a marker of an actual word in the array, then that means you have a possible 
+palindrome. Check if the the remainder of A (that we haven't traversed yet is a paldindrome. If 
+it is, that's a new word.)
+2) B is longer than A
+Completely match A through the trie. This is equivalent to matching as much of B in reverse as 
+you can. B is going to have extra letters.
+Any palindromes that are formed from the nodes after our final node (the last/first letter of A) 
+indicate a full palindrome. 
+Instead of doing a full search from that node for palindromes, we store "plaindromes farther than 
+down the trie" at each node. 
+...to do this...as you're adding a word to the tree, after traversing (or creating) each node, 
+check if the reamining letters to be added form a palindrome. If they do, add it to the current 
+nodes list. 
 
 """
