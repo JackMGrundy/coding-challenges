@@ -102,4 +102,8 @@ Notes:
 
 	Example:
 	1,2,3,None,None,4,None,None,5,None,None
+
+
+    Note you do need the commas because of negative numbers...relying on a method like 
+    collections.deque(data) to split the data will break with negative numbers.
 """
