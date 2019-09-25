@@ -20,6 +20,21 @@ Accepted
 Submissions
 672.2K
 """
+# O(N). Constant space.
+# 108ms. 82 percentile.
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        steps = 0
+        reachWithCurrentSteps = 0
+        bestReachWithExtraStep = 0
+        
+        for i,num in enumerate(nums):
+            if reachWithCurrentSteps < i:
+                steps += 1
+                reachWithCurrentSteps = bestReachWithExtraStep
+            bestReachWithExtraStep = max(bestReachWithExtraStep, i + num)
+        
+        return steps
 
 
 
@@ -52,14 +67,11 @@ step = 0
 lastReach = 0
 reach = 0
 
-
-
 [2,
 i = 0
 step = 0
 lastReach = 0
 reach = 2
-
 
 [2, 1,
 i = 1
@@ -67,13 +79,11 @@ step = 1
 lastReach = 2
 reach = 2
 
-
 [2,1,1
 i = 2
 step = 1
 lastReach = 2
 reach = 3
-
 
 [2,1,1,4
 i = 3
@@ -81,13 +91,11 @@ step = 2
 lastReach = 3
 reach = 7
 
-
 [2,1,1,4,6
 i = 4
 step = 3
 lastReach = 7
 reach = 10
-
 
 [2,1,1,4,6,8
 i = 5
@@ -95,20 +103,17 @@ step = 3
 lastReach = 7
 reach = 13
 
-
 [2,1,1,4,6,8,10
 i = 6
 step = 3
 lastReach = 7
 reach = 16
 
-
 [2,1,1,4,6,8,10,12
 i = 7
 step = 3
 lastReach = 7
 reach = 19
-
 
 [2,1,1,4,6,8,10,14
 i = 8
