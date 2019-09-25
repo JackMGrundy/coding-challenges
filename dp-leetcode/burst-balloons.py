@@ -14,5 +14,12 @@ Output: 167
 Explanation: nums = [3,1,5,8] --> [3,5,8] -->   [3,8]   -->  [8]  --> []
              coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
 """
-# Found this to be very challenging. Could reall benefit from more DP practice.
 
+
+
+
+"""
+Notes:
+
+
+"""
