@@ -24,77 +24,7 @@ Input: [-10,9,20,null,null,15,7]
 
 Output: 42
 """
-# 1st attempt: 98th percentile. 88ms.
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-
-class Solution:
-    def maxPathSum(self, root: TreeNode) -> int:
-        
-        def helper(root):
-            
-            if not root.left and not root.right:
-                return (root.val, root.val)
-            
-            leftsTotalValue, leftsBestBranch = helper(root.left) if root.left else (-float("inf"), -float("inf"))
-            rightsTotalValue, rightsBestBranch = helper(root.right) if root.right else (-float("inf"), -float("inf"))
-            
-            rootsBestBranch = max(root.val, root.val + leftsBestBranch, root.val + rightsBestBranch)
-            rootsTotalValue = max(root.val,                  \
-                                  root.val + leftsBestBranch, \
-                                  root.val + rightsBestBranch, \
-                                  root.val + leftsBestBranch + rightsBestBranch)
-            
-            bestTotalValue = max(leftsTotalValue, rightsTotalValue, rootsTotalValue)
-            
-            return (bestTotalValue, rootsBestBranch)
-        
-        res, _ = helper(root)
-        return res
-            
-            
-
-# 2nd attempt. same speed as before...98th percentile. 88ms....surprised...have had performance hits with nonlocal before
-# clean up with nonlocal
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-
-class Solution:
-    def maxPathSum(self, root: TreeNode) -> int:
-        bestPathValue = -float("inf")
-        
-        def helper(root):
-            nonlocal bestPathValue
-            
-            if not root.left and not root.right:
-                bestPathValue = max(bestPathValue, root.val)
-                return root.val
-            
-            leftsBestBranch = helper(root.left) if root.left else -float("inf")
-            rightsBestBranch = helper(root.right) if root.right else -float("inf")
-            rootsBestBranch = max(root.val, root.val + leftsBestBranch, root.val + rightsBestBranch)
-                                         
-            bestPathValue =   max(bestPathValue,             \
-                                  rootsBestBranch,            \
-                                  root.val + leftsBestBranch + rightsBestBranch)
-            
-            return rootsBestBranch
-        
-        helper(root)
-        return bestPathValue
-            
-
-
-
-# 3rd attempt. 98th percentile. 88ms. Cleaner.
+# 3rd attempt. 98th percentile. 88ms.
 class Solution:
     def maxPathSum(self, root: TreeNode) -> int:
         bestPathValue = -float("inf")
@@ -117,3 +47,17 @@ class Solution:
         
         helper(root)
         return bestPathValue
+
+
+"""
+Notes:
+
+Great question. Very intuitive actually.
+
+Any solution we pick is only allowed to branch in two different directions at most once. Therefore at each node we record the "rootsBestBranch" meaning that if
+we use this root in a path, what is the best value you can get out of it? We return that from each level to the level above it.
+
+And to actually find the answer, we simply check at each node what's the best value we can get out of making the node the root. Given that we know the best
+we can get out of the left and right branches, this is easy. Its either the just the roots value, the roots value + one of the branches, or the roots value
++ both branches best values. 
+"""
