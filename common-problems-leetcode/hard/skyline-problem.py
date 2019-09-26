@@ -17,67 +17,24 @@ The input list is already sorted in ascending order by the left x position Li.
 The output list must be sorted by the x position.
 There must be no consecutive horizontal lines of equal height in the output skyline. For instance, [...[2 3], [4 5], [7 5], [11 5], [12 7]...] is not acceptable; the three lines of height 5 should be merged into one in the final output as such: [...[2 3], [4 5], [12 7], ...]
 """
-# 132ms. 77the percentile.
-from heapq import *
+# 128ms. 89 percentile.
 class Solution:
     def getSkyline(self, buildings: List[List[int]]) -> List[List[int]]:
-        prevBestHeight = 0
-        curBestHeight = 0
-        lastX = -1
-        res = []
-        removed = collections.defaultdict(int)
-        pq = []
+        startEvents = [ (L, -H, R) for L,R,H in buildings ]
+        endEvents   = list({ (R, 0, None) for _,R,_ in buildings })
+        events = sorted(startEvents + endEvents)
+        pq = [(0, float("inf"))]
+        res = [ [0,0] ]
         
-        startsAndEnds = []
-        for building in buildings:
-            x, y, h = building
-            startsAndEnds.append( (x, h, True) )
-            startsAndEnds.append( (y, h, False) )
+        for eventTime, negEventHeight, eventEnd in events:
+            while pq[0][1] <= eventTime:
+                heapq.heappop(pq)
+            if negEventHeight != 0:
+                heapq.heappush(pq, (negEventHeight, eventEnd))
+            if abs(pq[0][0]) != res[-1][1]:
+                res.append([eventTime, -pq[0][0]])
         
-        startsAndEnds.sort()
-        
-        for marker in startsAndEnds:
-            curX, h, isStart = marker
-            
-            if isStart:
-                heappush(pq, -h)
-            else:
-                removed[h] += 1
-            
-            updatedHeight = False
-            
-            while not updatedHeight:
-                curBestHeight = 0 if not pq else -pq[0]
-                if removed[curBestHeight] > 0:
-                    removed[curBestHeight] -= 1
-                    heappop(pq)
-                else:
-                    updatedHeight = True
-
-            if lastX == curX and res and res[-1][1] < curBestHeight:
-                res.pop()
-                prevBestHeight = 0 if not res else res[-1][1]
-                lastX = 0 if not res else res[-1][0]
-                
-            if curBestHeight != prevBestHeight:
-                res.append( [curX, curBestHeight] )
-                prevBestHeight = curBestHeight
-                lastX = curX
-            
-        
-        return res
-
-
-
-
-
-
-
-
-
-
-
-
+        return res[1:]
 
 """
 Notes:
@@ -87,43 +44,42 @@ to describe this by identifying the far left coordinates of
 each line segment. 
 
 The classic solution to this problem involves divide and 
-conquer and a cool merge sort algo. The solution that 
-immediately comes to my mind is a priority queue based 
-solution:
+conquer and a cool merge sort algo. I find a priority queue
+solution more natural though. 
 
 
+Intuition:
 
-Make tuples out of each x and y that are like:
+Instead of thinking of buildings, we think in terms of "events". An event is the start or the end of a building. 
+We make a list of our events. Each event is represented by a tuple where the first element indicates the location of
+the event, the second is the height, and the third is the end of the events duration. The end of a building is
+indicated by a height 0 and a 0 length duration.
 
-(x/y value, height, flag of start or end)
-Sort those. 
+We sort the events chronologically..that is left to right
 
-Make a pq for heights. Add 0 to the pq. 
+Queue invariant:
+-gives the tallest building left of the current event that hasn't ended yet. This could be current building.
 
-Take the first tuple and start with that height. 
+The while loop maintains this invariant. It's like saying "please show me the best you have" to the pq. 
+The pq says "here's the best we have". You say "that doesn't fit my requirements. Whats the next best?".
+So the pq tosses the old item and serves up another item. This continues until you have the best item that fits your 
+requirements. Note the discarded items couldn't fit your later "requests" either because we move strictly to the right. 
+Therefore there's no concern about discarding them permanently.
 
-Make a hashtable to record counts of removed height
+This pq and its invariant is all we need to construct our list.
 
-for each tuple
-    If it is a start
-        Add its height to the pq
-    If it is an end:
-        Increment the count of removed heights
+The only locations where we could get a change in the overlapping heights are the starts and ends of buildings. Therefore
+our list of events provides every location we could be interested in. 
 
-    Peak the current best height in the pq
-    Check if the best heigh has been removed as recorded by the 
-    hash table. If so, decrement the hash table entry, pop the best
-    height from the queue, and then get the next biggest height. 
+The final step is to identify if there is a change at a given spot and to record what that change is. We already know the 
+location where the change would take place (its the location of the event). We need to know what height to record if
+any. Given two pieces of information we can figure this out:
 
-    Deal with overlaps:
-    if the current x/y matches that previous x/y and the height 
-    of the current interval is greater than that of the last one 
-    put on the result, pop the last one and roll back the lastX 
-    and previous best height. 
+1) What is the tallest building that hasn't ended yet
+2) Is it a different height than the height of the last building on our list 
 
-    if the best height changed:
-        Close off the previous interval and start a new one.
+The pq provides 1. As for 2, we can simply look at the height of the last segment we recorded in our answer.
 
-
-
+If 1 yields a height that satisfies 2, then we know at the current location, the superimposed heights have changed
+and we record an answer.
 """
