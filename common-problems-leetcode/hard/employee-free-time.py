@@ -34,15 +34,15 @@ schedule and schedule[i] are lists with lengths in range [1, 50].
 NOTE: input types have been changed on June 17, 2019. Please reset to default code definition to get 
 new method signature.
 
- 
 
 Accepted
 19.7K
 Submissions
 31.3K
 """
-# 268ms.
-# 90 percentile.
+
+# 264ms.
+# 95 percentile.
 """
 # Definition for an Interval.
 class Interval:
@@ -53,36 +53,30 @@ class Interval:
 class Solution:
     def employeeFreeTime(self, schedule: 'list<list<Interval>>') -> 'list<Interval>':
         intervals = [ interval for employeeSchedule in schedule for interval in employeeSchedule ]
-
         intervals.sort(key = lambda x: x.start)
-        intervals = self._mergeIntervals(intervals)
-        gaps = []
-        for i in range(len(intervals)-1):
-            if intervals[i].end < intervals[i+1].start:
-                gaps.append(Interval(intervals[i].end, intervals[i+1].start))
-        return gaps
+        return self._gaps(intervals)
     
-        
-    def _mergeIntervals(self, intervals):
+    def _gaps(self, intervals):
         if not intervals:
             return []
         
-        merged = [intervals[0]]
+        gaps, previousEnd = [], intervals[0].end
         
         for interval in intervals[1:]:
-            start, end = interval.start, interval.end
-            if start <= merged[-1].end:
-                merged[-1].end = max(merged[-1].end, end)
+            if previousEnd < interval.start:
+                gaps.append(Interval(previousEnd, interval.start))
+                previousEnd = interval.end
             else:
-                merged.append(interval)
+                previousEnd = max(previousEnd, interval.end)
 
-        return merged
+        return gaps
 
 """
 Notes:
 
     There are a few approaches to solving this. I like this one^ for the simplicitly. 
-    You just flatten the intervals into a single list, merge, and then identify the gaps.
+    We just flatten the intervals into a single list, merge, and during the merge
+    process identify the gaps.
     The downside is the sort operation which makes it Nlog(N). We're giving up the benefit
     that the lists are initially sorted. To make this faster, we could replace the sorting
     with a merge type operation that combines the employee's schedules in sorted order in
