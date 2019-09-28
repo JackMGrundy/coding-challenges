@@ -113,7 +113,6 @@ class Solution:
             return done or biDirectionalBFS(thisSideExtended, otherSide, isForward, validWords, tree)
         
         biDirectionalBFS(set([beginWord]), set([endWord]), True, validWords, tree)
-        print(tree)
         return constructPaths(beginWord, endWord, tree)
 
 
