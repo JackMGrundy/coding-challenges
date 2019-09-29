@@ -21,59 +21,46 @@ Some examples:
 
 "(2+6* 3+5- (3*14/7+2)*5)+3"=-12                                                
 """
-
-
-
+# 48ms. 93 percentile.
+class Solution:
+    def calculate(self, s: str) -> int:
+        s += "$"
+        
+        def helper(s, stack, i):
+            num, operation = 0, '+'
+            
+            while i < len(s):
+                character = s[i]
+                if character.isdigit():
+                    num = num*10 + int(character)
+                    i += 1
+                elif character == ' ':
+                    i += 1
+                elif character == "(":
+                    num, i = helper(s, [], i+1)
+                else:
+                    if operation == '+':
+                        stack.append(num)
+                    elif operation == '-':
+                        stack.append(-num)
+                    elif operation == '/':
+                        stack.append(int(stack.pop() / num) )
+                    elif operation == '*':
+                        stack.append(stack.pop() * num)
+                    
+                    i += 1
+                    num = 0
+                    if character == ')':
+                        return (sum(stack), i)
+                    operation = character
+            
+            return sum(stack)
+        
+        return helper(s, [], 0)
+        
 """
 Notes:
 
-Combination  of  Basic  Calculators I and II. Logic for the solution that's most
-intuitive in my opinion.                                                        
-
-Start out with a stack and with an operation value equal to "+"                 
-
-get rid of spaces in the string to simplify things                              
-
-Loop through the chars in the string.                                           
-
-Now we go through a bunch of ifs depending on the value of the current char     
-
-if "(":                                                                         
-
-Basically  search ahead until you've found a closed parenthsis. Note that if you
-see  more  opens,  then  we keep going until we find the correspodning number of
-closed's.                                                                       
-
-At  that  point,  complete  a  recursive  call  to  the  function with just this
-subsection  between  the  parentheses...note  if  there  were  multiple pairs of
-parentheses  then  we're in turn going to trigger more calls. Each call gets its
-own stack and its own operation value.                                          
-
-At  the  current level, we store the result of the call in an int and we advance
-the  loop  pointer  to  the end of the section that was processed in a recursive
-call.                                                                           
-
-Then  we  go  through  the  standard calculator operations depending on the last
-operator seen.                                                                  
-
-+ -> just put the value on the stack                                            
-
-- -> put a negative value on the stack                                          
-
-*  or / -> pop the last value from the stack, apply the operation between it and
-the current value. Push the resulting value onto the stack.                     
-
-if digit:                                                                       
-
-Run  a  routine  for  matching  digits  and  building  up  an int until we see a
-nondigit. Standard "multiply times 10 then add new value" procedure.            
-
-Then do the operations logic again to determine what to do with the value       
-
-else must be an operation:                                                      
-
-just update operation.                                                          
-
-After all this, add up all the values on the stack and then return.             
+Careful handling of if cases + use of recursion to deal with parentheses.    
 
 """
