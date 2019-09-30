@@ -21,46 +21,70 @@ You may assume k is always valid, 1 ≤ k ≤ input array's size for non-empty a
 Follow up:
 Could you solve it in linear time?
 """
-
-"""
-Cool problem. Here's intuition.
-Maintain a deque. The deque will contain monotonically decreasing values. The head of the deque (left) will contain the max value. The deque will 
-represent a subsequence of the array. 
-
-To maintain it:
-When moving increasing the range of the window, pop elements from the tail of the deque until you hit a value that is greater than the new value. Then
-add the new value. 
-
-When decreasing the range of the window, look at the value being removed. If it equals the head of the deque, pop the head of the deque. 
-
-3 keys observations:
-1) when we increase the range of the window, we observe a new value x. If this value is greater than values we have already seen and are 
-still considering, then those old values could never be a max again because they will be dropped before this new greater value.
-
-2) the operation to maintain the deque after increasing the window size is amortized constant time (emphasis). To see this, note that in the 
-worst case the new value x observed by increasing the window size is greater than every value in the deque. In this case we have to do k pops. However, 
-after this happens, the deque will just have x. In the worst case, the next time we increasing the window size we can only do a single pop. Let's
-for the next k values we observe, we do no pops. Then we've constant work for these k elements. Now say we have to do k pops for the new element. 
-Then we've ultimately done 2 operations (a push and a pop) for each the elements in the deque. 
-
-3) The operation to maintain the deque after decreasing the window size is obviously constant time. 
-
-"""
 # 164ms. 97th percentile. 
-from collections import deque
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        d = deque([])
-        maxes = []
-        for i in range(0, len(nums)):
-            if d and i >= k and nums[i-k] == d[0]:
-                d.popleft()
-            newValue = nums[i]
-            while d and newValue > d[-1]:
-                d.pop()
-            d.append(newValue)
-            
-            if i >= k-1:
-                maxes.append(d[0])
+        deque = collections.deque([])
+        maximums = []
         
-        return maxes
+        for i,num in enumerate(nums):
+            if deque and k <= i and nums[i - k] == deque[0]:
+                deque.popleft()
+            
+            while deque and deque[-1] < num:
+                deque.pop()
+            deque.append(num)
+            
+            if k - 1 <= i:
+                maximums.append(deque[0])
+        
+        return maximums
+
+
+"""
+Edits.
+
+Cool problem and exercise in amortized analysis                                 
+
+Maintain  a  deque.  The deque will contain monotonically decreasing values. The
+head of the deque (left) will contain the max value. The deque will             
+
+represent a subsequence of the array.                                           
+
+To maintain it:                                                                 
+
+When increasing the range of the window, pop elements from the tail of the deque
+until you hit a value that is greater than the new value. Then                  
+
+add the new value.                                                              
+
+When  decreasing the range of the window, look at the value being removed. If it
+equals the head of the deque, pop the head of the deque.                        
+
+3 keys observations:                                                            
+
+1)  when  we increase the range of the window, we observe a new value x. If this
+value is greater than values we have already seen and are                       
+
+still considering, then those old values could never be a max again because they
+will be dropped before this new greater value.                                  
+
+2)  the  operation  to  maintain  the  deque after increasing the window size is
+amortized constant time (emphasis). To see this, note that in the               
+worst  case  the  new  value x observed by increasing the window size is greater
+than every value in the deque. In this case we have to do k pops. However,      
+after this happens, the deque will just have x. In the worst case, the next time
+we increasing the window size we can only do a single pop. Let's                
+for  the  next  k values we observe, we do no pops. Then we've constant work for
+these k elements. Now say we have to do k pops for the new element.             
+Then we've ultimately done 2 operations (a push and a pop) for each the elements
+in the deque.     
+
+A simpler way to state this is that worst case scenario we pop every element in 
+the list from the deque...which is still O(N)
+
+3)  The  operation  to  maintain  the  deque after decreasing the window size is
+obviously constant time.                                                        
+
+
+"""

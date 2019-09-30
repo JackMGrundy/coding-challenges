@@ -89,6 +89,7 @@ read4(buf) # read4 returns 4. Now buf = ['a','b','c','d'], fp points to 'e'
 read4(buf) # read4 returns 4. Now buf = ['e','f','g','h'], fp points to 'i'
 read4(buf) # read4 returns 3. Now buf = ['i','j','k',...], fp points to end of file
 """
+# 36ms. 84 percentile.
 class Solution:
     
     def __init__(self):
@@ -101,22 +102,26 @@ class Solution:
         :rtype: The number of actual characters read (int)
         """
         charsRead = 0
-        sourceEmpty = False
-        
+        sourceIsEmpty = False
+
         while charsRead < n:
-            if len(self.queue) == 0:
-                if sourceEmpty:
-                    return charsRead
-                
-                nextFour = ['']*4
-                numNewChars = read4(nextFour)
-                self.queue.extend(nextFour[0:numNewChars])
-                sourceEmpty = numNewChars != 4
-            else:
+
+            while len(self.queue) != 0 and charsRead < n:
                 buf[charsRead] = self.queue.popleft()
                 charsRead += 1
+            
+            if len(self.queue) == 0 and charsRead < n and not sourceIsEmpty:
+                temp = [""]*4
+                newChars = read4(temp)
+                self.queue.extend(temp[0:newChars])
+                if len(self.queue) < 4:
+                    sourceIsEmpty = True
+            
+            if charsRead < n and len(self.queue) == 0 and sourceIsEmpty:
+                break
         
         return charsRead
+
 
 """
 Notes:
