@@ -14,21 +14,31 @@ Input:
 Output: 7
 Explanation: Because the path 1→3→1→1→1 minimizes the sum.
 """
-# 1st attempt: 88th percentile in speed
-# Standard bottom up dp...get the best path to each square 1 by 1...build up to the final spot
+# 108ms. 91 percentile in speed
 class Solution:
     def minPathSum(self, grid: List[List[int]]) -> int:
+        
         dp = grid[:][:]
         
-        m = len(grid)
-        n = len(grid[0])
+        for j in range(1, len(grid[0])):
+            dp[0][j] += dp[0][j - 1]
         
-        for i in range(1, n):
-            dp[0][i] += dp[0][i-1]
+        for i in range(1, len(grid)):
+            dp[i][0] += dp[i - 1][0]
+            for j in range(1, len(grid[0])):
+                dp[i][j] += min(dp[i - 1][j], dp[i][j - 1])
         
-        for y in range(1, m):
-            dp[y][0] += dp[y-1][0]
-            for x in range(1, n):
-                dp[y][x] += min( dp[y-1][x], dp[y][x-1])
-        
-        return dp[m-1][n-1]
+        return dp[-1][-1]
+            
+
+
+"""
+Notes:
+
+DP problem. Fill in the memo so that we know the cheapest path to any square.
+The first row and the first column are simple...the only possible path is from the preceding square.
+So we can fill in the first row and the first column of the memo by adding in order.
+
+Then we can fill in the rest by taking the min of the value above and the value to the left. 
+
+"""
