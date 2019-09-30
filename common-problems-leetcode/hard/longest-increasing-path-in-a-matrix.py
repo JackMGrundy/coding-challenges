@@ -33,48 +33,46 @@ Explanation:  The  longest increasing path is [3, 4, 5, 6]. Moving diagonally is
 not allowed.                                                                    
 
 """
-# 608ms 29 percentile.
+# 536ms 56 percentile.
 # Manual caching
 class Solution:
     def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
-        if not matrix or not matrix[0]: 
+        if not matrix or not matrix[0]:
             return 0
+        memo = [ [ 0 for j in range(len(matrix[0])) ] for i in range(len(matrix)) ] 
         
-        dp = [ [ 0 for j in range(len(matrix[0])) ] for i in range(len(matrix)) ]
         def backtrack(i, j):
-            if not dp[i][j]:
-                neighbors = [(i+1,j), (i-1,j), (i,j+1), (i,j-1)]
-                for neighbor in neighbors:
-                    nI, nJ = neighbor
+            if not memo[i][j]:
+                neighbors = [ (i+1,j), (i-1,j), (i,j+1), (i,j-1) ]
+                for [nI, nJ] in neighbors:
                     if 0 <= nI < len(matrix) and 0 <= nJ < len(matrix[0]) and matrix[i][j] < matrix[nI][nJ]:
-                        dp[i][j] = max(dp[i][j], backtrack(nI, nJ))
-                dp[i][j] += 1
-            
-            return dp[i][j]
+                        memo[i][j] = max(memo[i][j], backtrack(nI, nJ))
+                memo[i][j] += 1
+                
+            return memo[i][j]
+        
+        return max( [ backtrack(i,j) for i in range(len(matrix)) for j in range(len(matrix[0])) ] )
 
-        return max([ backtrack(i, j) for i,_ in enumerate(matrix) for j,_ in enumerate(matrix[0]) ])
 
-
-# 496ms. 73 percentile.
+# 488ms. 76 percentile.
 # Built in caching
 from functools import lru_cache
 class Solution:
     def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
-        if not matrix or not matrix[0]: 
+        if not matrix or not matrix[0]:
             return 0
         
         @lru_cache(maxsize=None)
         def backtrack(i, j):
-            neighbors = [(i+1,j), (i-1,j), (i,j+1), (i,j-1)]
+            neighbors = [ (i+1,j), (i-1,j), (i,j+1), (i,j-1) ]
             res = 0
-            for neighbor in neighbors:
-                nI, nJ = neighbor
+            for [nI, nJ] in neighbors:
                 if 0 <= nI < len(matrix) and 0 <= nJ < len(matrix[0]) and matrix[i][j] < matrix[nI][nJ]:
                     res = max(res, backtrack(nI, nJ))
-            res += 1
-            return res
-
-        return max([ backtrack(i, j) for i,_ in enumerate(matrix) for j,_ in enumerate(matrix[0]) ])
+            return res + 1
+        
+        
+        return max( [ backtrack(i,j) for i in range(len(matrix)) for j in range(len(matrix[0])) ] )
 
 """
 Notes:
