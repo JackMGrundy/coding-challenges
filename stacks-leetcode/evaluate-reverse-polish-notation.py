@@ -30,64 +30,31 @@ Explanation:
 = 17 + 5
 = 22
 """
-# 1st attempt: 80th percentile in speed
-"""
-I simultaneously really like and dislike this problem
-Pro: It's an interesting bit of knowledge (reverse polish notation). Brings up the python operator library.
-Brings up an interesting design division by Guido with respect to remainder behavior for negative division.
-
-Neg: The one challenging bit is just an obnixous result of a very language specific detail (negative divison)
-"""
-import operator
-import math
-ops = { "+":operator.add, "-":operator.sub, "/t":operator.truediv, "/":operator.floordiv, "*":operator.mul }
-
+# 76ms. 83 percentile.
 class Solution:
     def evalRPN(self, tokens: List[str]) -> int:
-        if not tokens: return 0
-        s = []
-        res = 0
-        operators = ["+", "-", "*", "/"]
-        tokens = [ int(t) if t not in operators else t for t in tokens ]
+        stack = []
         
         for token in tokens:
-            if token in operators:
-                a, b = s.pop(), s.pop()
-                if token=="/" and ( ( a < 0 and b > 0 ) or ( b < 0 and a > 0 ) ):
-                    c = ops[token + "t"](b, a)
-                    c = -1*math.floor(abs(c))
-                else:
-                    c = ops[token](b, a)
-                s.append(c)
+            if token == "+":
+                a, b = stack.pop(), stack.pop()
+                stack.append(a + b)
+            elif token == "-":
+                a, b = stack.pop(), stack.pop()
+                stack.append(b - a)
+            elif token == "*":
+                a, b = stack.pop(), stack.pop()
+                stack.append(a*b)
+            elif token == "/":
+                a, b = stack.pop(), stack.pop()
+                stack.append(int(b/a))
             else:
-                s.append(token)
+                stack.append(int(token))
         
-        return s[0]
-    
-    
-# 2nd attempt: 80th percentile but cleaner
-import operator
-import math
-ops = { "+":operator.add, "-":operator.sub, "/t":operator.truediv, "/":operator.floordiv, "*":operator.mul }
+        return sum(stack)
 
-class Solution:
-    def evalRPN(self, tokens: List[str]) -> int:
-        if not tokens: return 0
-        s = []
+"""
+Notes:
 
-        for token in tokens:
-            if token in "+-*/":
-                n2 = s.pop()
-                n1 = s.pop()
-                if token=="+":
-                    s.append(n1 + n2)
-                elif token=="-":
-                    s.append(n1 - n2)
-                elif token=="*":
-                    s.append(n1 * n2)
-                elif token=="/":
-                    s.append(int(n1 / n2))
-            else:
-                s.append(int(token))
-            
-        return s[0]
+See calculator problems for similar examples
+"""
