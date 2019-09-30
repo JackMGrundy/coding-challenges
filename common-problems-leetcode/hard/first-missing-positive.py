@@ -64,26 +64,23 @@ for values. Any we'll know its 6 if values 1 to 5 check out.
 # Faster solutions opted for built ins like sorted that are symptotically O(Nlog(N)) rather than O(N).
 class Solution:
     def firstMissingPositive(self, nums: List[int]) -> int:
-        if not nums:
+        if not nums or 1 not in nums:
             return 1
         
         nums = [0] + nums
-
-        for i,num in enumerate(nums):
-            if num < 0:
-                continue
-            elif num == i:
-                continue
-            elif 0 < num < len(nums):
-                nums[i] = -1
-                while 0 < num < len(nums):
-                    if nums[num] == num:
-                        break
-                    temp, nums[num] = nums[num], num
-                    num = temp
         
-        for i,num in enumerate(nums[1:], 1):
-            if num != i:
+        for i,num in enumerate(nums):
+            if num == i:
+                continue
+            elif num < 0:
+                nums[i] = -1
+            else:
+                nums[i] = -1
+                while 0 < num < len(nums) and nums[num] != num:
+                    nums[num], num  = num, nums[num]
+        
+        for i,num in enumerate(nums):
+            if num == -1:
                 return i
         
         return len(nums)
