@@ -7,13 +7,13 @@ The encoded string should be as compact as possible.
 
 Note: Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.
 """
-# First attempt: Preorder traversal. 87th percetile in speed:
+# 60ms. 81 percentile.
 # Definition for a binary tree node.
-class TreeNode(object):
-    def __init__(self, x):
-        self.val = x
-        self.left = None
-        self.right = None
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
 
 class Codec:
 
@@ -23,17 +23,19 @@ class Codec:
         :type root: TreeNode
         :rtype: str
         """
-        if root==None: return("")
-        res = []
-        out = self.helper(root, res)
-        return(",".join(out))
-    
-    def helper(self, root, res):
-        if root==None:
-            return([])
-        return([str(root.val)] + self.helper(root.left, res) + self.helper(root.right, res))
-    
-    
+        data = []
+        
+        def helper(root):
+            if not root:
+                data.append("N,")
+            else:
+                data.append(str(root.val) + ",")
+                helper(root.left)
+                helper(root.right)
+
+        helper(root)
+        return ''.join(data)
+        
 
     def deserialize(self, data):
         """Decodes your encoded data to tree.
@@ -41,33 +43,20 @@ class Codec:
         :type data: str
         :rtype: TreeNode
         """
-        if data=="": return()
-        data = data.split(",")
-        data = [int(x) for x in data]
-        curVal = data[0]
-        root = TreeNode(curVal)
-        curNode = root
-        stack = [root]
+        data = collections.deque(data.split(",")[0:-1])
         
-        for i in range(1, len(data)):
-            nextVal = data[i]
-            nextNode = TreeNode(nextVal)
-            
-            #Moving left down the tree
-            if nextVal < curVal:
-                curNode.left = nextNode
+        def helper():
+            if not data:
+                return None
             else:
-                while stack and stack[-1].val < nextVal:
-                    branchNode = stack.pop()
-                branchNode.right = nextNode
-                
-            stack.append(nextNode)
-            curNode = nextNode
-            curVal = nextVal
+                rootVal = data.popleft()
+                if rootVal != 'N':
+                    root = TreeNode(int(rootVal))
+                    root.left = helper()
+                    root.right = helper()
+                    return root
         
-        return(root)
-                
-            
+        return helper()
 
 # Your Codec object will be instantiated and called as such:
 # codec = Codec()
