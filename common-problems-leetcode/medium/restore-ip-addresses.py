@@ -8,60 +8,40 @@ Output: ["255.255.11.135", "255.255.111.35"]
 """
 
 # 32ms. 98th percentile.
-# not super clean but low on time rn...
 class Solution:
     def restoreIpAddresses(self, s: str) -> List[str]:
-        if not s or len(s) > 12:
-            return ""
-        ips = []
-        s = list(s)
-        
-        def backTrack(cutoffs, s):
-            curIndex = 0 if not cutoffs else cutoffs[-1]
-            if len(cutoffs) == 3 and curIndex >= len(s)-3:
-                ips.append(cutoffs)
-                return
-            elif len(cutoffs) >= 3:
-                return
-            
-            for i in range(1,4):
-                if s[curIndex] == "0" and i >= 2 :
-                    continue
-                if len(cutoffs) < 3 and curIndex + i < len(s):
-                    backTrack(cutoffs + [curIndex+i], s)
-        
-        
-        def verifyIp(cutoffs):
-            last = len(s)
-            ip = []
-            cutoffs = [0] + cutoffs
-            while cutoffs:
-                block = s[cutoffs[-1]:last]
-                if int(''.join(block)) >= 256:
-                    return
-                elif block[0] == "0" and len(block) > 1:
-                    return
-                else:
-                    ip = block + ["."] + ip if ip else block
-                last = cutoffs.pop()
-            res.append(''.join(ip))
-
-        
-        backTrack([], s)
         res = []
-        for ip in ips:
-            verifyIp(ip)
-
+        self._backtrack(s, 0, "", res)
         return res
-
-
+    
+    def _backtrack(self, s, blocksFormed, path, res):
+        if blocksFormed == 4:
+            if len(s) == 0:
+                res.append(path[:-1])
+        else:
+            for numDigits in range(1, 4):
+                if numDigits <= len(s):
+                    if numDigits == 1:
+                        self._backtrack(s[numDigits:], blocksFormed + 1, path + s[0:numDigits] + ".", res)
+                    elif numDigits == 2 and s[0] != "0":
+                        self._backtrack(s[numDigits:], blocksFormed + 1, path + s[0:numDigits] + ".", res)
+                    elif numDigits == 3 and s[0] != "0" and int(s[0:3]) < 256:
+                        self._backtrack(s[numDigits:], blocksFormed + 1, path + s[0:numDigits] + ".", res)
 
 """
-Note that given that a valid IP can be at most 12 digits and
-have at most 4 sections, there are only so many combinations
-of valid period placements. We can just generate those combinations
-for the length of s and then check if they're valid.
+Notes:
 
-The one wrinkle is no blocks that start with 0 but have length
-greater than 1.
+Each block of the ip can have 1, 2, or 3 digits. Any single digit is allowed.
+Any combination of 2 digits is allowed as long as the first isn't a 0. 
+Any combination of 3 digits allowed such that the first isn't a 0 and the
+total is less than 256.
+
+Given these rules, we use backtracking. 
+
+The stopping condition is that we have formed 4 blocks. If we have, we append
+the new ip to the list of results. We're careful not to include the last
+period at the very end. 
+
+Otherwise, we try all three ways of adding a new block (1 digit, 2 digits, or 3 digits).
+Note we make sure we have enough chars left to actually allocate the number of digits  
 """
