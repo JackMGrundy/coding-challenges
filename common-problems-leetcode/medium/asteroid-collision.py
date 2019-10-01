@@ -44,27 +44,22 @@ Note:
 The length of asteroids will be at most 10000.
 Each asteroid will be a non-zero integer in the range [-1000, 1000]..
 """
-# 116ms. 64 percentile.
+# 108ms. 94 percentile.
 class Solution:
     def asteroidCollision(self, asteroids: List[int]) -> List[int]:
-        stack = []
-        
-        for asteroid in asteroids:
-            lastAsteroidMovingRight, asteroidMovingLeft = (stack and 0 < stack[-1]), (asteroid < 0)
-            if lastAsteroidMovingRight and asteroidMovingLeft:
-                rightMovingAsteroid = stack.pop()
-                leftMovingAsteroid = asteroid
-                while stack and rightMovingAsteroid < abs(leftMovingAsteroid) and 0 < stack[-1]:
-                    rightMovingAsteroid = stack.pop()
-
-                if abs(leftMovingAsteroid) < rightMovingAsteroid:
-                    stack.append(rightMovingAsteroid)
-                elif rightMovingAsteroid < abs(leftMovingAsteroid):
-                    stack.append(leftMovingAsteroid)
+        result = []
+        for a in asteroids:
+            while result and a < 0 < result[-1]:
+                if -a == result[-1]:
+                    result.pop()
+                    break
+                elif -a > result[-1]:
+                    result.pop()
+                    continue
+                break
             else:
-                stack.append(asteroid)
-                        
-        return stack
+                result.append(a)
+        return result
 
     
     """
@@ -76,5 +71,21 @@ class Solution:
 """
 Notes:
 
+a < 0 < result[-1] tells you if there is a collision
+Logic:
+
+whil we have asteroids and the new one will collide with the last old one
+    if the last asteroid is of equal size to the new one, pop it to eliminate it. End the loop
+
+    if the last asteroid is of smaller size than the new one, pop it, and keep looping
+
+    Else:
+        This includes the case where the old asteroid is of bigger size than the new one.
+        In this case the old asteroid just clobbers the one. Break the loop.
+
+
+Syntax:
+The else clause is only executed when your while condition becomes false. 
+If you break out of the loop, or if an exception is raised, it won't be executed.
 
 """

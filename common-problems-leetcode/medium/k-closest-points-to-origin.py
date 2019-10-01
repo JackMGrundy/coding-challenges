@@ -46,43 +46,39 @@ class Solution:
             return []
         if len(points) <= K:
             return points
-        pointsWithDistances = [ (x[0]*x[0] + x[1]*x[1], x[0], x[1]) for x in points ]
-        self.quickSelect(pointsWithDistances, K)
-        kClosestPoints = [ (x[1],x[2]) for x in pointsWithDistances[0:K] ]
-        return kClosestPoints
+        points = [ (x[0]*x[0] + x[1]*x[1], x[0], x[1]) for x in points  ]
+        self.quickSelect(points, K)
+        return [ [x[1], x[2]] for x in points[0:K] ]
     
-
-    def quickSelect(self, pointsWithDistances, K):
-        return self._quickSelect(pointsWithDistances, 0, len(pointsWithDistances) - 1, K-1)
+    def quickSelect(self, points, K):
+        return self._quickSelect(points, 0, len(points) - 1, K - 1)
     
-
-    def _quickSelect(self, pointsWithDistances, start, end, K):
+    def _quickSelect(self, points, start, end, K):
         if start == end:
-            return 
+            return
         
-        partitionIndex = self._partition(pointsWithDistances, start, end)
+        partitionIndex = self._partition(points, start, end)
         
         if partitionIndex == K:
             return
-        elif K < partitionIndex:
-            self._quickSelect(pointsWithDistances, start, partitionIndex - 1, K)
+        elif partitionIndex < K:
+            self._quickSelect(points, partitionIndex + 1, end, K)
         else:
-            self._quickSelect(pointsWithDistances, partitionIndex + 1, end, K)
+            self._quickSelect(points, start, partitionIndex - 1, K)
     
-
-    def _partition(self, pointsWithDistances, start, end):
+    def _partition(self, points, start, end):
         left = right = start
         
-        m = left + (right - left)//2
-        pointsWithDistances[m], pointsWithDistances[end] = pointsWithDistances[end], pointsWithDistances[m]
+        middle = start + (end - start)//2
+        points[end], points[middle] = points[middle], points[end]
         
         while right < end:
-            if pointsWithDistances[right][0] < pointsWithDistances[end][0]:
-                pointsWithDistances[right], pointsWithDistances[left] = pointsWithDistances[left], pointsWithDistances[right]
+            if points[right][0] < points[end][0]:
+                points[left], points[right] = points[right], points[left]
                 left += 1
             right += 1
         
-        pointsWithDistances[left], pointsWithDistances[end] = pointsWithDistances[end], pointsWithDistances[left]
+        points[end], points[left] = points[left], points[end]
         
         return left
         

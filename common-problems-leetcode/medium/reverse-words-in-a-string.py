@@ -40,4 +40,9 @@ class Solution:
     def reverseWords(self, s: str) -> str:
         s = re.compile("[\s]+").split(s.strip())[::-1]
         return ' '.join(s).strip()
+
+
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        return ' '.join([ word for word in s.split(" ")[::-1] if word != "" ])
         

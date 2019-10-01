@@ -61,22 +61,22 @@ Therefore, person #1 only need to give person #0 $4, and all debt is settled.
 # 36ms. 92 percentile.
 class Solution:
     def minTransfers(self, transactions: List[List[int]]) -> int:
-        
-        balances = collections.defaultdict(int)
-        for creditor, debtor, amount in transactions:
-            balances[creditor] += amount
-            balances[debtor] -= amount
-        balances = { person:balance for person,balance in balances.items() if balance != 0}
-        
+                
         def bfs(balances):
             if len(balances) == 0:
                 return 0
             for groupSize in range(2, len(balances) + 1):
-                for group in itertools.combinations(balances.keys(), groupSize):
-                    if sum( [ balances[person] for person in group ] ) == 0:
-                        balances = { person:balance for person,balance in balances.items() if person not in group }
+                for group in itertools.combinations(list(range(len(balances))), groupSize):
+                    if sum([ balances[person] for person in group ]) == 0:
+                        balances = [ balance for person,balance in enumerate(balances) if person not in group ]
                         return groupSize - 1 + bfs(balances)
-        
+
+        balances = collections.defaultdict(int)
+        for creditor, debtor, amount in transactions:
+            balances[creditor] += amount
+            balances[debtor] -= amount
+        balances = [ balances[person] for person in balances if balances[person] != 0]
+
         return bfs(balances)
 
 
@@ -85,15 +85,7 @@ class Solution:
 # Repeated BFS to find "circles"
 class Solution:
     def minTransfers(self, transactions: List[List[int]]) -> int:
-        
-        balances = collections.defaultdict(int)
-        for creditor, debtor, amount in transactions:
-            balances[creditor] += amount
-            balances[debtor] -= amount
-        
-        balances = [ balances[person] for person in balances if balances[person] != 0]
-        totalPayments = 0
-        
+                
         def bfs(balances):
             debtToSettle = balances[0]
             queue = collections.deque([(debtToSettle, [0], 1)])
@@ -107,7 +99,15 @@ class Solution:
                 else:
                     for i in range(startIndex, len(balances)):
                         queue.append( (debtToSettle + balances[i], path + [i], i + 1) )
+
+        balances = collections.defaultdict(int)
+        for creditor, debtor, amount in transactions:
+            balances[creditor] += amount
+            balances[debtor] -= amount
         
+        balances = [ balances[person] for person in balances if balances[person] != 0]
+
+        totalPayments = 0
         while 0 < len(balances):
             paymentsMade, balances = bfs(balances)
             totalPayments += paymentsMade
