@@ -28,7 +28,7 @@ class Solution:
         starts.sort()
         ends.sort()
         
-        startsPointer, endsPointer = 0, 0
+        endsPointer = 0
         roomsInUse = 0
         
         for startsPointer in range(len(intervals)):

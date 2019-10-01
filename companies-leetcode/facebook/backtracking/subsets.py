@@ -19,7 +19,8 @@ Output:
 ]
 """
 from itertools import combinations
-# Attempt 1: use built in tools. 100th percentile in speed. 34th percentile in space (11MB vs top score of 10.7MB)
+# 100th percentile in speed
+# Builtins
 class Solution(object):
     def subsets(self, nums):
         """
@@ -31,11 +32,10 @@ class Solution(object):
             cs = combinations(nums, i)
             for combination in cs:
                 res.append(list(combination))
-        return(res)
+        return res
 
 
-# Attempt 2: Without built in tools. 100th percentile in speed. 65th percentile in space. 10.9Mb. 
-# Much cooler way to solve.
+# 100th percentile in speed
 # Logic: start with an empty set. To build up the subsets formed with the first
 # num, simply add the only existing set, [], plus 1 = [1]. Keep [].
 # To add the second num, once again, just add it to everything already in the list,
@@ -44,27 +44,20 @@ class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
         res = [[]]
         for num in nums:
-            res += [x+[num] for x in res]
-        return(res)
+            res += [ x + [num] for x in res ]
+        return res
 
-# Attempt 3: Interesting recursive solution. 44th percentile in speed
+# 40ms. 75 percentile.
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        def dfs(depth, start, lst):
-            res.append(lst)
-            if depth==len(nums):
-                return()
-            for i in range(start, len(nums)):
-                dfs(depth+1, i+1, lst + [nums[i]])
-        
         res = []
-        nums.sort()
-        dfs(0, 0, [])
-        return(res)
-
-
-if __name__=='__main__':
-    nums = [1,2,3]
-    s = Solution()
-    res = s.subsets(nums)
-    print(res)
+        
+        def helper(depth, start, lst):
+            res.append(lst)
+            if depth == len(nums):
+                return
+            for i in range(start, len(nums)):
+                helper(depth + 1, i + 1, lst + [nums[i]])
+            
+        helper(0, 0, [])
+        return res

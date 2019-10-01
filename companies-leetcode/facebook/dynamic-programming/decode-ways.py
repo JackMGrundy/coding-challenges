@@ -21,6 +21,7 @@ Explanation: It could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
 
 
 # Simple backtracking dfs with memoization
+# Without memoization it times out:
 # 32ms. 97th percentile. 
 class Solution:
     def numDecodings(self, s: str) -> int:
@@ -48,26 +49,31 @@ class Solution:
         return dfs(0)
 
 
-# Note that without memoization it times out:
+# Built ins for caching
+# Without memoization it times out:
+# 32ms. 97th percentile. 
+from functools import lru_cache
 class Solution:
     def numDecodings(self, s: str) -> int:
         
-        def dfs(curCharIndex):
-            if curCharIndex == len(s):
-                return 1 
-            elif curCharIndex > len(s):
+        @lru_cache(maxsize=None)
+        def dfs(sI):
+            if sI == len(s):
+                return 1
+            elif len(s) < sI:
                 return 0
             
-            c = s[curCharIndex]
+            c = s[sI]
+            
             if c == '0':
                 return 0
             elif c == '1':
-                return dfs(curCharIndex+1) + dfs(curCharIndex+2)
-            elif c == '2' and curCharIndex+1 < len(s) and s[curCharIndex+1] in ['0', '1', '2', '3', '4', '5', '6']:
-                return dfs(curCharIndex+1) + dfs(curCharIndex+2)
+                return dfs(sI + 1) + dfs(sI + 2)
+            elif c == '2' and sI + 1 < len(s) and s[sI + 1] in '0123456':
+                return dfs(sI + 1) + dfs(sI + 2)
             else:
-                return dfs(curCharIndex+1)
-
+                return dfs(sI + 1)
+                
         return dfs(0)
 
 

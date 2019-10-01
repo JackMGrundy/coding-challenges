@@ -29,42 +29,78 @@ Submissions
 """
 
 # 40ms, 97th percentile in speed
+# DFS approach
 class Solution:
-    
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        graph = collections.defaultdict(list)
         
-        neighbors = self.getNeighbors(numCourses, prerequisites)
-        visited = [False] * numCourses
-        recStack = [False] * numCourses
+        for [a, b] in prerequisites:
+            graph[a].append(b)
         
-        for node in range(numCourses):
-            if visited[node] == False:
-                if self.cycleUtil( node, recStack, visited, neighbors ) == True:
-                    return False
+        recStack = [ False for _ in range(numCourses) ]
+        visited = [ False for _ in range(numCourses) ]
         
-        return True
-    
-    
-    def cycleUtil(self, node, recStack, visited, neighbors):
-        visited[node] = True
-        recStack[node] = True
-        
-        for neighbor in neighbors[node]:
-            if recStack[neighbor] == True:
-                return True            
-            if visited[neighbor] == False:
-                if self.cycleUtil( neighbor, recStack, visited, neighbors) == True:
+        def isPartOfCycle(course, recStack, visited, graph):
+            recStack[course] = True
+            visited[course]  = True
+            
+            for neighbor in graph[course]:
+                if recStack[neighbor]:
                     return True
+                if not visited[neighbor] and isPartOfCycle(neighbor, recStack, visited, graph):
+                    return True
+            
+            recStack[course] = False
+            return False
         
-        recStack[node] = False
-        return False
-    
-    
-    def getNeighbors(self, nodes, links):
-        res = { node:[] for node in range(nodes) } 
-        
-        for link in links:
-            a, b = link
-            res[a].append(b)
-        
-        return res
+        for course in range(numCourses):
+            if not visited[course] and isPartOfCycle(course, recStack, visited, graph):
+                return False
+            
+        return True
+
+"""
+Notes:
+
+See notes on cycle detection
+
+DFS approach:
+Convert links to a graph where given a node, you can get a list of neighbors.
+For each node, check if there is a cycle. Only check if it hasn't already
+been ok'ed (visited)
+
+To check for a cycle:
+    Given that the nodes are 0 to N-1, we keep a simple N length list to
+    record nodes in the call stack.
+
+    We keep a similar list called "visited" to note the nodes we have
+    already ok'ed. 
+
+    We start the dfs on a given node. We note it as both visited and in
+    the call stack.
+
+    We use the graph to iterate through its neighbors. If we see a neighbor
+    that is already in the stack, we found a cycle.
+
+    Otherwise, if the neighbor hasn't been visited, we make a recursive call
+    that starts at that node. This recursive call will continue the path. Via the
+    the rec stack list, it will remember that that the previous node is in
+    the rec stack.
+
+    Finally, back in the first call in the recursion stack, we mark that
+    this node is no longer in the recursion stack and return that there isn't 
+    a cycle. We only get here if a cycle wasn't found at either this level
+    or at a deeper level in the recursion stack.
+
+
+Intuition for visited:
+Say we pass through node A while processing a path. We found no cycle on this
+path. Because we recorded A as visited, we won't visit it again, either as
+the start of a path or as part of another path. 
+
+This is ok. As part of the already traversed path, we already examined all outgoing
+edges from A. Therefore, if we started a different path that went through A,
+we would end up just traversing those same outlinks again and again find that there
+is no cycle. 
+
+"""
