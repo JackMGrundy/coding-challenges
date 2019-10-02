@@ -51,15 +51,15 @@ class Solution:
 
         dp = [ 0 for x in range(len(matrix[0])+1) ]
         longestSide = 0
-        for j in range(1, len(matrix)+1):
+        for i in range(1, len(matrix)+1):
             prevSquare = 0
-            for i in range(1, len(matrix[0])+1):
-                temp = dp[i]
-                if matrix[j-1][i-1] == '1':
-                    dp[i] = min(dp[i], dp[i-1], prevSquare)+1
-                    longestSide = max(longestSide, dp[i])
+            for j in range(1, len(matrix[0])+1):
+                temp = dp[j]
+                if matrix[i-1][j-1] == '1':
+                    dp[j] = min(dp[j], dp[j-1], prevSquare)+1
+                    longestSide = max(longestSide, dp[j])
                 else:
-                    dp[i] = 0
+                    dp[j] = 0
                 
                 prevSquare = temp
             
@@ -69,7 +69,8 @@ class Solution:
 """
 Notes:
 
-Two hard things in this problem. The first is the logic for the dp, although after the fact it seems pretty straightforward imo.
+Two hard things in this problem. The first is the logic for the dp, although after the fact 
+it seems pretty straightforward imo.
 At any element you can check if you have a 2 by 2 square by looking at its neighbors. So anywhere you see
 1 1
 1 1

@@ -113,7 +113,7 @@ class Solution:
             elif r1 == c1 == N-1:
                 return grid[r1][c1]
             else:
-                # Counter the cherries in current cells
+                # Count the cherries in current cells
                 ans = grid[r1][c1]
                 if (r1, c1) != (r2, c2):
                     ans += grid[r2][c2]

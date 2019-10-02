@@ -15,38 +15,45 @@ Input: nums = [5,7,7,8,8,10], target = 6
 Output: [-1,-1]
 """
 
-# 96ms. 93th percentile.
+# 92ms. 99th percentile.
 class Solution:
     def searchRange(self, nums: List[int], target: int) -> List[int]:
-        l = 0
-        r = len(nums)-1
-        first = self.findLeftMost(l, r, nums, target)
-        last  = self.findRightMost(l, r, nums, target)
-        return [first, last]
+        return [ self.farthestLeft(nums, target), self.farthestRight(nums, target) ]
     
-
-    def findLeftMost(self, l, r, nums, target):
-        while l <= r:
-            m = (l+r)//2
+    
+    def farthestLeft(self, nums, target):
+        left, right = 0, len(nums) - 1
+        
+        while left <= right:
             
-            if (nums[m] == target) and (m == 0 or nums[m-1] != target):
-                return m
-            elif nums[m] < target:
-                l = m+1
+            middle = left + (right - left)//2
+            
+            if nums[middle] == target and (middle == 0 or nums[middle - 1] != target):
+                return middle
+            
+            if nums[middle] < target:
+                left = middle + 1
             else:
-                r = m-1
+                right = middle - 1
+        
         return -1
 
-    def findRightMost(self, l, r, nums, target):
-        while l <= r:
-            m = (l+r)//2
+                
+    def farthestRight(self, nums, target):
+        left, right = 0, len(nums) - 1
+        
+        while left <= right:
             
-            if (nums[m] == target) and (m == len(nums)-1 or nums[m+1] != target):
-                return m
-            elif nums[m] <= target:
-                l = m+1
+            middle = left + (right - left)//2
+            
+            if nums[middle] == target and (middle == len(nums) - 1 or nums[middle + 1] != target):
+                return middle
+            
+            if nums[middle] <= target:
+                left = middle + 1
             else:
-                r = m-1
+                right = middle - 1
+        
         return -1
 
 """
