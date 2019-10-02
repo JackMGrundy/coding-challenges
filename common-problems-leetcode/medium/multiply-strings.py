@@ -34,7 +34,7 @@ class Solution:
             output[i] %= 10
         
         startIndex = 0
-        while 0 <= startIndex < len(output) - 1 and output[startIndex] == 0:
+        while startIndex < len(output) - 1 and output[startIndex] == 0:
             startIndex += 1
         
         return ''.join([ str(x) for x in output[startIndex:]])

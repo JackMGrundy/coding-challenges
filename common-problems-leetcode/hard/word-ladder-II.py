@@ -44,18 +44,20 @@ class Solution:
         validPaths = []
         paths = {}
         paths[beginWord] = [[beginWord]]
+        searching = True
         
-        while paths:
+        while paths and searching:
             extendedPaths = collections.defaultdict(list)
             for lastWord, pathsEndingInLastWord in paths.items():
                 if lastWord == endWord:
                     validPaths.extend(pathsEndingInLastWord)
-                else:
+                    searching = False
+                elif searching:
                     for i in range(wordLength):
                         for c in string.ascii_lowercase:
                             newWord = lastWord[:i] + c + lastWord[i+1:]
                             if newWord in validWords:
-                                extendedPaths[newWord] += [path + [newWord] for path in paths[lastWord]]
+                                extendedPaths[newWord] += [path + [newWord] for path in pathsEndingInLastWord ]
         
             validWords -= set(extendedPaths.keys())
             paths = extendedPaths

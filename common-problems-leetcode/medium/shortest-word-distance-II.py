@@ -48,5 +48,13 @@ class WordDistance:
 """
 Notes:
 
+You get all the indices of the all the words. Then when you're trying to find the smallest
+distance between words, you iterate through them, advancing whichever is behind and updated
+distance as you go. The simple intuition is that advancing the bigger one could only make the 
+distance bigger, so we don't care about those comparisons.
+
+Note at first I thought of using binary search to speed up the search process. It actually
+slows things down though. For each index in indices 1, you would need to a do a logn search 
+in indices2. This could be nlog(n) instead of just n for the first approach.
 
 """

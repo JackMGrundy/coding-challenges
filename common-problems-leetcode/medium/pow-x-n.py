@@ -36,10 +36,12 @@ class Solution:
             n = -n
         total = 1
         while n:
-            if n & 1:
+            # if n & 1:
+            if n % 2 == 1:
                 total *= x
             x *= x
-            n >>= 1
+            # n >>= 1
+            n //= 2
         return total
 
 
@@ -63,9 +65,12 @@ Notes:
 For the most part Fast Power is obvious. One thing to note though...the logic in the iteative version for multiplying
 total by x...note that this isn't the original value of x...its x after we've liked already doubled it one or more times.
 This might seem strange because "shouldn't we only increase total by a factor of the original x when we encounter an
-odd power?". The answer is due to the halving process. Say you start with n = 19. Yes, in the first iteration becasue 19
+odd power?". The answer is due to the halving process. Say you start with n = 19. Yes, in the first iteration because 19
 is odd, you just multiply total by the original x. However, then you divide 19 down to 9 with integer division. On this next
 iteration, you actually need to multiply total by the original x twice. The reason? You halved 18 down to 9. Meaning
-that when you halve 9 down to 8, you're losing 2 not 1 factors of x. This compounds as keep halving. Thankfully, x is
-compounding perfectly in lockstep, so multiplying by x makes it all work out. 
+that when you halve 9 down to 4, you're losing 2 not 1 factors of x. This compounds as we keep halving. Thankfully, x is
+compounding in perfect lockstep with the halving, so multiplying by x makes it all work out. 
+
+Also note that the "odd if" in the iterative method is always going to be triggered at the end of the process. Any
+natural number is going to boil down to 1 after the repeated halving.
 """

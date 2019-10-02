@@ -24,15 +24,16 @@ Output: false
 # 36ms. 98th percentile.
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        dp = [False]*len(s)
+        dp = [False]*(len(s)+1)
+        dp[0] = True
         
-        for i in range(len(dp)):
+        for i in range(len(s)):
             for word in wordDict:
-                if i + len(word) <= len(s) and s[i:i+len(word)] == word and (i == 0 or dp[i] == True):
+                if dp[i] and (s[i:i+len(word)] == word):
                     if i + len(word) == len(s):
                         return True
-                    else:
-                        dp[i + len(word)] = True
+                    dp[i + len(word)] = True
+        
         return False
 
 """
