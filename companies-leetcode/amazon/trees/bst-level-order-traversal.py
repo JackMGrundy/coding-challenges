@@ -15,33 +15,37 @@ return its level order traversal as:
   [15,7]
 ]
 """
-from collections import deque
-
-class TreeNode:
-    def __init__(self, num):
-        self.val = num
-        self.right = None
-        self.left = None
+# 32ms. 99 percentile.
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
 
 class Solution:
-    def levelOrder(self, root):
-        """
-        :type root: TreeNode
-        :rtype: List[List[int]]
-        """
-        if not root: return([])
-        res = [];  curLevelNodes = [];  curLvl = 0
-        queue = deque()
-        queue.append((root, curLvl))
-        while queue:
-            curNode, curNodeLvl = queue.popleft()
-            if curNodeLvl != curLvl:
-                res.append(curLevelNodes)
-                curLevelNodes = []
-                curLvl = curNodeLvl
-            curLevelNodes.append(curNode.val)
-            for c in [curNode.left, curNode.right]:
-                if c is not None: 
-                    queue.append((c, 1+curLvl))
-        res.append(curLevelNodes)
-        return(res)
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        if not root:
+            return []
+        q = collections.deque([(root, 0)])
+        depth = -1
+        res = []
+        level = []
+        
+        while q:
+            node, nodeDepth = q.popleft()
+            
+            if depth < nodeDepth:
+                res.append(level)
+                level = []
+                depth += 1
+            
+            level.append(node.val)
+            
+            for c in [node.left, node.right]:
+                if c:
+                    q.append( (c, nodeDepth + 1) )
+        
+        res.append(level)
+        
+        return res[1:]

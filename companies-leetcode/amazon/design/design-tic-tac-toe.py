@@ -49,23 +49,19 @@ Follow up:
 Could you do better than O(n2) per move() operation?
 """
 
-# Attempt #1: 99th percentile. O(N) time per move
-class TicTacToe(object):
+# 100 ms 87th percentile. Constant time per move
+class TicTacToe:
 
-    def __init__(self, n):
+    def __init__(self, n: int):
         """
         Initialize your data structure here.
-        :type n: int
         """
-        self.n = n
         self.rows = [0]*n
-        self.cols = [0]*n
-        #0 -> left to right diagonal
-        #1 -> right to left diagonal
+        self.columns = [0]*n
         self.diagonals = [0]*2
-        
+        self.n = n
 
-    def move(self, row, col, player):
+    def move(self, row: int, col: int, player: int) -> int:
         """
         Player {player} makes a move at ({row}, {col}).
         @param row The row of the board.
@@ -75,31 +71,39 @@ class TicTacToe(object):
                 0: No one wins.
                 1: Player 1 wins.
                 2: Player 2 wins.
-        :type row: int
-        :type col: int
-        :type player: int
-        :rtype: int
         """
-        diff = 1 if player==1 else -1
-        
+        diff = 1 if player == 1 else -1
         self.rows[row] += diff
-        if abs(self.rows[row])==self.n: return(player)
+        self.columns[col] += diff
         
-        self.cols[col] += diff
-        if abs(self.cols[col])==self.n: return(player)
-        
-        #Diagonals
-        if row==col:
+        if row == col:
             self.diagonals[0] += diff
-        if abs(row+col)==self.n-1:
+        
+        if row + col == self.n - 1:
             self.diagonals[1] += diff
         
-        if abs(self.diagonals[0])==self.n: return(player)
-        if abs(self.diagonals[1])==self.n: return(player)
+        if abs(self.rows[row]) == self.n or \
+           abs(self.columns[col]) == self.n or \
+           abs(self.diagonals[0]) == self.n or \
+           abs(self.diagonals[1]) == self.n:
+            return player
         
-        return(0)
+        return 0
+
+# Your TicTacToe object will be instantiated and called as such:
+# obj = TicTacToe(n)
+# param_1 = obj.move(row,col,player)
 
 
 # Your TicTacToe object will be instantiated and called as such:
 # obj = TicTacToe(n)
 # param_1 = obj.move(row,col,player)
+
+
+"""
+Notes:
+
+Store the total number of spaces each player has in each row, column, and along the two diagonals
+by adding 1 for player 1 and -1 for player 2. Checking for a win requires constant time. We just
+add a value to a row, column, and up to two diagonals if need be and then we do some checks.
+"""
