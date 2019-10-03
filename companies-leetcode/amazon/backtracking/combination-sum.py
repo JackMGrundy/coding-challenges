@@ -50,29 +50,39 @@ class Solution:
 """
 Notes:
 
-The simple part of this problem is doing a backtracking dfs style approach...at each level of recursion, just try subtracting each number in 
-the list of candidates. If you get 0, great that's a valid combination. If it's less than 0 quick that line of search. If it's greater than 
-0 spin up another level of recusion. 
+The  simple part of this problem is doing a backtracking dfs style approach...at
+each  level  of  recursion,  just  try  subtracting  each  number in the list of
+candidates.  If you get 0, great that's a valid combination. If it's less than 0
+quick  that  line  of  search.  If  it's greater than 0 spin up another level of
+recusion.                                                                       
 
-The tricky part of this problem is dealing with the duplicates bit. My favorite idea so far to accomplish this is the
-if curNumbers and candidate < curNumbers[-1]:
-    continue
+The  tricky part of this problem is dealing with the duplicates bit. My favorite
+idea so far to accomplish this is the                                           
 
-bit.
+if curNumbers and candidate < curNumbers[-1]:                                   
+    continue                                                                    
 
-To understand this, consider this example:
-Your input
-[2,3,6,7]
-7
-Output
-[[2,2,3],[2,3,2],[3,2,2],[7]]
-Expected
-[[2,2,3],[7]]
+bit.                                                                            
 
-The problem is the:
-[2,2,3],[2,3,2],[3,2,2]
+To understand this, consider this example:                                      
 
-that bit of code enforces that we only consider combinations that are montonically increasing. That fixes this instance. 
+Your input                                                                      
+[2,3,6,7]                                                                       
+7                                                                               
 
-This is a much better (in terms of speed, memory and arguably readbility) approach than doing something like keeping a set of combinations found so far. 
+Output                                                                          
+[[2,2,3],[2,3,2],[3,2,2],[7]]                                                   
+
+Expected                                                                        
+[[2,2,3],[7]]                                                                   
+
+The problem is the:                                                             
+[2,2,3],[2,3,2],[3,2,2]                                                         
+
+that  bit  of  code  enforces  that  we  only  consider  combinations  that  are
+montonically increasing. That fixes this instance.                              
+
+This  is  a  much  better  (in  terms  of speed, memory and arguably readbility)
+approach than doing something like keeping a set of combinations found so far.  
+
 """

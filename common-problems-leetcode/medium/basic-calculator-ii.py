@@ -20,28 +20,30 @@ Note:
 You may assume that the given expression is always valid.
 Do not use the eval built-in library function.
 """
-# 92ms. 88 percentile.
+# 84ms. 95 percentile.
 class Solution:
     def calculate(self, s: str) -> int:
-        s = list(s)
+        operator = "+"
         num = 0
         stack = []
-        lastOp = None
+        s = s + "$"
         
         for i,c in enumerate(s):
-            if c.isdigit():
+            if c == " ":
+                continue
+            elif c.isdigit():
                 num = num*10 + int(c)
-            if (c in "+-*/") or (i == len(s)-1):
-                if not lastOp:
+            else:
+                if operator == "+":
                     stack.append(num)
-                elif lastOp == "+":
-                    stack.append(num)
-                elif lastOp == "-":
+                elif operator == "-":
                     stack.append(-num)
-                elif lastOp == "*":
-                    stack[-1] *= num
-                elif lastOp == "/":
-                    stack[-1] = int(stack[-1]/num)
+                elif operator == "*":
+                    stack.append(stack.pop() * num)
+                elif operator == "/":
+                    stack.append( int(stack.pop() / num) )
+                
+                operator = c
                 num = 0
-                lastOp = c
+
         return sum(stack)

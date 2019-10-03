@@ -43,6 +43,7 @@ Submissions
 
 # 264ms.
 # 95 percentile.
+# O(N(Log(N)) where N is the number of intervals
 """
 # Definition for an Interval.
 class Interval:
@@ -71,9 +72,47 @@ class Solution:
 
         return gaps
 
+# 284ms. 48 percentile.
+# O(N(Log(C)) where N is the number of intervals and C is the number of employees
+"""
+# Definition for an Interval.
+class Interval:
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+"""
+from heapq import *
+class Solution:
+    def employeeFreeTime(self, schedule: 'list<list<Interval>>') -> 'list<Interval>':
+        pq = []
+        # Add each employee's first interval to the priority queue
+        for listIndex,employeeSchedule in enumerate(schedule):
+            heappush( pq, (employeeSchedule[0].start, employeeSchedule[0].end, listIndex, 0, employeeSchedule[0]) )
+        
+        # Merge the in
+        overlaps = []
+        while pq:
+            start, end, listIndex, elementIndex, interval = heappop(pq)
+            if overlaps and start <= overlaps[-1].end:
+                overlaps[-1].end = max(overlaps[-1].end, end)
+            else:
+                overlaps.append(interval)
+            
+            if elementIndex + 1 < len(schedule[listIndex]):
+                nextEvent = schedule[listIndex][elementIndex + 1]
+                heappush(pq,  (nextEvent.start, nextEvent.end, listIndex, elementIndex+1, nextEvent) )
+        
+        freeTime = []
+        for i in range(1, len(overlaps)):
+            freeTime.append( Interval(overlaps[i-1].end, overlaps[i].start) )
+        
+        return freeTime
+
+
 """
 Notes:
 
+1)
     There are a few approaches to solving this. I like this one^ for the simplicitly. 
     We just flatten the intervals into a single list, merge, and during the merge
     process identify the gaps.
@@ -81,4 +120,7 @@ Notes:
     that the lists are initially sorted. To make this faster, we could replace the sorting
     with a merge type operation that combines the employee's schedules in sorted order in
     linear time. I like the simplicitly of the single line for sorting though...
+
+2) The asymptotically better solution. Use a priority queue to get the next earliest interval
+amongst the sorted lists of employees schedules. 
 """
