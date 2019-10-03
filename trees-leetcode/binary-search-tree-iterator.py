@@ -26,18 +26,7 @@ Note:
 next() and hasNext() should run in average O(1) time and uses O(h) memory, where h is the height of the tree.
 You may assume that next() call will always be valid, that is, there will be at least a next smallest number in the BST when next() is called.
 """
-# Attempt 1:
-"""
-I started to store the last number returned...then I'd make a O(logn) call to find the next biggest
-one. This doesn't work. Nonunique sequences will break it. Also too slow...need constant calls
-"""
 
-
-# Attempt 2: 99th percentile in speed
-"""
-Simple but cool takeaway from this. By making this class and saving the stack, you can turn 
-traditional search algos into iterators. In this case, we're doing an in order traversal. 
-"""
 # Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, x):
@@ -48,33 +37,42 @@ traditional search algos into iterators. In this case, we're doing an in order t
 class BSTIterator:
 
     def __init__(self, root: TreeNode):
-        self.s = []
-        while root: 
-            self.s.append(root)
-            root = root.left
-            
+        self.stack = []
+        self.root = root
 
     def next(self) -> int:
         """
         @return the next smallest number
         """
-        cur = self.s.pop()
-        temp = cur.right
-        while temp:
-            self.s.append(temp)
-            temp = temp.left
-        return cur.val
-
+        while self.stack or self.root:
+            if self.root:
+                self.stack.append(self.root)
+                self.root = self.root.left
+            else:
+                node = self.stack.pop()
+                self.root = node.right
+                break
+        
+        return node.val if node else None
+            
 
     def hasNext(self) -> bool:
         """
         @return whether we have a next smallest number
         """
-        return len(self.s)>0
-        
+        return self.stack or self.root
 
 
 # Your BSTIterator object will be instantiated and called as such:
 # obj = BSTIterator(root)
 # param_1 = obj.next()
 # param_2 = obj.hasNext()
+
+
+"""
+Notes:
+
+Iterative in order traversal. After getting the next smallest value, we save the stack and the
+current root and then stop the traversal. 
+
+"""
