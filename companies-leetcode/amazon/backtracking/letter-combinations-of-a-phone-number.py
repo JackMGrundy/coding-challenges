@@ -46,33 +46,33 @@ class Solution(object):
 
 # Solution without itertools
 # 12ms. 94th percentile.
-class Solution(object):
-    def letterCombinations(self, digits):
-        """
-        :type digits: str
-        :rtype: List[str]
-        """
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
         if not digits:
             return []
-        digitsToLetters = {
-                            "2": ["a", "b", "c"],
-                            "3": ["d", "e", "f"],
-                            "4": ["g", "h", "i"],
-                            "5": ["j", "k", "l"],
-                            "6": ["m", "n", "o"],
-                            "7": ["p", "q", "r", "s"],
-                            "8": ["t", "u", "v"],
-                            "9": ["w", "x", "y", "z"]}
+        possibleCombinations = []
         
-        res = []
-        def dfs(curIndex, s):
-            if curIndex == len(digits):
-                res.append(s)
+        digitToLetters = { "0": [], "1": [], "2": ["a", "b", "c"], "3": ["d", "e", "f"], 
+                          "4": ["g", "h", "i"], "5": ["j", "k", "l"], "6": ["m", "n", "o"], 
+                          "7": ["p", "q", "r", "s"], "8": ["t", "u", "v"], "9": ["w", "x", "y", "z"], }
+        
+        def backtrack(i, path):
+            if i == len(digits):
+                possibleCombinations.append( ''.join(path) )
                 return
             
-            for letter in digitsToLetters[digits[curIndex]]:
-                dfs(curIndex+1, s+letter)
+            for letter in digitToLetters[digits[i]]:
+                backtrack(i + 1, path + [letter])
         
-        dfs(0, "")
-        return res
+        backtrack(0, [])
+        
+        return possibleCombinations
+
+
+"""
+Notes:
+
+Standard backtracking
+
+"""
         

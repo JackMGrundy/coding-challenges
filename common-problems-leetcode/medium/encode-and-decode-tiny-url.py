@@ -8,15 +8,15 @@ algorithm should work. You just need to ensure that a URL can be encoded to a ti
 decoded to the original URL.
 """
 
-# 20ms. 70th percentile.
+# 16ms. 90th percentile.
 class Codec:
-    
+
     def __init__(self):
-        self.shortToLong = {}
-        self.longToShort = {}
-        self.alphabet = list(string.ascii_letters + "012345689")
+        self.alphabet = list(string.ascii_lowercase + "0123456789")
+        self.longToShort = collections.defaultdict(str)
+        self.shortToLong = collections.defaultdict(str)
         self.shortLength = 6
-        
+    
     def encode(self, longUrl):
         """Encodes a URL to a shortened URL.
         
@@ -27,15 +27,13 @@ class Codec:
         while len(key) < self.shortLength or key in self.shortToLong:
             key = []
             for i in range(self.shortLength):
-                    key.append(random.choice(self.alphabet))
+                key.append(random.choice(self.alphabet))
             key = ''.join(key)
         
         self.shortToLong[key] = longUrl
         self.longToShort[longUrl] = key
-
-        return "htpp://tinyurl.com/" + key
         
-        
+        return "http://tinyurl.com/{}".format(key)
 
     def decode(self, shortUrl):
         """Decodes a shortened URL to its original URL.
@@ -44,10 +42,13 @@ class Codec:
         :rtype: str
         """
         key = shortUrl[-6:]
-        if key in self.shortToLong:
-            return self.shortToLong[key]
-        else:
-            return ""
+        return self.shortToLong[key]
+
+        
+
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.decode(codec.encode(url))
         
 
 # Your Codec object will be instantiated and called as such:

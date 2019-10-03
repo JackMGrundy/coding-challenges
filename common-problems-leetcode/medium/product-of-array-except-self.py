@@ -13,11 +13,10 @@ Could you solve it with constant space complexity? (The output array does not co
 # 140ms. 65 percentile.
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
-        output = [ x for x in nums ]
+        output = [ num for num in nums ]
         for i in range(1, len(nums)):
             output[i] *= output[i-1]
         
-        output = output
         rollingTotal = 1
         for i in range(len(output)-1, 0, -1):
             output[i] = output[i-1]*rollingTotal
@@ -29,13 +28,18 @@ class Solution:
 """
 Notes:
 
-Consider the example:
-[1,2,3,4]
+Consider the example:                                                           
 
-We initialize the output array to be a rolling product of these numbers:
-[1 2 6 24]
+[1,2,3,4]                                                                       
 
-Then we iterate backwards through this array and maintain a rolling product constant comprised of elements from the original array.
-For each element, we have the product of the all the elements before it contained in the preceding element. And we have the product
-of all the elements after it in the array contained in our constat. Ojala, everything we need to fill each element
+We initialize the output array to be a rolling product of these numbers:        
+
+[1 2 6 24]                                                                      
+
+Then  we  iterate  backwards  through  this array and maintain a rolling product
+constant  comprised  of  elements  from the original array. For each element, we
+have  the  product  of the all the elements before it contained in the preceding
+element.  And  we  have  the  product  of all the elements after it in the array
+contained in our constat. Ojala, everything we need to fill each element        
+
 """

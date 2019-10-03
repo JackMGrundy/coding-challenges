@@ -13,6 +13,7 @@ Submissions
 228,367
 """
 # 89th percentile. 56ms. 
+# builtins.
 from itertools import accumulate
 from collections import defaultdict
 class Solution:
@@ -31,12 +32,13 @@ class Solution:
         
         return res
 
-# Tried to speed things up by doing the acumulation on the fly, but no dice
 # 89th percentile. 56ms. 
+# no builtins
 from collections import defaultdict
 class Solution:
     def subarraySum(self, nums: List[int], k: int) -> int:
-        if not nums: return 0
+        if not nums: 
+            return 0
         res = 0
         matches = defaultdict(int) 
         matches[k] = 1
@@ -46,7 +48,7 @@ class Solution:
             sm += n
             if sm in matches:
                 res += matches[sm] 
-            matches[sm+k] += 1
+            matches[sm + k] += 1
         
         return res
 

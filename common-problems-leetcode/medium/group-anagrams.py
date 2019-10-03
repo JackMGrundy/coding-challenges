@@ -19,16 +19,15 @@ Accepted
 Submissions
 700,745
 """
-# 61st percentile 120ms
-# cleaner
-from collections import defaultdict
+# 108ms. 93 percentile.
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-        groups = defaultdict(list)
-        for s in strs:
-            groups[str(sorted(s))].append(s)
+        groups = collections.defaultdict(list)
         
-        return list(groups.values())
+        for s in strs:
+            groups[tuple(sorted(s))].append(s)
+        
+        return groups.values()
 
 # 90th percentile. 112ms
 """

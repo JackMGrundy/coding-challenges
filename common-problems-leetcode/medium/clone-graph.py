@@ -1,8 +1,7 @@
 """
 
-Given a reference of a node in a connected undirected graph, return a deep copy (clone) of the graph. Each node in the graph contains a val (int) and a list (List[Node]) of its neighbors.
-
- 
+Given a reference of a node in a connected undirected graph, return a deep copy (clone) of the 
+graph. Each node in the graph contains a val (int) and a list (List[Node]) of its neighbors. 
 
 Example:
 
@@ -57,7 +56,14 @@ class Solution:
     
     
 
-# 40ms. 95th percentile. dfs recursive.
+# 36ms. 99th percentile. dfs recursive.
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val, neighbors):
+        self.val = val
+        self.neighbors = neighbors
+"""
 """
 # Definition for a Node.
 class Node:
@@ -67,27 +73,28 @@ class Node:
 """
 class Solution:
     def cloneGraph(self, node: 'Node') -> 'Node':
-        oldNodesToNew = {}
+        
+        def dfs(node, oldToNew):
+            for neighbor in node.neighbors:
+                if neighbor not in oldToNew:
+                    neighborCopy = Node(neighbor.val, [])
+                    oldToNew[neighbor] = neighborCopy
+                    oldToNew[node].neighbors.append(neighborCopy)
+                    dfs(neighbor, oldToNew)
+                else:
+                    oldToNew[node].neighbors.append(oldToNew[neighbor])
+
+            
+        oldToNew = {}
         nodeCopy = Node(node.val, [])
-        oldNodesToNew[node] = nodeCopy
-        self.dfs(node, oldNodesToNew)
+        oldToNew[node] = nodeCopy
+        dfs(node, oldToNew)
         return nodeCopy
-        
-        
-    def dfs(self, node, oldNodesToNew):
-        for neighbor in node.neighbors:
-            if neighbor not in oldNodesToNew:
-                neighborCopy = Node(neighbor.val, [])
-                oldNodesToNew[node].neighbors.append(neighborCopy)
-                oldNodesToNew[neighbor] = neighborCopy
-                self.dfs(neighbor, oldNodesToNew)
-            else:
-                oldNodesToNew[node].neighbors.append(oldNodesToNew[neighbor])
 
 
 """
 Notes:
 
-They key here is to be able to pair old nodes with new ones. The search method doesn't really matte as long
+They key here is to be able to pair old nodes with new ones. The search method doesn't really matter as long
 as it traverses all the nodes.
 """

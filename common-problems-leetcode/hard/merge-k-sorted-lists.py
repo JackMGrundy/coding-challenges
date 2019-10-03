@@ -38,6 +38,33 @@ class Solution(object):
         return head.next
 
 
+# Simple priority queue approach. 100ms. 98 percentile.
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+from heapq import *
+class Solution:
+    def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+        lists = [ ls for ls in lists if ls != None ]
+        if not lists:
+            return None
+
+        pq = []
+        for i,head in enumerate(lists):
+            heappush(pq, (head.val, i, head))
+        
+        cap = merger = ListNode(-1)
+        while pq:
+            _, i, node = heappop(pq)
+            if node.next:
+                heappush(pq, (node.next.val, i, node.next))
+            merger.next = node
+            merger = merger.next
+        
+        return cap.next
+
 
 # Merge in one list at a time. O(N)K time where N is total nodes
 # and k is number of lists.
@@ -167,7 +194,7 @@ Combine the lists -> K space (priority queue will have K elements in it at any o
 
 
 4) This is the best approach in that its Nlog(k) but constant space. It's a bit trickier though.
-The idea is cool though. In my opinion it's another example of merge sort esque techniques
+The idea is cool though. In my opinion it's another example of how merge sort esque techniques
 work surprisingly well with linked lists. 
 
 At the core, we maintain a final list and merge in one list at a time. Then we do this with
