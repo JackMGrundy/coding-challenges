@@ -36,7 +36,7 @@ Explanation: The endWord "cog" is not in wordList, therefore no possible transfo
 """
 
 
-# 496ms. 54 percentile.
+# 496ms. 54 percentile. One way bfs without bridge words.
 class Solution:
     def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
         wordLength = len(beginWord)
@@ -63,6 +63,49 @@ class Solution:
             paths = extendedPaths
     
         return validPaths
+
+
+
+# 164ms. 79 percentile.
+# One way bfs with bridge words.
+from collections import defaultdict, deque
+class Solution:
+    def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+        if endWord not in wordList:
+            return []
+        
+        bridgeWords = defaultdict(list)
+        for word in wordList:
+            for i in range(len(word)):
+                bridgeWord = word[0:i] + "*" + word[i+1:]
+                bridgeWords[bridgeWord].append(word)
+        
+        searching = True
+        paths = defaultdict(list)
+        paths[beginWord] = [[beginWord]]
+        shortestPaths = []
+        visited = set()
+        
+        while paths and searching:
+            extendedPaths = defaultdict(list)
+            for lastWord, pathsEndingInLastWord in paths.items():
+                if lastWord == endWord:
+                    searching = False
+                    shortestPaths.extend(pathsEndingInLastWord)
+                elif searching:
+                    for i in range(len(lastWord)):
+                        bridgeWord = lastWord[0:i] + "*" + lastWord[i+1:]
+                        if bridgeWord in bridgeWords:
+                            for neighbor in bridgeWords[bridgeWord]:
+                                if neighbor not in visited:
+                                    extendedPaths[neighbor] += [ path + [neighbor] for path in pathsEndingInLastWord ]
+                                    
+                
+            for key in extendedPaths.keys():
+                visited.add(key)
+            paths = extendedPaths
+        
+        return shortestPaths
 
 
 

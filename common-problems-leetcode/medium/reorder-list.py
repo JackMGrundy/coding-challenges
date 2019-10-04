@@ -25,37 +25,36 @@ class Solution:
         """
         Do not return anything, modify head in-place instead.
         """
-        if not head or not head.next:
-            return head
-        
-        slow = fast = previous = res = head
+        if not head:
+            return None
+        slow = fast = head
+        length = 0
         while fast and fast.next:
-            previous = slow
             slow = slow.next
             fast = fast.next.next
+            length += 2
         
-        previous.next = None
-        previous = slow
+        previous = None
         current = slow.next
         slow.next = None
-        after = None
-
         while current:
             after = current.next
             current.next = previous
             previous = current
             current = after
         
-        firstHalfHead = head
-        secondHalfHead = previous
-            
-        while firstHalfHead and secondHalfHead:
-            firstHalfHead.next, firstHalfHead = secondHalfHead, firstHalfHead.next
-            
-            if firstHalfHead:
-                secondHalfHead.next, secondHalfHead = firstHalfHead, secondHalfHead.next
+        cap = merger = ListNode(-1)
+        while head or previous:
+            if head:
+                merger.next = head
+                merger = merger.next
+                head = head.next
+            if previous:
+                merger.next = previous
+                merger = merger.next
+                previous = previous.next
 
-        return res
+        return cap.next
                 
         
 
