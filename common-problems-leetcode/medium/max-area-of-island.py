@@ -59,7 +59,6 @@ class Solution:
         return best
 
 
-
 # recursive dfs. 172ms. 38th percentile.
 class Solution:
     def maxAreaOfIsland(self, grid: List[List[int]]) -> int:

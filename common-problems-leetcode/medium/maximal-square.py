@@ -12,57 +12,24 @@ Input:
 
 Output: 4
 """
-# 208ms. 79th percentile.
-# To minimize casting, just cast the first row and the first column. 
-class Solution:
-    def maximalSquare(self, matrix: List[List[str]]) -> int:
-        if not matrix:
-            return 0
-        m, n = len(matrix), len(matrix[0])
-        dp = [ [ 0 for j in range(n) ] for i in range(m) ]
-        largestSide = 0
-        
-        for i in range(m):
-            dp[i][0] = int(matrix[i][0])
-            if dp[i][0] == 1:
-                largestSide = 1
-
-        for j in range(n):
-            dp[0][j] = int(matrix[0][j])
-            if dp[0][j] == 1:
-                largestSide = 1
-        
-        for i in range(1, m):
-            for j in range(1, n):
-                if matrix[i][j] == "1":
-                    dp[i][j] = 1 + min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1])
-                    largestSide = max(largestSide, dp[i][j])
-        
-        return largestSide*largestSide
-        
-
-
-# can't be lazy...
 # 196ms. 98 percentile
 class Solution:
     def maximalSquare(self, matrix: List[List[str]]) -> int:
         if not matrix:
             return 0
-        
-        longestSide = 0
         dp = [0]*(len(matrix[0]) + 1)
-        
+        longestSide = 0
         for i in range(len(matrix)):
-            topLeft = 0
+            prevSquare =0
             for j in range(len(matrix[0])):
                 temp = dp[j]
                 if matrix[i][j] == '1':
-                    dp[j] = 1 + min(dp[j], dp[j-1], topLeft)
+                    dp[j] = 1 + min(dp[j], dp[j-1], prevSquare)
                     longestSide = max(longestSide, dp[j])
                 else:
                     dp[j] = 0
                 
-                topLeft = temp
+                prevSquare = temp
         
         return longestSide*longestSide
 

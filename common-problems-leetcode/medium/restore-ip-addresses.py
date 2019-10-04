@@ -10,23 +10,25 @@ Output: ["255.255.11.135", "255.255.111.35"]
 # 32ms. 98th percentile.
 class Solution:
     def restoreIpAddresses(self, s: str) -> List[str]:
-        res = []
-        self._backtrack(s, 0, "", res)
-        return res
-    
-    def _backtrack(self, s, blocksFormed, path, res):
-        if blocksFormed == 4:
-            if len(s) == 0:
-                res.append(path[:-1])
-        else:
-            for numDigits in range(1, 4):
-                if numDigits <= len(s):
-                    if numDigits == 1:
-                        self._backtrack(s[numDigits:], blocksFormed + 1, path + s[0:numDigits] + ".", res)
-                    elif numDigits == 2 and s[0] != "0":
-                        self._backtrack(s[numDigits:], blocksFormed + 1, path + s[0:numDigits] + ".", res)
-                    elif numDigits == 3 and s[0] != "0" and int(s[0:3]) < 256:
-                        self._backtrack(s[numDigits:], blocksFormed + 1, path + s[0:numDigits] + ".", res)
+        ips = []
+        
+        def backtrack(ip, index, blocksLeft):
+            if blocksLeft == 0:
+                if index == len(s):
+                    ips.append( ip[0:-1] )
+                return
+            
+            if index < len(s):
+                backtrack(ip + s[index] + ".", index + 1, blocksLeft - 1)
+            if index + 1 < len(s) and s[index] != '0':
+                backtrack(ip + s[index:index+2] + ".", index + 2, blocksLeft - 1)
+            if index + 2 < len(s) and s[index] != '0' and int(s[index:index+3]) < 256:
+                backtrack(ip + s[index:index+3] + ".", index + 3, blocksLeft - 1)
+        
+        
+        backtrack("", 0, 4)
+        
+        return ips
 
 """
 Notes:
