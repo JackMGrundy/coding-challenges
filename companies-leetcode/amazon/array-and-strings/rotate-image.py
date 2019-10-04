@@ -41,7 +41,7 @@ rotate the input matrix in-place such that it becomes:
 ]
 """
 
-# 1st attempt: 40ms. 82 percentile.
+# 40ms. 82 percentile.
 # Not super readable...
 class Solution:
     def rotate(self, matrix: List[List[int]]) -> None:
@@ -62,7 +62,7 @@ class Solution:
 
 
 
-# 2nd attempt: 36ms. 96 percentile.
+# 36ms. 96 percentile.
 # Better
 class Solution:
     def rotate(self, matrix: List[List[int]]) -> None:
@@ -79,13 +79,13 @@ class Solution:
 
 
 
-# 3rd attempt: love python
+# ove python
 class Solution:
     def rotate(self, matrix: List[List[int]]) -> None:
         """
         Do not return anything, modify matrix in-place instead.
         """
-        for topLeftY in range(len(matrix)//2):
-            for topLeftX in range(topLeftY, len(matrix)-topLeftY-1):
-                matrix[topLeftY][topLeftX], matrix[~topLeftX][topLeftY], matrix[~topLeftY][~topLeftX], matrix[topLeftX][~topLeftY] =\
-                matrix[~topLeftX][topLeftY], matrix[~topLeftY][~topLeftX], matrix[topLeftX][~topLeftY],  matrix[topLeftY][topLeftX]
+        for i in range(len(matrix)//2):
+            for j in range(i, len(matrix[0]) - i - 1):
+                matrix[i][j],  matrix[~j][i],  matrix[~i][~j], matrix[j][~i] = \
+                matrix[~j][i], matrix[~i][~j], matrix[j][~i],  matrix[i][j]
