@@ -9,6 +9,7 @@ The input time is legal and ranges from 00:00 to 23:59.
 """
 
 # 72ms. 95th percentile.
+# 1440 operations...
 class Solution:
     def findMinDifference(self, timePoints: List[str]) -> int:
         memo = [ 0 for _ in range(24*60) ]
@@ -32,3 +33,18 @@ class Solution:
         
         best = min(best, 24*60+first-last)
         return best
+
+
+# 80ms. 88 percentile.
+# O(Nlog(N))
+class Solution:
+    def findMinDifference(self, timePoints: List[str]) -> int:
+        timePoints = [ 60*int(x[0:2]) + int(x[3:]) for x in timePoints ]
+        timePoints.sort()
+        
+        timePoints.append(1440 + timePoints[0])
+        minDiff = float("inf")
+        for i in range(1, len(timePoints)):
+            minDiff = min(minDiff, timePoints[i] - timePoints[i - 1])
+        
+        return minDiff

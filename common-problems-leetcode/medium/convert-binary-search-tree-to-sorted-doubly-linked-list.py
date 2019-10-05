@@ -27,7 +27,10 @@ The figure below shows the transformed BST. The solid line indicates the success
 line means the predecessor relationship.
 """
 
-# 708ms. 92nd percentile.
+
+# Iterative. 
+# Making a new list: 696ms. 99 percentile.
+# Rearranging old node: 728ms. 68 percentile.
 """
 # Definition for a Node.
 class Node:
@@ -36,6 +39,39 @@ class Node:
         self.left = left
         self.right = right
 """
+class Solution:
+    def treeToDoublyList(self, root: 'Node') -> 'Node':
+        if not root:
+            return None
+        stack = []
+        first, last = None, None
+        
+        while stack or root:
+            if root:
+                stack.append(root)
+                root = root.left
+            elif stack:
+                node = stack.pop()
+                root = node.right
+                
+                # Uncomment to copy tree instead of relinking
+                # node = Node(node.val)
+                
+                if not first:
+                    first = node
+                if last:
+                    node.left = last
+                    last.right = node
+                last = node
+        
+        last.right = first
+        first.left = last
+        return first
+            
+
+
+# 708ms. 92nd percentile.
+# Recursive
 class Solution:
     
     def treeToDoublyList(self, root: 'Node') -> 'Node':
@@ -65,3 +101,8 @@ class Solution:
         last.right = first
         first.left = last
         return first
+
+"""
+Notes:
+
+"""
