@@ -95,6 +95,7 @@ class Solution:
 """
 Notes:
 
-They key here is to be able to pair old nodes with new ones. The search method doesn't really matter as long
+They key here is to be able to pair old nodes with new ones. 
+The search method doesn't really matter as long
 as it traverses all the nodes.
 """

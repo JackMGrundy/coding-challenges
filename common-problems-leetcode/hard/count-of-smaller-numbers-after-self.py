@@ -42,7 +42,8 @@ class Solution:
             half = len(nums) // 2
             if half:
                 left, right = mergeSort(nums[:half]), mergeSort(nums[half:])
-                for i in range(len(nums))[::-1]:
+                # for i in range(len(nums))[::-1]: # Equivalently
+                for i in range( len(nums) - 1, -1, -1):
                     if not right or left and left[-1] > right[-1]:
                         nums[i] = left.pop()
                     else:
