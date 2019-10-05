@@ -1,5 +1,7 @@
 """
-Given an array w of positive integers, where w[i] describes the weight of index i, write a function pickIndex which randomly picks an index in proportion to its weight.
+Given an array w of positive integers, where w[i] describes the weight of 
+index i, write a function pickIndex which randomly picks an index in 
+proportion to its weight.
 
 Note:
 
@@ -20,35 +22,46 @@ Input:
 Output: [null,0,1,1,1,0]
 Explanation of Input Syntax:
 
-The input is two lists: the subroutines called and their arguments. Solution's constructor has one argument, the array w. pickIndex has no arguments. Arguments are always wrapped with a list, even if there aren't any.
+The input is two lists: the subroutines called and their arguments. 
+Solution's constructor has one argument, the array w. pickIndex has no 
+arguments. Arguments are always wrapped with a list, even if there 
+ren't any.
 
 Accepted
 24,452
 Submissions
 57,249
 """
-# 53rd percentile. 300ms.
-from random import randint
+# 272ms. 91 percentile.
+# Custom binary search
 class Solution:
-    
+
     def __init__(self, w: List[int]):
-        self.indexCutoffs = [0]*len(w)
-        self.indexCutoffs[0] = w[0]
-        for i in range(1, len(w)):
-            self.indexCutoffs[i] += self.indexCutoffs[i-1]  + w[i]
-        self.totalWeight = self.indexCutoffs[-1]
+        total = sum(w)
+        for i in range(len(w)):
+            w[i] = w[i]/total
+            if 0 < i:
+                w[i] += w[i-1]
+        self.w = w
 
     def pickIndex(self) -> int:
-        target = randint(1, self.totalWeight)
-        l, r = 0, len(self.indexCutoffs)-1
-        while l < r:
-            mid = (l+r)//2
-            if self.indexCutoffs[mid] >= target:
-                r = mid
+        randVal = random.random()
+        index = self.binarySearch(self.w, randVal)
+        return index
+    
+    def binarySearch(self, nums, target):
+        left, right = 0, len(nums) - 1
+        
+        while left <= right:
+            middle = left + (right - left)//2
+            
+            if nums[middle] < target:
+                left = middle + 1
             else:
-                l = mid+1
-        return l
+                right = middle - 1
+        return left
             
+
 
 # Your Solution object will be instantiated and called as such:
 # obj = Solution(w)
@@ -56,24 +69,32 @@ class Solution:
 
 
 
-# 97th percentile. 184 ms.
-from random import random
-from bisect import bisect_left
+# 99th percentile. 192 ms.
+# built ins.
 class Solution:
-    
+
     def __init__(self, w: List[int]):
-        totalWeight = sum(w)
-        self.indexCutoffs = []
-        cumulativeSum = 0
-        for weight in w:
-            cumulativeSum += float(weight)/totalWeight
-            self.indexCutoffs.append(cumulativeSum)
-            
+        total = sum(w)
+        for i in range(len(w)):
+            w[i] = w[i]/total
+            if 0 < i:
+                w[i] += w[i-1]
+        self.w = w
+
     def pickIndex(self) -> int:
-        target = random()
-        test = bisect_left(self.indexCutoffs, target)
-        return test
+        randVal = random.random()
+        index = bisect.bisect_left(self.w, randVal)
+        return index
 
 # Your Solution object will be instantiated and called as such:
 # obj = Solution(w)
 # param_1 = obj.pickIndex()
+
+
+"""
+Notes:
+
+Boils down to making a cumulative distribution, generating a random
+value and then select the corresponding group.
+
+"""
