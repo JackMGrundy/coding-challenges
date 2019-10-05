@@ -39,17 +39,21 @@ Input: "/a//b////c/d//././/.."
 Output: "/a/b/c"
 """
 
-# 36ms. 84th percentile.
+# 28ms. 99.6 percentile.
 class Solution:
     def simplifyPath(self, path: str) -> str:
-        path = path.split("/")
-        res = []
-        for d in path:
-            if d == "." or d == "":
+        
+        stack = []
+        
+        for part in path.split("/"):
+            if part == "..":
+                if stack:
+                    stack.pop()
+            elif part == ".":
                 continue
-            if d == "..":
-                if res:
-                    res.pop()
+            elif part == "":
+                continue
             else:
-                res.append(d)
-        return '/' + '/'.join(res)
+                stack.append(part)
+        
+        return "/" + '/'.join(stack)
