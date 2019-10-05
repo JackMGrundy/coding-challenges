@@ -1,5 +1,7 @@
 """
-Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+Given an array nums of n integers, are there elements a, b, c in 
+nums such that a + b + c = 0? Find all unique triplets in the 
+array which gives the sum of zero.
 
 Note:
 
@@ -15,44 +17,7 @@ A solution set is:
   [-1, -1, 2]
 ]
 """
-from itertools import combinations
-
-nums = [-1, 0, 1, 2, -1, -4]
-
-# 1st attempt: timeout : (  passed 311/313 tests.
-# Too slow becase of A) use of set to eliminate duplicates B) casting between tuples
-# and lists C) "too brute force" with search for 2nd and 3rd elements of tuple...
-# processing duplicate elements
-class Solution(object):
-    def threeSum(self, nums):
-        """
-        :type nums: List[int]
-        :rtype: List[List[int]]
-        """
-        nums.sort()
-        # Horrible code...but fun to fit in one line
-        res = [ list(x) for x in { 
-                        ( lagVal, nums[leadI], 0-lagVal-nums[leadI] ) 
-                        for lagI, lagVal in enumerate(nums) 
-                        for leadI in range(lagI+1, len(nums)) 
-                            if 0-lagVal-nums[leadI] in nums[(leadI+1):] } ]
-
-        # Equivalent code that is actually readablebut spread over ~10 lines
-        # res = set()
-        # for lagI, lagVal in enumerate(nums):
-        #     for leadI in range(lagI+1, len(nums)):
-        #         leadVal = nums[leadI]
-        #         target = 0 - lagVal - leadVal
-        #         if target in nums[(leadI+1):]:
-        #             res.add( tuple( [lagVal, leadVal, target] ) )
-        
-        # res = [ list(x) for x in res ]
-        return(res)
-
-
-
-
-# 2nd attempt: ~480ms 97.5th percentile. Fixed problems above.
+# ~480ms 97.5th percentile
 class Solution(object):
     def threeSum(self, nums):
         """
@@ -61,10 +26,10 @@ class Solution(object):
         """
         nums.sort()
         res = []
-        for i in range(len(nums)-2):
-            if i>0 and nums[i]==nums[i-1] or nums[i]>0:
+        for i in range(len(nums) - 2):
+            if 0 < i and nums[i] == nums[i - 1] or 0 < nums[i]:
                 continue
-            l, r = i+1, len(nums)-1
+            l, r = i + 1, len(nums) - 1
             while l < r:
                 s = nums[i] + nums[l] + nums[r]
                 if s < 0:
@@ -73,14 +38,13 @@ class Solution(object):
                     r -= 1
                 else:
                     res.append([ nums[i], nums[l], nums[r] ])
-                    while l<r and nums[l]==nums[l+1]:
+                    while l < r and nums[l] == nums[l + 1]:
                         l += 1
-                    while l<r and nums[r]==nums[r-1]:
+                    while l < r and nums[r] == nums[r - 1]:
                         r -= 1
-                    l, r = l+1, r-1
+                    l, r = l + 1, r - 1
         
-        return(res)
-
+        return res
 
 
 
@@ -103,16 +67,16 @@ class Solution(object):
         neg.sort()
         
         # Only possible tuple without at least 1 positive and at least 1 negative
-        if 0 in counts and counts[0]>=3:
+        if 0 in counts and counts[0] >= 3:
             res.append( [0, 0, 0] )
         
         # All other possible tuples
         for posEle in pos:
             for negEle in neg: 
-                thirdEle = 0-posEle-negEle
+                thirdEle = 0 - posEle - negEle
                 if thirdEle in counts:
                     # Tuples with 2 of the same
-                    if (thirdEle == posEle or thirdEle == negEle) and counts[thirdEle]>=2:
+                    if (thirdEle == posEle or thirdEle == negEle) and counts[thirdEle] >= 2:
                         res.append( [ posEle, negEle, thirdEle ] )
                     #Tuples with all different
                     elif negEle < thirdEle < posEle:
@@ -121,30 +85,41 @@ class Solution(object):
 
 
 """
-Notes:
-We're going to have an at least O(N^2) solution, so sorting is fine.
-Break the positives and negatives into separate lists. 
-Count how many we have of each element
-Then reduce the lists to unique elements and sort ascending - this helps us to sidestep the "no duplicates" part
-We have to have a positive and we have to have a negative. So we're going to iterate through all those combinations
-    ^This step cuts down on a lot of combinations that an approach with two advancing pointers for fist and second
-    would explore. 
+Notes:                                                                          
 
-    The one exception is [0,0,0], which we can check for with counts
-We can instantly tell if we have the requisite third using a hash table that we prepopulate. 
+We're going to have an at least O(N^2) solution, so sorting is fine.            
+Break the positives and negatives into separate lists.                          
+Count how many we have of each element                                          
+Then  reduce  the lists to unique elements and sort ascending - this helps us to
+sidestep  the  "no  duplicates"  part. We have to have a positive and we have to
+have a negative. So we're going to iterate through all those combinations       
+        ^This  step cuts down on a lot of combinations that an approach with two
+advancing pointers for first and second would explore.                                                              
 
-Now we're pretty much home free.
-Check if we have that third element. There are two ways this third element could be a match for us.
-1) Third is equal to first or second. To makes sure we actually have two copies, check counts
-2) Third is a different number from the first two. Here we need a mechanism to deal with duplicates - at some point "third ele"
-    is going to come up again but as pos or neg. Specifically, for a given triplet, if the three numbers are a, b, c and say c is negative,
-    we're going to have
-    pos = a, third = b, neg = c
-    and
-    pos = b, third = a, neg = c
-    To enfore taking one, we can somewhat arbitraily take one of them. To make the writing of it a bit easier, we can just do negEle < thirdEle < posEle
+    The one exception is [0,0,0], which we can check for with counts            
 
-Last bit: if 
+We  can instantly tell if we have the requisite third using a hash table that we
+prepopulate.                                                                    
+
+Now we're pretty much home free.                                                
+
+Check if we have that third element. There are two ways this third element could
+be a match for us.                                                              
+
+1) Third is equal to first or second. To makes sure we actually have two copies,
+check counts                                                                    
+2)  Third  is a different number from the first two. Here we need a mechanism to
+deal  with  duplicates - at some point "third ele" is going to come up again but
+as pos or neg. Specifically, for a given triplet, if the three numbers are a, b,
+c and say c is negative, we're going to have                                    
+
+    pos = a, third = b, neg = c                                                 
+    and                                                                         
+    pos = b, third = a, neg = c                                                 
+
+      To enfore taking one, we can somewhat arbitraily take one of them. To make
+the writing of it a bit easier, we can just do negEle < thirdEle < posEle       
+
 
 
 """
