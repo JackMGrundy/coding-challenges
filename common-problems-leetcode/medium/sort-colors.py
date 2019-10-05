@@ -44,8 +44,10 @@ class Solution:
 """
 Notes:
 
-The key here is that there are only 3 values. We can just keep track of pointers to 3 different sections...
+The key here is that there are only 3 values. 
+We can just keep track of pointers to 3 different sections...
 swap as needed as we run through.
 
-Makes sense that this is so similar to quick sort (the quintessential in place sorting algo)
+Makes sense that this is so similar to quick sort 
+(the quintessential in place sorting algo)
 """
