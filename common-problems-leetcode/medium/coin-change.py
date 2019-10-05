@@ -18,53 +18,32 @@ Accepted
 Submissions
 618,159
 """
-# Timeout: backtracking
-class Solution:
-    def coinChange(self, coins: List[int], amount: int) -> int:
-        coins.sort(reverse=True)
-        res = float("inf")
-        
-        def helper(coins, amount, count):
-            nonlocal res
-            if amount == 0:
-                res = min(res, count)
-                return 0
-            for coin in coins:
-                if amount-coin >= 0:
-                    helper(coins, amount-coin, count+1)
-                if res < float("inf"):
-                    return
-
-        
-        
-        helper(coins, amount, 0)
-        return res if res < float("inf") else -1
-        
-
 # DP
 # 43rd percentile 1436ms
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        if amount==0: return 0
+        if amount == 0: 
+            return 0
         dp = [float("inf")]*(amount+1)
         dp[0] = 0
         
         for i in range(len(dp)):
             for coin in coins:
-                if i-coin >= 0:
-                    dp[i] = min(dp[i], 1+dp[i-coin])
+                if i - coin >= 0:
+                    dp[i] = min(dp[i], 1 + dp[i-coin])
         return dp[amount] if dp[amount] < float("inf") else -1
 
 
 # DP - optimize for loops
-# 71st percentile 1180 ms
+# 81st percentile 1184 ms
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        if amount==0: return 0
-        dp = [0] + [float("inf")]*(amount+1)
-        
+        dp = [float("inf")]*(amount+1)
+        dp[0] = 0
+                
         for coin in coins:
             for i in range(coin, len(dp)):
-                dp[i] = min(dp[i], 1+dp[i-coin])
+                dp[i] = min(dp[i], 1 + dp[i - coin])
         
-        return dp[amount] if dp[amount] < float("inf") else -1
+        return dp[-1] if dp[-1] < float("inf") else -1
+                    
