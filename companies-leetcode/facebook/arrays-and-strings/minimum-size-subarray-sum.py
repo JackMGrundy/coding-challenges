@@ -12,21 +12,19 @@ If you have figured out the O(n) solution, try coding another solution of which 
 # 2nd attempt: 98th percentile in speed.
 class Solution:
     def minSubArrayLen(self, s: int, nums: List[int]) -> int:
-        if nums==[]: return(0)
-        l = 0; sm = 0; res = float("inf")
+        if nums==[]:
+            return 0
+        l = 0
+        sm = 0
+        res = float("inf")
+
         for r, num in enumerate(nums):
             sm += num
-            while sm >= s:
-                if r-l+1<res: res = r-l+1    
-                if l==r: return(1)
+            while s <= sm:
+                res = min(res, r - l + 1)
+                if l == r: 
+                    return 1
                 sm -= nums[l]
                 l += 1        
  
-        if res == float("inf"):
-            return(0)
-        else:
-            return(res)
-                
-                
-                
-            
+        return 0 if res == float("inf") else res

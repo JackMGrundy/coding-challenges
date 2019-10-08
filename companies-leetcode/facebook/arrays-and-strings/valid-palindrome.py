@@ -21,4 +21,4 @@ class Solution(object):
         :rtype: bool
         """
         s = ''.join(re.sub(r'\W+', '', s.lower()))
-        return(s==s[::-1])
+        return s == s[::-1]

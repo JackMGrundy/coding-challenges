@@ -37,20 +37,18 @@ class Solution:
     def invalidTransactions(self, transactions: List[str]) -> List[str]:
         invalidTransactions = []
         
-        for i,transaction in enumerate(transactions):
-            transaction = transaction.split(",")
-            transaction[1], transaction[2] = int(transaction[1]), int(transaction[2])
-            transactions[i] = transaction
+        for i,transactionString in enumerate(transactions):
+            name, time, amount, city = transactionString.split(",")
+            transactions[i] = [ name, int(time), int(amount), city ]
         
-        for thisTransaction in transactions:
+        for [thisName, thisTime, thisAmount, thisCity] in transactions:
             
-            if 1000 < thisTransaction[2]:
-                invalidTransactions.append(",".join([ str(x) for x in thisTransaction]))
-            
+            if 1000 < thisAmount:
+                invalidTransactions.append(','.join([ thisName, str(thisTime), str(thisAmount), thisCity]))
             else:
-                for thatTransaction in transactions:
-                    if thisTransaction[0] == thatTransaction[0] and abs(thisTransaction[1] - thatTransaction[1]) <= 60 and thisTransaction[3] != thatTransaction[3]:
-                        invalidTransactions.append(",".join([ str(x) for x in thisTransaction]))
+                for [thatName, thatTime, thatAmount, thatCity] in transactions:
+                    if thisName == thatName and abs(thisTime - thatTime) <= 60 and thisCity != thatCity:
+                        invalidTransactions.append( ','.join([ thisName, str(thisTime), str(thisAmount), thisCity]) )
                         break
         
         return invalidTransactions

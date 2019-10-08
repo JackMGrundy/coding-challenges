@@ -131,5 +131,21 @@ class Solution:
 """
 Notes:
 
+We start a recursive call on the full string. 
+We memoize to speed things up, so we can stop early if we have already 
+processed this string. 
+
+At each level of recursion we have a list of results. This list
+contains all the paths to the end from this point. 
+
+Our effective stopping condition is when the full word is contained
+in the list of words. 
+
+Even if we hit a stopping condition, we could keep matching with the
+letters contained in the current letter. If we find a word in the set
+of words, we recurse to another level with a shortened starting word. 
+When we return, we have a list of lists where each list is a path to the
+end starting from the current level's i. To build up the paths, we 
+tack the current word on to each path.
 
 """
