@@ -56,4 +56,4 @@ class Solution(object):
         while runnerA != runnerB:
             runnerA = runnerA.next if runnerA else headB
             runnerB = runnerB.next if runnerB else headA
-        return(runnerA)
+        return runnerA
