@@ -32,10 +32,10 @@ class Solution:
         for hIndex in range(len(haystack)):
             nIndex = 0
             
-            if len(needle) > len(haystack)-hIndex:
+            if len(haystack) - hIndex < len(needle):
                 return -1
             
-            while (nIndex == len(needle) or needle[nIndex] == haystack[hIndex+nIndex]):                
+            while nIndex == len(needle) or needle[nIndex] == haystack[hIndex + nIndex]:
                 nIndex += 1
                 
                 if nIndex >= len(needle):

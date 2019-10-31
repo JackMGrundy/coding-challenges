@@ -35,13 +35,8 @@ Explanation:
 "bbaA" is also a valid answer, but "Aabb" is incorrect.
 Note that 'A' and 'a' are treated as two different characters.
 """
-# 40ms. 93rd percentile.
-from collections import Counter
+# 40ms. 95 percentile.
 class Solution:
     def frequencySort(self, s: str) -> str:
-        counts = sorted(list(Counter(s).items()), key=lambda x: -x[1])
-        res = []
-        for x in counts:
-            res.append(x[0]*x[1])
-        
-        return ''.join(res)
+        counts = collections.Counter(s).most_common()
+        return ''.join([ x[0]*x[1] for x in counts ])

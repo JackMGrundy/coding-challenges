@@ -27,27 +27,25 @@ problem,  assume  that  your  function  returns  0  when  the  reversed  integer
 overflows.                                                                      
 
 """
-
+# 40ms. 60 percentile.
 class Solution:
     def reverse(self, x: int) -> int:
-        MIN_INT, MAX_INT = -(2**31), (2**31 - 1)
-        
+        MAX_INT = 2**31 - 1
+        MIN_INT = -(2**31)
         isNegative = x < 0
         x = abs(x)
-        reverse = 0
+        total = 0
         
         while x:
-            if not isNegative and MAX_INT/10 <= reverse and 0 < x%10:
+            if not isNegative and MAX_INT/10.0 < total:
+                return 0
+            if isNegative and abs(MIN_INT)/10.0 < total:
                 return 0
             
-            if isNegative and abs(MIN_INT)/10 <= reverse and 0 < x%10:
-                return 0
-            
-            reverse = reverse*10 + x%10
+            total = total*10 + x%10
             x //= 10
         
-        
-        return reverse if not isNegative else -reverse
+        return total if not isNegative else -total
 
 """
 Notes:

@@ -21,8 +21,8 @@ Note:
 
 You must return the copy of the given head as a reference to the cloned list.
 """
-# 1st attempt: 100th percentile in speed and space. 36ms. 
-# Uses two passes. The first pass deep copies the nodes and their normal connections. It makes each new
+# 2 passes. 100th percentile in speed and space. 36ms. 
+# The first pass deep copies the nodes and their normal connections. It makes each new
 # node's random pointer point to the corresponding old copy. 
 #  The first pass makes a memo mapping old nodes to their copies.
 # Given this memo, we make a second pass and change each random pointer - pointing to old node - to point
@@ -59,29 +59,41 @@ class Solution:
         return res
 
 
-# Attempt 2:
+# One pass. 36ms. 99.75 percentile.
 """
-You can do this in one pass if you use more space:
-
-2 dictionaries
-oldToNew = maps old nodes to their corresponding new nodes
-unseenNodes = the other dictionary maps "unseen" old nodes to the new nodes that should point to them
-
-At each node, you make a deep copy and mark it in oldToNew
-
-If that node if in the keys of unseenNodes, then use unseenNodes[node] to get the node that should link to its copy
-Then link unseenNodes[node] to the deep copy
-
-Next deal with that node's random pointer. There are 3 exhaustive, mutually exclusive cases:
-1) the node points to itself or nulll...easy to deal with
-2) if the old node's random pointer points to a node we've already seen. We can easily check this by checking if the random
-pointer's target is in the keys of old to new. If it is, change deep copy's pointer to oldToNew[old node]
-3) else, the old node's random pointer must point to a node we haven't seen yet. Updating unseenNodes[unseen node] = old node
-
-^This procedure is more complicated but lets you do everything in one pass. 
-However, considering the asymptotic complexity is the same, and the above solution is already clean and fast,
-I'd opt for the above solution. 
+# Definition for a Node.
+class Node:
+    def __init__(self, val, next, random):
+        self.val = val
+        self.next = next
+        self.random = random
 """
+class Solution:
+    def copyRandomList(self, head: 'Node') -> 'Node':
+        oldToNew = {}
+        
+        cap = copy = Node(None, None, None)
+        
+        while head:
+            if head in oldToNew:
+                newNode = oldToNew[head]
+            else:
+                newNode = Node(head.val, None, None)
+                oldToNew[head] = newNode
+            
+            randomNode = None
+            if head.random in oldToNew:
+                randomNode = oldToNew[head.random]
+            elif head.random:
+                randomNode = Node(head.random.val, None, None)
+                oldToNew[head.random] = randomNode
+            
+            copy.next = newNode
+            copy.next.random = randomNode
+            copy = copy.next
+            head = head.next
+        
+        return cap.next
 
 
 
@@ -124,7 +136,8 @@ class Solution:
         self.copied = {}
     
     def copyRandomList(self, head: 'Node') -> 'Node':
-        if not head: return None
+        if not head: 
+            return None
         if head in self.copied:
             return self.copied[head]
         else:
