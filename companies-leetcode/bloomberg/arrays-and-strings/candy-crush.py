@@ -30,47 +30,49 @@ The length of board will be in the range [3, 50].
 The length of board[i] will be in the range [3, 50].
 Each board[i][j] will initially start as an integer in the range [1, 2000].
 """        
-# 224ms. 51 percentile.
+# 212ms. 70 percentile.
 class Solution:
     def candyCrush(self, board: List[List[int]]) -> List[List[int]]:
-        if not board:
-            return board
-        
-        crushed = True
-        while crushed:
-            crushed = self.crush(board)
-            if crushed:
-                self.drop(board)
+        wasCrushed = True
+        while wasCrushed:
+            wasCrushed = self.crush(board)
+            self.drop(board)
         
         return board
     
-    def crush(self, board):
-        crushed = False
-        crushedCells = set([])
+    def crush(self, board) -> bool:
+        crushedSquares = set([])
         
-        for j in range(len(board)):
-            for i in range(len(board[0])):
-                # crush column
-                if board[j][i] != 0 and j+2 < len(board) and board[j][i] == board[j+1][i] == board[j+2][i]:
-                    crushedCells.update( [(j,i), (j+1,i), (j+2,i)] )
-                    crushed = True
+        for i in range(len(board)):
+            for j in range(len(board[0])):
                 
-                # crush row
-                if board[j][i] != 0 and i+2 < len(board[0]) and board[j][i] == board[j][i+1] == board[j][i+2]:
-                    crushedCells.update( [(j,i), (j,i+1), (j,i+2)] )
-                    crushed = True
+                # rows
+                if board[i][j] != 0 and j+2 < len(board[0]) and board[i][j] == board[i][j+1] == board[i][j+2]:
+                    crushedSquares.update([ (i,j), (i,j+1), (i,j+2) ])
+                
+                # columns
+                if board[i][j] != 0 and i+2 < len(board) and board[i][j] == board[i+1][j] == board[i+2][j]:
+                    crushedSquares.update([ (i,j), (i+1,j), (i+2,j) ])
         
-        for cell in crushedCells:
-            j,i = cell
-            board[j][i] = 0
+        for [i, j] in crushedSquares:
+            board[i][j] = 0
         
-        return crushed
+        return 0 < len(crushedSquares)
     
     # Similar to partition in quicksort
-    def drop(self, board):
-        for i in range(len(board[0])):
-            swapIndex = len(board)-1
-            for j in range(len(board)-1, -1, -1):
-                if board[j][i] != 0:
-                    board[j][i], board[swapIndex][i] = board[swapIndex][i], board[j][i]
+    def drop(self, board) -> None:
+        for j in range(len(board[0])):
+            swapIndex = len(board) - 1
+            for i in range(len(board) - 1, -1, -1):
+                if board[i][j] != 0:
+                    board[swapIndex][j], board[i][j] = board[i][j], board[swapIndex][j]
                     swapIndex -= 1
+                
+            
+        
+        
+        
+        
+        
+        
+        

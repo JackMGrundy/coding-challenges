@@ -28,7 +28,10 @@ class Solution:
                 temp = board[i][j]
                 board[i][j] = "*"
                 
-                matched = dfs(i+1, j, curCharIndex+1) or dfs(i-1, j, curCharIndex+1) or dfs(i, j+1, curCharIndex+1) or dfs(i, j-1, curCharIndex+1)
+                matched = dfs(i+1, j, curCharIndex+1) or \
+                          dfs(i-1, j, curCharIndex+1) or \
+                          dfs(i, j+1, curCharIndex+1) or \
+                          dfs(i, j-1, curCharIndex+1)
                 
                 board[i][j] = temp
                 return matched

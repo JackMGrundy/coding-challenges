@@ -81,7 +81,7 @@ Submissions
 2.5M                                                                            
 
 """
-# 100th percentile. 32ms.
+# 76th percentile. 40ms.
 """
 Note, this is a bit silly for Python, becasue Python has unbonded ints. 
 I wanted to solve it in Python though,
@@ -89,35 +89,29 @@ so I manually set the values.
 """
 class Solution:
     def myAtoi(self, str: str) -> int:
-        MAX_INTEGER = 2147483647
-        MIN_INTEGER = -2147483648
-        index = 0
+        MAX_INT = 2**31 - 1
+        MIN_INT = -(2**31)
         
-        # White spaces
-        s = str.strip()
-        if not s: 
+        s = str
+        s = s.strip()
+        if not s:
             return 0
         
-        # Sign
-        negative = True if s[0]=="-" else False
-        if s[0] in ["+", "-"]:
-            index += 1
+        si = 0
+        isNegative = s[si] == '-'
+        if s[si] in '+-':
+            si += 1
         
-        # Overflow
-        total = 0
-        while index < len(s) and s[index].isdigit():
-            c = s[index]
-            nextDigit = int(c)
+        num = 0
+        while si < len(s) and s[si].isdigit():
+            d = int(s[si])
             
-            if negative:
-                if ( (-MIN_INTEGER)//10 < total ) or ( -MIN_INTEGER//10 == total and nextDigit > (-MIN_INTEGER%10) ):
-                    return MIN_INTEGER
-            else:
-                if ( MAX_INTEGER//10 < total ) or ( MAX_INTEGER//10 == total and nextDigit > MAX_INTEGER%10 ):
-                    return MAX_INTEGER
+            if not isNegative and MAX_INT/10 <= num + d/10:
+                return MAX_INT
+            if isNegative and abs(MIN_INT)/10 <= num + d/10:
+                return MIN_INT
+            
+            num = num*10 + d
+            si += 1
         
-            total *= 10
-            total += nextDigit
-            index += 1
-        
-        return -total if (total and negative) else total
+        return num if not isNegative else -num

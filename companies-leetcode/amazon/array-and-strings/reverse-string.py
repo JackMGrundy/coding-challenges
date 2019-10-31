@@ -1,10 +1,7 @@
 class Solution:
-    def reverseString(self, s):
+    def reverseString(self, s: List[str]) -> None:
         """
-        :type s: str
-        :rtype: str
+        Do not return anything, modify s in-place instead.
         """
-        s = list(s)
-        s.reverse()
-        return(''.join(s))
-        
+        for i in range(len(s)//2):
+            s[i], s[len(s) - i - 1] = s[len(s) - i - 1], s[i]
