@@ -1,4 +1,4 @@
-/* 
+"""
 
 On a campus represented as a 2D grid, there are N workers and M bikes, with N <=
 M. Each worker and bike is a 2D coordinate on this grid.                        
@@ -50,54 +50,31 @@ Note:
 
 All worker and bike locations are distinct.                                     
 
-1 <= workers.length <= bikes.length <= 1000                                     
+1 <= workers.length <= bikes.length <= 1000                                                                                                              
 
-*/
+"""
 
-// 35ms. 99 percentile.
-class Solution {
-    public int[] assignBikes(int[][] workers, int[][] bikes) {
-        List<int[]>[] buckets = new ArrayList[2001];
+# 712ms. 94th percentile.
+class Solution:
+    def assignBikes(self, workers: List[List[int]], bikes: List[List[int]]) -> List[int]:
+        distances = [ [] for _ in range(2001) ]
         
-        for (int w = 0; w < workers.length; w++) {
-            int[] worker = workers[w];
-            for (int b = 0; b < bikes.length; b++) {
-                int[] bike = bikes[b];
-                
-                int manhattanDistance = Math.abs(worker[0] - bike[0]) + Math.abs(worker[1] - bike[1]);
-                if (buckets[manhattanDistance] == null) {
-                    buckets[manhattanDistance] = new ArrayList<int[]>();
-                }
-                buckets[manhattanDistance].add( new int[]{w, b} );
-            }
-        }
+        for workerIndex, (workerX, workerY) in enumerate(workers):
+            for bikeIndex, (bikeX, bikeY) in enumerate(bikes):
+                manhattanDistance = abs(workerX - bikeX) + abs(workerY - bikeY)
+                distances[manhattanDistance].append( (workerIndex, bikeIndex) )
         
-        int[] assignments = new int[workers.length];
-        Arrays.fill(assignments, -1);
-        boolean[] usedBikes = new boolean[bikes.length];
+        usedBikes = set()
+        assignments = [-1]*len(workers)
+        for distance in distances:
+            for workerIndex, bikeIndex in distance:
+                if assignments[workerIndex] == -1 and bikeIndex not in usedBikes:
+                    usedBikes.add(bikeIndex)
+                    assignments[workerIndex] = bikeIndex
         
-        for (List<int[]> bucket : buckets) {
-            if (bucket == null) {
-                continue;
-            }
-            
-            for (int distance = 0; distance < bucket.size(); distance++) {
-                int worker = bucket.get(distance)[0];
-                int bike = bucket.get(distance)[1];
+        return assignments
 
-                if (!usedBikes[bike] && assignments[worker] == -1) {
-                    assignments[worker] = bike;
-                    usedBikes[bike] = true;
-                }   
-            }
-        }
-            
-        return assignments;
-    }
-}
-
-
-/*
+"""
 
 Notes:
 
@@ -132,6 +109,4 @@ So we just dump all the distances into their appropriate indices, then we loop
 through them and generate the final assignments. We skip any worker-bike pair
 pair that has a worker and/or bike that was already used in a different assignment. 
 
-
-
-*/
+"""
