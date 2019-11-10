@@ -1,4 +1,4 @@
-/*
+"""
 
 Suppose  you  have  a  random list of people standing in a queue. Each person is
 described  by a pair of integers (h, k), where h is the height of the person and
@@ -21,39 +21,20 @@ Output:
 
 [[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]                                      
 
+"""
 
-*/
-
-// 7ms. 71 percentile.
-class Solution {
-    public int[][] reconstructQueue(int[][] people) {
-        
-        Arrays.sort(people, new Comparator<int[]>() {
-           
-            @Override
-            public int compare(int[] thisPerson, int[] thatPerson) {
-                int thisPersonHeight = thisPerson[0];
-                int thatPersonHeight = thatPerson[0];
-                int thisPersonK = thisPerson[1];
-                int thatPersonK = thatPerson[1];
-                
-                return thisPersonHeight == thatPersonHeight ? thisPersonK - thatPersonK : thatPersonHeight - thisPersonHeight; 
-            }
-        });
-        
-        List<int[]> reconstructedQueue = new LinkedList<>();
-        for (int[] person : people) {
-            reconstructedQueue.add(person[1], person);
-        }
-        
-        
-        return reconstructedQueue.toArray(new int[reconstructedQueue.size()][2]);
-    }
-}
+# 96ms. 99 percentile.
+class Solution:
+    def reconstructQueue(self, people: List[List[int]]) -> List[List[int]]:
+        people.sort(key = lambda x: (-x[0], x[1]))
+        reconstructedQueue = []
+        for person, key in people:
+            reconstructedQueue.insert(key, [person, key])
+        return reconstructedQueue
 
 
 
-/*
+"""
 
 Notes:
 
@@ -85,4 +66,4 @@ Intuition:
     ^That's the key intuition. Given this, it's simple to see that we can
     simply process a group at a time until they are all accounted for. 
 
-*/
+"""
