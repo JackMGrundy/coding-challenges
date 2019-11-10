@@ -32,17 +32,41 @@ Output for Retrieve has no order required.
 */
 
 
+
+
 /*
+
 Notes:
 
-Represent the timestamp as a number - we can chop "20" off in the year and otherwise
-just concatenate the numbers together.
+Typically read vs write tradeoff scenario. We could easily store in constant time and then
+do a linear time filter to get all the requested times. However, that linear time
+read can be a deal breaker. 
 
-Then simply store the numbers in a sorted list. With binary search we can insert
-new values in log time. 
+Per usual with data stores, we can come up with some scheme that's log(n) for both. 
 
-Retrieving is the trickier part. 
+Strategy:
 
-...I think we can use a pair of binary searches to get the range of values too...
+Immediate thought is to convert the values to numbers. However, while the granularity
+requirement is a bit annoying, it makes this process easier. 
+
+For Python, we can just compare the strings as is...
+
+For Java, 
+
+Convert the values to numbers...use an insort type method (under the hood it's a 
+linkedlist with binary sort to find insertion points) to insert the timestamps in log time.
+
+For reading, we can simply use a pair of binary searches to find the left and right limits
+of the range we want.
+
+The tricky bits:
+
+1) Granularity: It's a bit ugly but we can simply cut the timestamps down to a certain 
+number of characters based on the granularity. 
+
+2) What if we have multiple entries with the same timestamp? This means that instead
+of storing each timestamp, we'll need to store lists at for each time stamp, and within
+the lists we can store ids. 
+
 
 */
