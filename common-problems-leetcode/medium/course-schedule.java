@@ -88,3 +88,53 @@ class Solution {
         return adjacencyList;
     }
 }
+
+
+/*
+
+Notes:
+
+
+See notes on cycle detection
+
+DFS approach:
+Convert links to a graph where given a node, you can get a list of neighbors.
+For each node, check if there is a cycle. Only check if it hasn't already
+been ok'ed (visited)
+
+To check for a cycle:
+    Given that the nodes are 0 to N-1, we keep a simple N length list to
+    record nodes in the call stack.
+
+    We keep a similar list called "visited" to note the nodes we have
+    already ok'ed. 
+
+    We start the dfs on a given node. We note it as both visited and in
+    the call stack.
+
+    We use the graph to iterate through its neighbors. If we see a neighbor
+    that is already in the stack, we found a cycle.
+
+    Otherwise, if the neighbor hasn't been visited, we make a recursive call
+    that starts at that node. This recursive call will continue the path. Via the
+    the rec stack list, it will remember that that the previous node is in
+    the rec stack.
+
+    Finally, back in the first call in the recursion stack, we mark that
+    this node is no longer in the recursion stack and return that there isn't 
+    a cycle. We only get here if a cycle wasn't found at either this level
+    or at a deeper level in the recursion stack.
+
+
+Intuition for visited:
+Say we pass through node A while processing a path. We found no cycle on this
+path. Because we recorded A as visited, we won't visit it again, either as
+the start of a path or as part of another path. 
+
+This is ok. As part of the already traversed path, we already examined all outgoing
+edges from A. Therefore, if we started a different path that went through A,
+we would end up just traversing those same outlinks again and again find that there
+is no cycle. 
+
+
+*/
