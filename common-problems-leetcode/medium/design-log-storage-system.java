@@ -31,7 +31,54 @@ Year ranges from [2000,2017]. Hour ranges from [00,23].
 Output for Retrieve has no order required.
 */
 
+// 34ms. 98 percentile.
+// Log(n) read and write.
+class LogSystem {
+    
+    TreeMap<String, List<Integer>> map;
+    
+    final String start = "2000:01:01:00:00:00";
+    final String end = "2017:12:31:23:59:59";
+    
+    Map<String, Integer> granularityToPrecision;
+    
+    public LogSystem() {
+        map = new TreeMap<>();
+        granularityToPrecision = new HashMap<>();
+        
+        granularityToPrecision.put("Year", 4);
+        granularityToPrecision.put("Month", 7);
+        granularityToPrecision.put("Day", 10);
+        granularityToPrecision.put("Hour", 13);
+        granularityToPrecision.put("Minute", 16);
+        granularityToPrecision.put("Second", 19);
+    }
+    
+    public void put(int id, String timestamp) {
+        map.putIfAbsent(timestamp, new ArrayList<Integer>());
+        map.get(timestamp).add(id);
+    }
+    
+    public List<Integer> retrieve(String s, String e, String gra) {
+        int precision = granularityToPrecision.get(gra);
+        String left = s.substring(0, precision) + start.substring(precision);
+        String right = e.substring(0, precision) + end.substring(precision);
+        
+        List<Integer> result = new ArrayList<>();
+        for ( List<Integer> ids : map.subMap(left, true, right, true).values() ) {
+            result.addAll(ids);
+        }
+        
+        return result;
+    }
+}
 
+/**
+ * Your LogSystem object will be instantiated and called as such:
+ * LogSystem obj = new LogSystem();
+ * obj.put(id,timestamp);
+ * List<Integer> param_2 = obj.retrieve(s,e,gra);
+ */
 
 
 /*
@@ -51,7 +98,8 @@ requirement is a bit annoying, it makes this process easier.
 
 For Python, we can just compare the strings as is...
 
-For Java, 
+For Java, we can use a treemap, which provides the subMap method for selecting a range
+of keys. Note a red-black tree underlies this.
 
 Convert the values to numbers...use an insort type method (under the hood it's a 
 linkedlist with binary sort to find insertion points) to insert the timestamps in log time.

@@ -130,7 +130,8 @@ requirement is a bit annoying, it makes this process easier.
 
 For Python, we can just compare the strings as is...
 
-For Java, 
+For Java, we can use a treemap, which provides the subMap method for selecting a range
+of keys. Note a red-black tree underlies this.
 
 Convert the values to numbers...use an insort type method (under the hood it's a 
 linkedlist with binary sort to find insertion points) to insert the timestamps in log time.
