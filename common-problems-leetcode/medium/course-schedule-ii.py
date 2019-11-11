@@ -46,87 +46,46 @@ You may assume that there are no duplicate edges in the input prerequisites.
 
 
 """
-from collections import deque
-
+# 100ms. 99th percentile.
 class Solution:
-    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
-        graph, incomingEdges = {}, {}
-        sources = deque()
-        topologicalOrder = []
+    def findOrder(self, numCourses, prerequisites):
+        leadsTo = collections.defaultdict(list)
+        degrees = {}
         
-        for i in range(numCourses):
-            incomingEdges[i] = 0
-            
-        for course, prereq in prerequisites:
-            if prereq not in graph:
-                graph[prereq] = []
-                
-            graph[prereq].append(course)
-            incomingEdges[course] += 1
-            
-        for k, v in incomingEdges.items():
-            if v == 0:
-                sources.append(k)
-                
-        for src in sources:
-            del incomingEdges[src]
-            
-        while sources:
-            currSource = sources.popleft()
-            topologicalOrder.append(currSource)
-            
-            if currSource in graph:
-                edgeDst = graph[currSource]
-                
-                for dst in edgeDst:
-                    incomingEdges[dst] -= 1
-                    
-                    if incomingEdges[dst] == 0:
-                        sources.append(dst)
-                        
-        if len(topologicalOrder) == numCourses:
-            return topologicalOrder
+        for course in range(numCourses):
+            degrees[course] = 0
         
-        return []
+        for course, prerequisite in prerequisites:
+            leadsTo[prerequisite].append(course)
+            degrees[course] += 1
 
+        coursesWithFulfilledPrerequisites = collections.deque([])
 
+        for course,degree in degrees.items():
+            if degree == 0:
+                coursesWithFulfilledPrerequisites.append(course)
+        
+        validClassOrder = []
 
+        while coursesWithFulfilledPrerequisites:
+            curCourse = coursesWithFulfilledPrerequisites.popleft()
+            validClassOrder.append(curCourse)
 
-class Solution:
-    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
-        if prerequisites == []:
-            return list(range(numCourses))
-        import collections
-        graph = collections.defaultdict(list)
-        #count = collections.defaultdict(int)
-        for prerequisite in prerequisites:
-            graph[prerequisite[0]].append(prerequisite[1])
-            #count[prerequisite[0]] +=1
+            for course in leadsTo[curCourse]:
+                
+                if 0 < degrees[course]:
+                    degrees[course] -= 1
 
-        visited = [0]*numCourses
-        path = []
-        def dfs(v, path):
-            if visited[v] == 1:
-                return False
-            if visited[v] == 2:
-                return True
-            visited[v] = 1
-            for u in graph[v]:
-                if not dfs(u, path):
-                    return False
-            visited[v] = 2
-            path.append(v)
-            return True
-            
-        for v in range(numCourses):
-            if not dfs(v, path):
-                return []
-        return path
+                    if degrees[course] == 0:
+                        coursesWithFulfilledPrerequisites.append(course)
+        
+        return validClassOrder if len(validClassOrder) == len(degrees) else []
 
 
 """
 
 Notes:
 
+Straight topological sort problem (see notes in algos folder)
 
 """

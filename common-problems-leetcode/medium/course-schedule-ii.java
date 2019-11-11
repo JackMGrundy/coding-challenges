@@ -47,108 +47,61 @@ You may assume that there are no duplicate edges in the input prerequisites.
 
 */
 
+// 4ms. 81 percentile.
 class Solution {
-    public int[] findOrder(int numCourses, int[][] prerequisites) 
-    {
-        //topo sort
-       // hm key is subj, value is list of all to tkae before, initialized with itself
-        //go through value, start with itself and go to next, backtracking in hashmap
-        //or set of  degrees and neighbors
-        List[] course=new List[numCourses];
-        int[] map=new int[numCourses];
-        List<Integer> ans=new ArrayList<Integer>();
-        for(int i=0;i<numCourses;i++)
-            course[i]=new ArrayList<Integer>();
-        for(int i=0;i<prerequisites.length;i++)
-            course[prerequisites[i][0]].add(prerequisites[i][1]);
-        for(int i=0;i<numCourses;i++)
-            if(dfs(course,i,ans,map)==false) return new int[0];
-            int[] an=new int[ans.size()];
-        for(int i=0;i<ans.size();i++)
-            an[i]=ans.get(i);
-        return an;
-    }
-    public boolean dfs(List[] course,int req,List<Integer> ans,int[] map)
-    {
-        if(map[req]==0)
-        {
-            map[req]=1;
-            for(int i=0;i<course[req].size();i++) 
-                if(dfs(course,(int)course[req].get(i),ans,map)==false) return false;
-            map[req]=2;
-        } 
-        else if(map[req]==1) return false;
-        else if(map[req]==2) return true;
-        ans.add(req);
-        return true;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] degrees = new int[numCourses];
+        Arrays.fill(degrees, 0);
+        
+        List<List<Integer>> leadsTo = new ArrayList<>();
+        for (int course = 0; course < numCourses; course++) {
+            leadsTo.add(new ArrayList<Integer>());
+        }
+        
+        for (int[] pair : prerequisites) {
+            Integer course = pair[0];
+            Integer prerequisite = pair[1];
+            leadsTo.get(prerequisite).add(course);
+            degrees[course]++;
+        }
+        
+        Queue<Integer> q = new LinkedList<>();
+        for (int course = 0; course < numCourses; course++) {
+            if (degrees[course] == 0) {
+                q.add(course);
+            }
+        }
+
+        int[] result = new int[numCourses];
+        int coursesAccountedFor = 0;
+        
+        while (0 < q.size()) {
+            int cur = q.remove();
+            result[coursesAccountedFor] = cur;
+            coursesAccountedFor++;
+
+            for (int neighbor : leadsTo.get(cur)) {
+                if (0 < degrees[neighbor]) {
+                    degrees[neighbor]--;
+                    if (degrees[neighbor] == 0) {
+                        q.add(neighbor);
+                    }
+                }
+            }
+        }
+        return coursesAccountedFor == numCourses ? result : new int[0];
     }
 }
-
-
-
-
-
-
-
-class Solution {
-    private static int[] visited;
-     private static List[] edges;
-     private static List<Integer> sortedlist;
- 
-     public int[] findOrder(int numCourses, int[][] prerequisites) {
-         if(numCourses == 0){
-             return new int[numCourses];
-         }
-         if(prerequisites == null || prerequisites.length == 0 || prerequisites[0] == null || prerequisites[0].length == 0){
-             int [] res = new int[numCourses];
-             for(int i = 0;i < numCourses; i ++){
-                 res[i] = i;
-             }
-             return res;
-         }
-         visited = new int[numCourses];
-         edges = new List[numCourses];
-         sortedlist = new ArrayList<>();
-         for(int i = 0; i < numCourses; i ++){
-             edges[i] = new ArrayList<>();
-         }
-         for(int[] prerequisite : prerequisites){
-             edges[prerequisite[1]].add(prerequisite[0]);
-         }
-         for(int i = 0;i < numCourses; i ++){
-             if(!dfs(i)){
-                 return new int[0];
-             }
-         }
-         int[] res = new int[numCourses];
-         for(int i = 0;i < numCourses;i ++){
-             res[i] = sortedlist.get(i);
-         }
-         return res;
-     }
-     public boolean dfs(int node){
-         if(visited[node] == 1){
-             return true;
-         }
-         else if(visited[node] == -1){
-             return false;
-         }
-         visited[node] = -1;
-         List<Integer> list = edges[node];
-         for(int li : list){
-             if(!dfs(li)){
-                 return false;
-             }
-         }
-         visited[node] = 1;
-         sortedlist.add(0 , node);
-         return true;
-     }
- }
 
 /*
 
 Notes:
 
+Straight topological sort problem (see notes in algos folder)
+
+For optimizing the implementation, it's typical Java...I first implemented
+this with hashmaps for the degrees and leadsTo mappings, but you can
+get a 2x speedup on these test cases using lists and arrays instead.
 
 */
