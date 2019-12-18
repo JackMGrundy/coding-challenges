@@ -4,3 +4,4 @@ Solutions to coding challenges
   Java
   SQL
   Bash Scripting
+  C++
