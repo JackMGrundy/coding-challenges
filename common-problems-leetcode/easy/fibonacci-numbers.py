@@ -36,5 +36,5 @@ class Solution:
         last = 0
         current = 1
         for i in range(1, N):
-            current, last = current+last, current
+            current, last = current + last, current
         return current

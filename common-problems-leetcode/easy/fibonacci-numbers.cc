@@ -28,22 +28,24 @@ Note:
 
 0 ≤ N ≤ 30.
 */
+
 //  0ms. 100th percentile.
 class Solution {
-    public int fib(int N) {
+public:
+    int fib(int N) {
         if (N < 1) {
             return 0;
         }
         
-        int fLast = 0;
-        int fCurrent = 1;
+        int last = 0;
+        int current = 1;
         int temp;
         for (int i = 1; i < N; i++) {
-            temp = fCurrent;
-            fCurrent += fLast;
-            fLast = temp;
+            temp = current;
+            current += last;
+            last = temp;
         }
         
-        return fCurrent;
+        return current;
     }
-}
+};
