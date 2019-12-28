@@ -67,7 +67,7 @@ class Solution(object):
         neg.sort()
         
         # Only possible tuple without at least 1 positive and at least 1 negative
-        if 0 in counts and counts[0] >= 3:
+        if 3 <= 0 in counts and counts[0]:
             res.append( [0, 0, 0] )
         
         # All other possible tuples
