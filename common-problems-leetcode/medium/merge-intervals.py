@@ -47,13 +47,6 @@ class Solution:
         
             
 # 2nd attempt: 98th percentile in speed
-"""
-Note: this improvement is possible because of the initial sorting...
-During the iteration, we know that each successive interval has a start 
-after that of the interval on top of the stack. Therefore, we can simply check if
-the current interval's start is less than the end of the intervals on top 
-of the stack.
-"""
 # Definition for an interval.
 # class Interval:
 #     def __init__(self, s=0, e=0):
@@ -71,3 +64,13 @@ class Solution:
             else:
                 res.append(interval)
         return res
+
+"""
+Notes:
+
+The great second solution is possible because of the initial sorting
+During the iteration, we know that each successive interval has a start 
+after that of the interval on top of the stack. Therefore, we can simply check if
+the current interval's start is less than the end of the intervals on top 
+of the stack.
+"""
