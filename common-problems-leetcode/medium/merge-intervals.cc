@@ -19,12 +19,16 @@ using namespace std;
 
 
 // 1st attempt: 12ms. 99th percentile.
+#include <algorithm>
+#include <iostream>
+
 class Compare {
 public:
     bool operator () (vector<int>& vec1, vector<int>& vec2) {
         return vec1[0] < vec2[0];
     }
 };
+
 Compare CompObject;
 
 class Solution {
@@ -33,17 +37,18 @@ public:
         if (intervals.empty()) return {};
         vector<vector<int>> mergedIntervals;
         int n = intervals.size();
-        mergedIntervals.reserve(n); //Improves performance from 20ms to 12ms.
+        mergedIntervals.reserve(n); // Great, simple technique for improving performance
         
         std::sort(intervals.begin(), intervals.end(), CompObject);
-
+        
         mergedIntervals.push_back(intervals[0]);
                 
-        for (int i = 1; i < n; i++) {
-            if (intervals[i][0] <= mergedIntervals.back()[1]) {
-                mergedIntervals.back()[1] = std::max(mergedIntervals.back()[1], intervals[i][1]);
+        for (auto const &it : intervals) { // Note this syntax for working with the originals and ensuring we don't change them
+                
+            if (it[0] <= mergedIntervals.back()[1]) {
+                mergedIntervals.back()[1] = std::max(mergedIntervals.back()[1], it[1]);
             } else {
-                mergedIntervals.push_back(intervals[i]);
+                mergedIntervals.push_back(it);
             }
         }
         
@@ -61,16 +66,18 @@ public:
         if (intervals.empty()) return {};
         vector<vector<int>> mergedIntervals;
         int n = intervals.size();
+        mergedIntervals.reserve(n);
         
         std::sort(intervals.begin(), intervals.end(), [](std::vector<int> a, std::vector<int> b){return a[0] < b[0];});
         
         mergedIntervals.push_back(intervals[0]);
                 
-        for (int i = 1; i < n; i++) {
-            if (intervals[i][0] <= mergedIntervals.back()[1]) {
-                mergedIntervals.back()[1] = std::max(mergedIntervals.back()[1], intervals[i][1]);
+        for (auto const &it : intervals) {
+                
+            if (it[0] <= mergedIntervals.back()[1]) {
+                mergedIntervals.back()[1] = std::max(mergedIntervals.back()[1], it[1]);
             } else {
-                mergedIntervals.push_back(intervals[i]);
+                mergedIntervals.push_back(it);
             }
         }
         
@@ -89,4 +96,7 @@ the current interval's start is less than the end of the intervals on top
 of the stack.
 
 Note the vector.reserve technique...good, simple performance booster
+
+And note the syntax of the range loop...ensures we work with references and don't change
+the original intervals
 */
