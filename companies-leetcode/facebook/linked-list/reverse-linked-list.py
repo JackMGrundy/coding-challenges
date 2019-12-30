@@ -32,7 +32,7 @@ class ListNode(object):
             runner.next = cur
             cur = runner
         
-        return(cur)
+        return cur
                 
 # 2nd attempt: iterative. 100th percnetile in speed Space: about 12.7MB.
 class Solution(object):
@@ -41,7 +41,8 @@ class Solution(object):
         :type head: ListNode
         :rtype: ListNode
         """
-        if not head: return(head)
+        if not head: 
+            return head
         cur = None
         stash = head
         
@@ -51,7 +52,7 @@ class Solution(object):
             runner.next = cur
             cur = runner
         
-        return(cur)
+        return cur
 
 
 # 3rd attempt: recursive. 100th percentile in speed. 17.7 MB. 
@@ -60,18 +61,18 @@ class Solution(object):
     def helper(self, leader, lagger=None):
         
         if not leader:
-            return(lagger)
-        else:
-            stash = leader.next
-            leader.next = lagger
-            return(self.helper(stash, leader))
+            return lagger
+
+        stash = leader.next
+        leader.next = lagger
+        return self.helper(stash, leader)
     
     def reverseList(self, head):
         """
         :type head: ListNode
         :rtype: ListNode
         """   
-        return(self.helper(head))
+        return self.helper(head)
 
 
 if __name__=='__main__':
@@ -87,4 +88,18 @@ if __name__=='__main__':
     while res:
         print(res.val)
         res = res.next
-        
+
+
+"""
+Notes:
+
+For the recursive solution:
+At each level, save head's next and then make head point to the previous node instead. 
+Spin up the next level. 
+The stopping condition is when head is null. 
+The only thing that isn't completely intuitive is the return. Note that at every level
+we are returning the result of the level below it. And because the bottom level occurs
+when head is null and previous is the original end (now new start) of the list, we will
+ultimately return the new start of the list. 
+
+"""
