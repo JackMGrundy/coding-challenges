@@ -1,7 +1,8 @@
 """
 Say you have an array for which the ith element is the price of a given stock on day i.
 
-If you were only permitted to complete at most one transaction (i.e., buy one and sell one share of the stock), design an algorithm to find the maximum profit.
+If you were only permitted to complete at most one transaction (i.e., buy one and sell one share of the stock), 
+design an algorithm to find the maximum profit.
 
 Note that you cannot sell a stock before you buy one.
 
@@ -26,7 +27,8 @@ class Solution(object):
         :type prices: List[int]
         :rtype: int
         """
-        if len(prices) in [0, 1]: return(0)
+        if len(prices) in [0, 1]: 
+            return 0
         
         mins = []
         runningMin = float("inf")
@@ -42,8 +44,8 @@ class Solution(object):
         maxs.reverse()
         
         res = 0
-        profits = [ x-y for (x,y) in zip(maxs, mins) ]
-        return(max(0, max(profits)))
+        profits = [ x - y for (x,y) in zip(maxs, mins) ]
+        return max(0, max(profits))
 
             
        
@@ -57,7 +59,8 @@ class Solution(object):
         :type prices: List[int]
         :rtype: int
         """
-        if len(prices) in [0, 1]: return(0)
+        if len(prices) in [0, 1]: 
+            return 0
         
         mins = []
         runningMin = float("inf")
@@ -68,13 +71,13 @@ class Solution(object):
         # maxs = []
         res = 0
         runningMax = -float("inf")
-        for i in range(len(prices)-1, -1, -1):
+        for i in range(len(prices) - 1, -1, -1):
             if prices[i] > runningMax: runningMax = prices[i]
             profit = runningMax-mins[i]
             if profit > res:
                 res = profit
             
-        return(max(0, res))
+        return max(0, res)
 
 
 
@@ -94,7 +97,7 @@ class Solution(object):
             if price < absMin:
                 absMin = price
         
-        return(profit)
+        return profit
 
 
 # Python 3. 76ms. 
@@ -105,7 +108,7 @@ class Solution:
         minPriceSeen = prices[0]
         res = 0
         for price in prices[1:]:
-            res = max(res, price-minPriceSeen)
+            res = max(res, price - minPriceSeen)
             minPriceSeen = min(minPriceSeen, price)
         
         return res
