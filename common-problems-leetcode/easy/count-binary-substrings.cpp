@@ -24,12 +24,15 @@ Constraints:
 1 <= s.length <= 105
 s[i] is either '0' or '1'.
 */
+#include <string>
+#include <algorithm>
+
 
 // first attempt
 // 74th percentile
 class Solution {
 public:
-    int countBinarySubstrings(string s) {
+    int countBinarySubstrings(std::string s) {
         int prevGroupSize = 0, currentGroupSize = 1, numberOfMatches = 0;
         for (int i = 1; i < s.size(); i++) {
             if (s[i] != s[i - 1]) {
@@ -57,7 +60,7 @@ less than or equal to the previous group size...
 // 94th percentile
 class Solution {
 public:
-    int countBinarySubstrings(string s) {
+    int countBinarySubstrings(std::string s) {
         int prevGroupSize = 0, currentGroupSize = 1, numberOfMatches = 0;
         for (int i = 1; i < s.size(); i++) {
             if (s[i] != s[i - 1]) {
