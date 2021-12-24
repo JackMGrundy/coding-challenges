@@ -42,7 +42,7 @@ public:
 // 20th percentile
 class Solution {
 public:
-    bool containsDuplicate(vector<int>& nums) {
+    bool containsDuplicate(std::vector<int>& nums) {
         std::unordered_set<int> set;
         int n = nums.size();
         
