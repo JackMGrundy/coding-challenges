@@ -22,3 +22,23 @@ Constraints:
 1 <= nums.length <= 105
 -109 <= nums[i] <= 109
 """
+
+# Attempt 1:
+# 14th percentile
+from collections import defaultdict
+
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        counts = defaultdict(int)
+        for num in nums:
+            if counts[num]:
+                return True
+            else:
+                counts[num] += 1
+        return False
+
+
+# Attempt 2:
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        return len(set(nums)) != len(nums)
