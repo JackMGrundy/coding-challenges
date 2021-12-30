@@ -26,24 +26,23 @@ nums is sorted in ascending order.
 */
 
 
+#include <vector>
+
 // 86th percentile
 class Solution {
 public:
-    int search(vector<int>& nums, int target) {
+    int search(std::vector<int>& nums, int target) {
         int left = 0, right = nums.size() - 1;
-        int index = (left + right)/2;
         
         while (left <= right) {
-            int val = nums[index];
-            if (val == target) {
+            int index = (left + right)/2;
+            if (nums[index] == target) {
                 return index;
-            } else if (val < target) {
+            } else if (nums[index] < target) {
                 left = index + 1;
-            } else if (target < val) {
+            } else if (target < nums[index]) {
                 right = index - 1;
             }
-            
-            index = (left + right)/2;
         }
         
         return -1;
