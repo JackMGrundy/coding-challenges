@@ -57,4 +57,25 @@ public:
     }
 };
 
-// Not sure why it's giving such a slow score...second solution is similar to others ranked faster
+// 30th percentile
+class Solution {
+public:
+    bool containsDuplicate(std::vector<int>& nums) {
+        std::unordered_set<int> set;
+        
+        for (auto& num : nums) {
+            if (set.count(num) != 1) {
+                set.insert(num);
+            } else {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+};
+
+
+/*
+There are "faster solutions" but their asymptotic compleixties are worse...sorting the nums first...
+*/

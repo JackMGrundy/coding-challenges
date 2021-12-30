@@ -29,7 +29,7 @@ nums is sorted in ascending order.
  * @param {number[]} nums
  * @param {number} target
  * @return {number}
- */
+*/
 
 // 92nd percentile
  var search = function(nums, target) {
