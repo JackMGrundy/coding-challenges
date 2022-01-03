@@ -32,10 +32,14 @@ Constraints:
 s[i] is either'(' , ')', or lowercase English letter.
 */
 
+#include <string>
+#include <unordered_set>
+#include <stack>
+
 // 15th percentile
 class Solution {
 public:
-    string minRemoveToMakeValid(string s) {
+    std::string minRemoveToMakeValid(std::string s) {
         std::stack<int> st;
         std::unordered_set<int> charsToRemove;
         
@@ -73,7 +77,7 @@ public:
 // 98th percentile
 class Solution {
 public:
-    string minRemoveToMakeValid(string s) {
+    std::string minRemoveToMakeValid(std::string s) {
         std::stack<int> st;
         
         for (int i = 0; i < s.length(); i++) {
@@ -106,7 +110,7 @@ public:
 // with remove_if....98th percentile
 class Solution {
 public:
-    string minRemoveToMakeValid(string s) {
+    std::string minRemoveToMakeValid(std::string s) {
         std::stack<int> st;
         
         for (int i = 0; i < s.length(); i++) {
