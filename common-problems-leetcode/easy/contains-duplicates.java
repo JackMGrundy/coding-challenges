@@ -82,6 +82,17 @@ class Solution {
 }
 
 
+// 99th percentile
+class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        HashSet<Integer> set = new HashSet<Integer>();
+        for (final int num : nums) {
+            if (!set.add(num)) return true;
+        }
+        
+        return false;
+    }
+}
 
 
 /*
