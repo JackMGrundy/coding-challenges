@@ -52,13 +52,77 @@ public:
         }
 
         int minRange = nums.size();
-        for (auto& valCount : counts) {
+        for (const auto& valCount : counts) {
             int val = valCount.first;
             int count = valCount.second;
             if (count == maxDegree) {
                 int range = lastAppearance[val] - firstAppearance[val] + 1;
                 minRange = std::min(minRange, range);
             }
+        }
+        
+        return minRange;
+    }
+};
+
+
+
+
+// 91st percentile
+class Solution {
+public:
+    int findShortestSubArray(vector<int>& nums) {
+        std::unordered_map<int, int> counts;
+        std::unordered_map<int, int> first;
+        std::unordered_map<int, int> last;
+        int maxDegree = 0;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            int num = nums[i];
+            counts[num]++;
+            maxDegree = std::max(counts[num], maxDegree);
+            last[num] = i;
+            if (first.find(num) == first.end()) first[num] = i;
+        }
+        
+        int minRange = nums.size();
+        
+        for (const auto& [num, count] : counts) { // C++ 17
+            if (count == maxDegree) minRange = std::min(minRange, last[num] - first[num] + 1);
+        }
+        
+        return minRange;
+    }
+};
+
+
+
+
+
+// 91st percentile
+class Solution {
+public:
+    int findShortestSubArray(vector<int>& nums) {
+        std::unordered_map<int, int> counts;
+        std::unordered_map<int, int> first;
+        std::unordered_map<int, int> last;
+        int maxDegree = 0;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            int num = nums[i];
+            counts[num]++;
+            maxDegree = std::max(counts[num], maxDegree);
+            last[num] = i;
+            if (first.find(num) == first.end()) first[num] = i;
+        }
+        
+        int minRange = nums.size();
+        
+
+        for (unordered_map<int, int>::iterator it = counts.begin(); it != counts.end(); it++) {  // pre C++ 11
+            int num = it->first;
+            int count = it->second;
+            if (count == maxDegree) minRange = std::min(minRange, last[num] - first[num] + 1);
         }
         
         return minRange;
