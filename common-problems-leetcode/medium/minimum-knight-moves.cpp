@@ -26,7 +26,11 @@ Constraints:
 0 <= |x| + |y| <= 300
 */
 
-
+// #include <pair>;
+#include <vector>
+#include <queue>
+#include <set>
+#include <unordered_set>
 
 
 // 44th percentile
@@ -35,13 +39,13 @@ public:
     typedef std::pair<int, int> LOC;
     typedef std::pair<LOC, int> LOC_MOVE;
     
-    std::vector<std::pair<int,int>> moves = { {1, 2}, {-1, 2}, {-1, -2}, {1, -2}, {2, 1}, {-2, 1}, {-2, -1}, {2, -1} };
+    std::vector<std::pair<int,int> > moves = { {1, 2}, {-1, 2}, {-1, -2}, {1, -2}, {2, 1}, {-2, 1}, {-2, -1}, {2, -1} };
     
     int minKnightMoves(int x, int y) {
         if (x == 0 && y == 0) return 0;
         
         std::queue<LOC_MOVE> q;
-        set<LOC> visited;
+        std::set<LOC> visited;
         
         const LOC startSpot = {0, 0};
         const LOC_MOVE startSpotAndMove = { startSpot, 0 };
@@ -91,15 +95,15 @@ public:
 class Solution {
 public:
     typedef std::pair<int, int> LOC;
-    typedef std::pair<LOC, int> LOC_MOVE;
+    typedef std::pair<LOC, int> LOC_MOVE; 
     
-    std::vector<std::pair<int,int>> moves = { {1, 2}, {-1, 2}, {-1, -2}, {1, -2}, {2, 1}, {-2, 1}, {-2, -1}, {2, -1} };
+    std::vector<std::pair<int,int> > moves = { {1, 2}, {-1, 2}, {-1, -2}, {1, -2}, {2, 1}, {-2, 1}, {-2, -1}, {2, -1} };
     
     int minKnightMoves(int x, int y) {
         if (x == 0 && y == 0) return 0;
         
         std::queue<LOC_MOVE> q;
-        unordered_set<LOC, pair_hash> visited;
+        std::unordered_set<LOC, pair_hash> visited;
         
         const LOC startSpot = {0, 0};
         const LOC_MOVE startSpotAndMove = { startSpot, 0 };
