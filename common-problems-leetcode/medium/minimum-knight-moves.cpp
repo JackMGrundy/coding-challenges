@@ -32,6 +32,7 @@ Constraints:
 #include <queue>
 #include <set>
 #include <unordered_set>
+#include <algorithm>
 
 
 // 44th percentile
@@ -215,11 +216,102 @@ public:
 
 
 
+// 90th percentile
+// Faster using 2d array instead of set for visited
+class Solution {
+public:
+    typedef std::pair<int, int> LOC;
+    typedef std::pair<LOC, int> LOC_MOVE;
+    
+    std::vector<std::pair<int,int>> moves = { {1, 2}, {-1, 2}, {-1, -2}, {1, -2}, {2, 1}, {-2, 1}, {-2, -1}, {2, -1} };
+    
+    int minKnightMoves(int x, int y) {
+        if (x == 0 && y == 0) return 0;
+        
+        std::queue<LOC_MOVE> q;
+        bool visited[304][304] = {true};
+        // fill((int *)visited, (int *)visited + 304*304, 0);
+        // ^ note another technique to fill an array...although list initialization is generally preferred
+        
+        const LOC startSpot = {0, 0};
+        const LOC_MOVE startSpotAndMove = { startSpot, 0 };
+        q.push(startSpotAndMove);
+        visited[2][2] = true;
+        
+        x = std::abs(x);
+        y = std::abs(y);
+        
+        while (0 < q.size()) {
+            LOC_MOVE currentSpotAndMove = q.front();
+            q.pop();
+            
+            const int currentSpotX = currentSpotAndMove.first.first;
+            const int currentSpotY = currentSpotAndMove.first.second;
+            const int currentMove = currentSpotAndMove.second;
+            
+            if (currentSpotX == x && currentSpotY == y) return currentMove;
+            
+            for (auto const & move : moves) {
+                const int xMove = move.first;
+                const int yMove = move.second;
+                const int nextSpotX = currentSpotX + xMove;
+                const int nextSpotY = currentSpotY + yMove;
+                
+                if (nextSpotX < -2 || nextSpotY < -2) continue;
+                if (1 < nextSpotX - x || 1 < nextSpotY - y) continue;
+                
+                const LOC nextSpot = {nextSpotX, nextSpotY};
+                
+                if (visited[nextSpotX + 2][nextSpotY + 2]) continue;                
+                
+                LOC_MOVE nextSpotAndMove = { nextSpot, currentMove + 1};
+                q.push(nextSpotAndMove);
+                visited[nextSpotX + 2][nextSpotY + 2] = true;
+            }
+        }
+        
+        return -1;        
+    }
+      
+};
 
 
-// TODO
-//     Bidirectional BFS
-//     Some sort of dfs solution
+
+
+// 96th percentile
+// Top down dfs
+class Solution {
+public:
+    int dp[301][301];
+    
+    int minKnightMoves(int x, int y) {
+        std::fill((int *)dp, (int *)dp + 301*301, 300);
+        dp[0][0] = 0;
+        dp[1][0] = 3;
+        dp[1][1] = 2;
+        return dfs(x, y);
+    }
+    
+    int dfs(int x, int y) {
+        x = abs(x);
+        y = abs(y);
+        if (x < y)
+            std::swap(x, y);
+        if (dp[x][y] < 300)
+            return dp[x][y];
+        int ans = std::min( {dfs(x - 2, y - 1) + 1, dfs(x - 1, y - 2) + 1, dp[x][y] }) ; // C++ 11
+        dp[x][y] = ans;
+        return ans;
+    }
+};
+
+
+
+
+
+
+
+
 
 
 /*
