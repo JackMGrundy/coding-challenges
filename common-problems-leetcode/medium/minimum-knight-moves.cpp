@@ -276,16 +276,81 @@ public:
 };
 
 
+// 93rd percentile
+// slight bfs variation
+class Solution {
+public:
+    typedef std::pair<int, int> LOC;
+    std::vector<std::pair<int,int>> MOVES = { {1, 2}, {-1, 2}, {-1, -2}, {1, -2}, {2, 1}, {-2, 1}, {-2, -1}, {2, -1} };
+    
+    int minKnightMoves(int x, int y) {        
+        std::queue<LOC> q;
+        bool visited[304][304] = {true};
+        
+        const LOC startSpot = {0, 0};
+        q.push(startSpot);
+        visited[2][2] = true;
+        
+        x = std::abs(x);
+        y = std::abs(y);
+        int moves = 0;
+        while (0 < q.size()) {
+            const int size = q.size();
+            
+            for (int i = 0; i < size; i++) {
+                LOC currentSpot = q.front();
+                q.pop();
+
+                const int currentSpotX = currentSpot.first;
+                const int currentSpotY = currentSpot.second;
+
+                if (currentSpotX == x && currentSpotY == y) return moves;
+
+                for (auto const & move : MOVES) {
+                    const int xMove = move.first;
+                    const int yMove = move.second;
+                    const int nextSpotX = currentSpotX + xMove;
+                    const int nextSpotY = currentSpotY + yMove;
+                    const LOC nextSpot = {nextSpotX, nextSpotY};
+
+                    if (nextSpotX < -2 || nextSpotY < -2) continue;
+                    if (1 < nextSpotX - x || 1 < nextSpotY - y) continue;
+                    if (visited[nextSpotX + 2][nextSpotY + 2]) continue;                
+                    q.push(nextSpot);
+                    visited[nextSpotX + 2][nextSpotY + 2] = true;
+                }
+            }
+            
+            moves++;
+        }
+        
+        return -1;        
+    }
+      
+};
 
 
-// 96th percentile
+
+
+
+// 100th percentile
 // Top down dfs
 class Solution {
 public:
     int dp[301][301];
     
-    int minKnightMoves(int x, int y) {
-        std::fill((int *)dp, (int *)dp + 301*301, 300);
+    int minKnightMoves(int x, int y) { 
+        
+        
+        /*
+        note the casts to get the start/end of the array
+
+        Arrays are implicitly convertible to pointers.
+        When we assign an array name to the pointer, the pointer points at the first element in an array.
+
+        //remember that array subscripting a[i] is semantically equivalent to *(a + i).
+        */
+        std::fill((int *)dp, (int *)dp + 301*301, 300); 
         dp[0][0] = 0;
         dp[1][0] = 3;
         dp[1][1] = 2;
@@ -293,18 +358,16 @@ public:
     }
     
     int dfs(int x, int y) {
-        x = abs(x);
-        y = abs(y);
-        if (x < y)
-            std::swap(x, y);
-        if (dp[x][y] < 300)
-            return dp[x][y];
-        int ans = std::min( {dfs(x - 2, y - 1) + 1, dfs(x - 1, y - 2) + 1, dp[x][y] }) ; // C++ 11
+        x = std::abs(x);
+        y = std::abs(y);
+        if (x < y) std::swap(x, y);
+        if (dp[x][y] < 300) return dp[x][y];
+        int ans = std::min( {dfs(x - 2, y - 1) + 1, dfs(x - 1, y - 2) + 1, dp[x][y]} );
         dp[x][y] = ans;
         return ans;
     }
+    
 };
-
 
 
 
