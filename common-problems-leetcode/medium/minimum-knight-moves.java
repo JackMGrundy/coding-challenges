@@ -118,6 +118,38 @@ class Solution {
 }
 
 
+
+
+// DFS 98th percentile
+class Solution {
+    private int[][] dp = new int[301][301];
+        
+    public int minKnightMoves(int x, int y) {
+        for (int[] row : dp) Arrays.fill(row, 300);
+        dp[0][0] = 0;
+        dp[1][0] = 3;
+        dp[1][1] = 2;
+        return dfs(x, y);
+    }
+    
+    private int dfs(int x, int y) {
+        x = Math.abs(x);
+        y = Math.abs(y);
+        if (x < y) {
+            int temp = x;
+            x = y;
+            y = temp;
+        }
+        if (dp[x][y] < 300) return dp[x][y];
+        int ans = Math.min( Math.min( dfs(x - 1, y - 2) + 1, dfs(x - 2, y - 1) + 1), dp[x][y] );
+        dp[x][y] = ans;
+        return ans;
+    }
+}
+
+
+
+
 /*
 Pairs vs int[2] make basically no difference in performance
 they compile down to basically the same thing...
