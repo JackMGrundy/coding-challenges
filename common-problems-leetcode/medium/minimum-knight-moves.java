@@ -26,6 +26,11 @@ Constraints:
 0 <= |x| + |y| <= 300
 */
 
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.HashSet;
+
 
 // 77th percentile bfs
 // using pairs
@@ -74,7 +79,7 @@ class Solution {
 
 
 // 70th percentile
-class Solution {
+class Solution2 {
     private final int[][] MOVES = new int[][] {{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
     
     public int minKnightMoves(int x, int y) {
